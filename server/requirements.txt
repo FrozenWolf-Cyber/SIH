@@ -1,0 +1,5 @@
+cmake
+face_recognition
+mysql-connector-python 
+Flask
+gunicorn
