@@ -1,7 +1,14 @@
 import os
-import shutil
 from flask import Flask, request, Response
+from database import Database
 import face_recognition
+
+db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
+db_user =  'root' #'be6a5ab891fb44'
+db_psswrd = '3112003' #heroku-psswrd
+db_name = 'SIH_attendance' #heroku-db
+
+mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
 
 app = Flask(__name__)
 
@@ -73,6 +80,29 @@ def status():
         else:
             return "WAIT"        
             
+@app.route('/signup',methods = ['POST', 'GET'])
+def signup():
+    if request.method == 'POST':
+        args = 'mail_id user_name password name age address contact_no blood_grp'.split(' ')
+        data = []
+        for arg in args :
+            data.append(request.form[arg])
+
+        user_name_availablity, unique_id = mydb.sign_up(tuple(data))
+        return unique_id
+
+@app.route('/login',methods = ['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        args = 'user_name_or_mail_id password'.split(' ')
+        data = []
+        for arg in args :
+            data.append(request.form[arg])
+
+        unique_id = mydb.user_login_details(data, type_of_login= request.form['type_of_login'])
+        return unique_id
+        
+
 
 if __name__ == '__main__':
    app.run(debug=False, threaded=True)
