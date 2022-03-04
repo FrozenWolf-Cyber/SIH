@@ -34,6 +34,7 @@ import time
 
 # x = requests.post(url, data= data)
 # print(x)
+
 url = 'http://127.0.0.1:5000/login'
 ### mail_id user_name password name age address contact_no blood_grp
 data = {'user_name_or_mail_id' : 'gokul3112003.com@gmail.com',
