@@ -116,6 +116,22 @@ class Database:
         return response
 
 
+    def get_user_details(self, user_id):
+        details = None
+        self.cursor.execute("SELECT name, age, address, contact_no, blood_grp FROM USER_INFO WHERE id = %s", (user_id,))
+
+        for i in self.cursor:
+            details = i
+
+        self.cursor.close()
+        self.db.close()
+        
+        return i
+
+        
+            
+
+
 
 
 

@@ -101,8 +101,19 @@ def login():
 
         unique_id = mydb.user_login_details(data, type_of_login= request.form['type_of_login'])
         return unique_id
-        
 
+@app.route('/get_info',methods = ['POST', 'GET'])
+def get_info():
+    if request.method == 'POST':
+        data_args = 'name,age,address,contact_no,blood_grp'.split(',')
+        data = mydb.get_user_details(request.form['user_id'])
+        
+        form = {}
+        for i, j in zip(data_args, data):
+            form[i] = j
+
+        return form
+        # return 0
 
 if __name__ == '__main__':
    app.run(debug=False, threaded=True)
