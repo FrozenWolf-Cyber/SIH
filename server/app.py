@@ -89,6 +89,8 @@ def signup():
             data.append(request.form[arg])
 
         user_name_availablity, unique_id = mydb.sign_up(tuple(data))
+        if unique_id is None:
+            return "ALREADY IN USE"
         return unique_id
 
 @app.route('/login',methods = ['POST', 'GET'])
