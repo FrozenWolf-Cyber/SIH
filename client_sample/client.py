@@ -1,6 +1,5 @@
 import requests
 import time
-
 ## SIGNUP
 url = 'http://127.0.0.1:5000/signup'
 ### mail_id user_name password name age address contact_no blood_grp
@@ -13,9 +12,9 @@ data = {'mail_id' : 'sp@gmail.com',
         'contact_no' : '100',
         'blood_grp' : 'B+'}
 
-files = {"img_left":open("sp/sp_left.jpg", "rb"),
-         "img_right":open("sp/sp_right.jpg", "rb"),
-         "img_center":open("sp/sp_center.jpg", "rb")}
+files = {"img_left":open("sp/sp_left.png", "rb"),
+         "img_right":open("sp/sp_right.png", "rb"),
+         "img_center":open("sp/sp_center.png", "rb")}
 
 x = requests.post(url, data= data, files=files)
 print(x.content)
@@ -64,7 +63,7 @@ print(x.content)
 #         break
 
 url = 'http://127.0.0.1:5000/verify'
-files = {'image': open("sp/sp_left.jpg", 'rb')}
+files = {'image': open("sp/sp_left.png", 'rb')}
 
 x = requests.post(url, files= files, data= {'user_id' : user_id})
 

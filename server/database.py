@@ -1,4 +1,3 @@
-from genericpath import exists
 import mysql.connector
 import random
 import string
