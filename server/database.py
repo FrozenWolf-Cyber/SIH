@@ -1,3 +1,4 @@
+from genericpath import exists
 import mysql.connector
 import random
 import string
@@ -30,14 +31,29 @@ class Database:
                           PRIMARY KEY (mail_id));
         ''')
 
+        self.cursor.close()
+        self.cursor = self.db.cursor()
         self.db.commit()
+        
 
-    def generate_unique_id(self): # unique id varies from 8-15 characters
+    def generate_user_id(self): # unique id varies from 8-15 characters
         unique_id = ''
         for i in range(random.randrange(8,15)): 
             unique_id = unique_id + random.choice(string.printable[:61])
 
         return unique_id
+
+    def check_user_id_exist(self, user_id):
+        exist = False
+        self.cursor.execute("SELECT id FROM USER_LOGIN")
+        for i in self.cursor:
+            if user_id == i[0]:
+                exist = True
+                break
+
+        self.cursor.close()
+        self.cursor = self.db.cursor()
+        return exist
 
     def check_unique_data(self, data):
         check = True
@@ -47,7 +63,8 @@ class Database:
             if data[0] == i[0] or data[1] == i[1]:
                 check = False
                 break
-
+        self.cursor.close()
+        self.cursor = self.db.cursor()
         return check
 
     def add_db(self, data):
@@ -56,7 +73,7 @@ class Database:
         self.cursor.execute('INSERT INTO USER_INFO (id , name , age , address , contact_no , blood_grp) VALUES (%s, %s, %s, %s, %s, %s)',(user_id, name, age, address, contact_no, blood_grp))
         self.db.commit()
         self.cursor.close()
-        self.db.close()
+        self.cursor = self.db.cursor()
         return 1
 
 
@@ -66,7 +83,7 @@ class Database:
         self.cursor.execute('UPDATE USER_INFO set name = %s, age = %s, address = %s, contact_no = %s, blood_grp = %s WHERE id = %s',(name, age, address, contact_no, blood_grp, user_id))
         self.db.commit()
         self.cursor.close()
-        self.db.close()
+        self.cursor = self.db.cursor()
         return 1
 
     def sign_up(self, data):
@@ -74,8 +91,14 @@ class Database:
         user_name_availablity = self.check_unique_data((mail_id, user_name))
         unique_id = None
         if user_name_availablity:
-            unique_id = self.generate_unique_id()
-            self.add_db((user_name, password, mail_id, name, age, unique_id, address, contact_no, blood_grp))
+            while True:
+                unique_id = self.generate_user_id()
+                if self.check_user_id_exist(unique_id):
+                    continue
+                
+                else :
+                    self.add_db((user_name, password, mail_id, name, age, unique_id, address, contact_no, blood_grp))
+                    break
 
         return  user_name_availablity, unique_id
 
@@ -93,6 +116,8 @@ class Database:
             for i in self.cursor:
                 id_psswrd = i
 
+        self.cursor.close()
+        self.cursor = self.db.cursor()
         if len(id_psswrd) == 2: # id, password
             if id_psswrd[1] == data[1]:
                 return id_psswrd[0] # returns id
@@ -124,7 +149,7 @@ class Database:
             details = i
 
         self.cursor.close()
-        self.db.close()
+        self.cursor = self.db.cursor()
         
         return i
 
