@@ -31,6 +31,7 @@ def start_verify(user_id, format):
             break
 
     if match:
+        print("ffsfd", flush =True)
         os.mkdir(f"status/{user_id}/VERIFIED")
 
     else :
