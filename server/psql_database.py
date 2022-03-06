@@ -1,12 +1,12 @@
-import mysql.connector
+import psycopg2
 import random
 import string
 
 class Database:
     def __init__(self,host,user,passwd,database):
-        self.db = mysql.connector.connect(host=host,
+        self.db = psycopg2.connect(host=host,
                                      user=user,
-                                     passwd=passwd,
+                                     password=passwd,
                                      database=database)
 
 
@@ -27,7 +27,13 @@ class Database:
                           user_name VARCHAR(20) UNIQUE ,
                           password VARCHAR(20) NOT NULL ,
                           id VARCHAR(20) UNIQUE ,
-                          PRIMARY KEY (mail_id));
+                          PRIMARY KEY (id));
+        ''')
+
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS USER_LOG ( 
+                          id VARCHAR(20) UNIQUE ,
+                          log VARCHAR(10000),
+                          PRIMARY KEY (id));
         ''')
 
         self.cursor.close()
@@ -70,11 +76,14 @@ class Database:
         user_name, password, mail_id, name, age, user_id, address, contact_no, blood_grp = data
         self.cursor.execute('INSERT INTO USER_LOGIN (mail_id , user_name , password , id) VALUES (%s, %s, %s, %s)',(mail_id, user_name, password, user_id))
         self.cursor.execute('INSERT INTO USER_INFO (id , name , age , address , contact_no , blood_grp) VALUES (%s, %s, %s, %s, %s, %s)',(user_id, name, age, address, contact_no, blood_grp))
+        self.cursor.execute('INSERT INTO USER_LOG (id , log ) VALUES (%s , %s)', (user_id, ''))
         self.db.commit()
         self.cursor.close()
         self.cursor = self.db.cursor()
         return 1
 
+    def check_in_out(self, user_id):
+        pass
 
     def update_db(self, data):
         user_name, password, mail_id, name, age, user_id, contact_no, address, blood_grp = data

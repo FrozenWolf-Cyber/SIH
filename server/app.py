@@ -1,15 +1,15 @@
 import os
 import face_recognition
-from database import Database
+from psql_database import Database
 from gdrive_wrapper import gdrive
 from flask import Flask, request, Response
 
 
 
 db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
-db_user =  'root' #'be6a5ab891fb44'
+db_user =  'postgres' #'be6a5ab891fb44'
 db_psswrd = '3112003' #heroku-psswrd
-db_name = 'SIH_attendance' #heroku-db
+db_name = 'sih_attendance' #heroku-db
 
 mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
 mydrive = gdrive()
@@ -36,6 +36,8 @@ def start_verify(user_id, format):
 
     else :
         os.mkdir(f"status/{user_id}/UNVERIFIED")
+
+    clear_local_data(user_id)
 
 def clear_local_data(user_id):
     for img in os.listdir(f"img_db/{user_id}"):
