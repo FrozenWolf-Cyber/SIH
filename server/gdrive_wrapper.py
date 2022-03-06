@@ -7,10 +7,13 @@ class gdrive():
         gauth = GoogleAuth()
         gauth.LocalWebserverAuth()
         self.drive = GoogleDrive(gauth)
-
         self.img_db_id = None
         self.user_folders_id = {}
         self.each_user_img_id = {}
+        self.refresh()
+
+
+    def refresh(self):
         file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
 
         for file in file_list:

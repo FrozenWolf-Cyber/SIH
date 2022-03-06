@@ -17,7 +17,7 @@ files = {"img_left":open("sp/sp_left.png", "rb"),
          "img_center":open("sp/sp_center.png", "rb")}
 
 x = requests.post(url, data= data, files=files)
-print(x.content)
+print(x.text)
 
 
 
@@ -29,9 +29,9 @@ data = {'user_name_or_mail_id' : 'sp@gmail.com',
         'password' : 'sp',}
 
 x = requests.post(url, data= data)
-print(x.content)
+print(x.text)
 
-user_id = x.content.decode("utf-8") 
+user_id = x.text
 
 ## GET INFO
 url = 'http://127.0.0.1:5000/get_info'
@@ -39,14 +39,33 @@ url = 'http://127.0.0.1:5000/get_info'
 data = {'user_id' : user_id}
 
 x = requests.post(url, data= data)
-print(x.content)
+print(x.text)
 
+## CHECK TABLES
+url = 'http://127.0.0.1:5000/master_cmd'
+### mail_id user_name password name age address contact_no blood_grp
+data = {'cmd' : "SELECT * FROM USER_INFO"}
+
+x = requests.post(url, data= data)
+print(x.text)
+
+data = {'cmd' : "SELECT * FROM USER_LOGIN"}
+
+x = requests.post(url, data= data)
+print(x.text)
+
+data = {'cmd' : "SELECT * FROM USER_LOG"}
+
+x = requests.post(url, data= data)
+print(x.text)
+
+## VERIFY
 url = 'http://127.0.0.1:5000/verify'
 files = {'image': open("sp/sp_left.png", 'rb')}
 
 x = requests.post(url, files= files, data= {'user_id' : user_id})
 
-print(x.content)
+print(x.text)
 
 while True:
 
@@ -56,5 +75,26 @@ while True:
 
     print(x.text)
     if x.text != 'WAIT':
-        print(x.text)
         break
+
+
+## CHECK IN 
+time.sleep(0.1)
+url = 'http://127.0.0.1:5000/check_in'
+x = requests.post(url, data= {'user_id' : user_id, "date_time":"10:53:56@06.03.2022"})
+print(x.text)
+
+
+## CHECK OUT 
+time.sleep(0.1)
+url = 'http://127.0.0.1:5000/check_out'
+x = requests.post(url, data= {'user_id' : user_id,"date_time": "10:53:56@06.03.2022"})
+print(x.text)
+
+
+## CHECK TABLES
+url = 'http://127.0.0.1:5000/master_cmd'
+data = {'cmd' : "SELECT * FROM USER_LOG"}
+
+x = requests.post(url, data= data)
+print(x.text)
