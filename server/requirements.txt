@@ -2,5 +2,6 @@ cmake
 face_recognition
 PyDrive
 psycopg2
-Flask
-gunicorn
+fastapi[all]
+uvicorn
+asgiref
