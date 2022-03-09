@@ -196,7 +196,7 @@ async def get_info(
     if not mydb.check_user_id_exist(user_id):
         return "NOPE"
 
-    data_args = 'name,age,address,contact_no,blood_grp'.split(',')
+    data_args = 'name,age,address,contact_no,blood_grp,log'.split(',')
     data = mydb.get_user_details(user_id)
     
     form = {}
