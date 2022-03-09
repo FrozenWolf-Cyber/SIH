@@ -79,18 +79,18 @@ while True:
         break
     time.sleep(0.3)
 
-## CHECK IN 
+## UPDATE LOG
 time.sleep(0.1)
-url = 'http://127.0.0.1:5000/check_in'
-x = requests.post(url, data= {'user_id' : user_id, "date_time":"10:53:56@06.03.2022"})
+url = 'http://127.0.0.1:5000/update_log'
+x = requests.post(url, data= {'user_id' : user_id, "date_time":"10:53:56@06.03.2022-14:53:56@06.03.2022 10:53:56@06.03.2022-14:53:56@06.03.2022 "})
 print(x.text)
 
 
-## CHECK OUT 
-time.sleep(0.1)
-url = 'http://127.0.0.1:5000/check_out'
-x = requests.post(url, data= {'user_id' : user_id,"date_time": "10:53:56@06.03.2022"})
-print(x.text)
+# ## CHECK OUT 
+# time.sleep(0.1)
+# url = 'http://127.0.0.1:5000/check_out'
+# x = requests.post(url, data= {'user_id' : user_id,"date_time": "10:53:56@06.03.2022"})
+# print(x.text)
 
 
 ## CHECK TABLES

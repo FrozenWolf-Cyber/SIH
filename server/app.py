@@ -79,26 +79,36 @@ async def verify(
     return "WAIT"
 
 
-@app.post('/check_in')
-def check_in(
+# @app.post('/check_in')
+# def update_log(
+#     user_id : str = Form(...),
+#     date_time: str = Form(...)
+# ):
+#     user_id = user_id[1:-1]
+#     mydb.check_in(user_id, date_time)
+
+#     return "CHECKED IN"
+
+
+# @app.post('/check_out')
+# def check_out(
+#     user_id : str = Form(...),
+#     date_time: str = Form(...)
+# ):
+#     user_id = user_id[1:-1]
+#     mydb.check_out(user_id, date_time)
+
+#     return "CHECKED OUT"
+
+@app.post('/update_log')
+def update_log(
     user_id : str = Form(...),
     date_time: str = Form(...)
 ):
     user_id = user_id[1:-1]
-    mydb.check_in(user_id, date_time)
+    mydb.update_log(user_id, date_time)
 
-    return "CHECKED IN"
-
-
-@app.post('/check_out')
-def check_out(
-    user_id : str = Form(...),
-    date_time: str = Form(...)
-):
-    user_id = user_id[1:-1]
-    mydb.check_out(user_id, date_time)
-
-    return "CHECKED OUT"
+    return "LOG UPDATED"
 
 
 @app.post('/status')

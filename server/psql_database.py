@@ -180,34 +180,48 @@ class Database:
         return output
     
 
-    def check_in(self, user_id, time_date):
-        # if user_id not in list(self.live_users.keys()):
+    # def check_in(self, user_id, time_date):
+    #     # if user_id not in list(self.live_users.keys()):
+    #     self.cursor.execute("SELECT log FROM USER_LOG WHERE id = %s", (user_id,))
+    #     log = '' # Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year
+    #     for i in self.cursor:
+    #         log = i
+    #     log = log[0]
+    #     log = log + time_date + '-'
+    #     self.cursor.execute("UPDATE USER_LOG set log = %s WHERE id = %s", (log, user_id))
+    #     self.cursor.close()
+    #     self.db.commit()   
+    #     self.cursor = self.db.cursor()
+
+    # def check_out(self, user_id, time_date):
+    #     self.cursor.execute("SELECT log FROM USER_LOG WHERE id = %s", (user_id,))
+
+    #     log = '' # Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year
+    #     for i in self.cursor:
+    #         log = i
+
+    #     log = log[0]
+    #     log  = log + time_date + ' '
+
+    #     self.cursor.execute("UPDATE USER_LOG set log = %s WHERE id = %s", (log, user_id))
+    #     self.cursor.close()
+    #     self.db.commit()  
+    #     self.cursor = self.db.cursor()   
+
+    def update_log(self, user_id, time_date):
         self.cursor.execute("SELECT log FROM USER_LOG WHERE id = %s", (user_id,))
+
         log = '' # Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year
         for i in self.cursor:
             log = i
-        log = log[0]
-        log = log + time_date + '-'
-        self.cursor.execute("UPDATE USER_LOG set log = %s WHERE id = %s", (log, user_id))
-        self.cursor.close()
-        self.db.commit()   
-        self.cursor = self.db.cursor()
-
-    def check_out(self, user_id, time_date):
-        self.cursor.execute("SELECT log FROM USER_LOG WHERE id = %s", (user_id,))
-
-        log = '' # Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year
-        for i in self.cursor:
-            log = i
 
         log = log[0]
-        log  = log + time_date + ' '
+        log  = log + time_date
 
         self.cursor.execute("UPDATE USER_LOG set log = %s WHERE id = %s", (log, user_id))
         self.cursor.close()
         self.db.commit()  
         self.cursor = self.db.cursor()   
-
             
 
 
