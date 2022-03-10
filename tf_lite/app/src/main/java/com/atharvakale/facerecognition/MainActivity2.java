@@ -35,6 +35,7 @@ public class MainActivity2 extends AppCompatActivity {
                 float[] embeds = my_model.embeds;
 
                 Log.i("EMBEDS : ",Arrays.toString(embeds));
+                Log.i("DIFFERENCE : ", Float.toString(my_model.findDistance(embeds,embeds)));
 
                 HashMap<String, SimilarityClassifier.Recognition> registered = new HashMap<>();
                 registered = my_model.readFromSP();
