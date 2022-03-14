@@ -1,7 +1,6 @@
 import os
 import shutil
 import uvicorn
-import face_recognition
 from typing import List
 from gdrive_wrapper import gdrive
 from asgiref.sync import sync_to_async
@@ -9,44 +8,20 @@ from psql_database import Database
 from fastapi import FastAPI, File, UploadFile, Form
 
 
-db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
-db_user =  'postgres' #'be6a5ab891fb44'
-db_psswrd = '3112003' #heroku-psswrd
-db_name = 'sih_attendance' #heroku-db
+# db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
+# db_user =  'postgres' #'be6a5ab891fb44'
+# db_psswrd = '3112003' #heroku-psswrd
+# db_name = 'sih_attendance' #heroku-db
 
-# db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
-# db_user =  'sxxkdscneuzrwf'
-# db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
-# db_name = 'd3rhldildqlaje'
+db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
+db_user =  'sxxkdscneuzrwf'
+db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
+db_name = 'd3rhldildqlaje'
 
 mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
 mydrive = gdrive()
 
 app = FastAPI()
-
-def start_verify(user_id, format):
-    mydrive.download_user_img(user_id)
-    match = False
-    for each_img in os.listdir('img_db/'+user_id):
-
-        known_image = face_recognition.load_image_file(f'img_db/{user_id}/{each_img}')
-        unknown_image = face_recognition.load_image_file(f'status/{user_id}/img.{format}')
-
-        know_encoding = face_recognition.face_encodings(known_image)[0]
-        unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
-        results = face_recognition.compare_faces([know_encoding], unknown_encoding)
-
-        if results[0] == True:
-            match = True
-            break
-
-    if match:
-        os.mkdir(f"status/{user_id}/VERIFIED")
-
-    else :
-        os.mkdir(f"status/{user_id}/UNVERIFIED")
-
-    clear_local_data(user_id)
 
 def clear_local_data(user_id):
     for img in os.listdir(f"img_db/{user_id}"):
@@ -55,58 +30,14 @@ def clear_local_data(user_id):
     os.rmdir(f"img_db/{user_id}")
 
 
-@app.post('/verify')
-async def verify(
-    image: UploadFile = File(...),
-    user_id: str = Form(...)
-):
-    user_id = user_id[1:-1]
-    img = image
-    
-    if not mydb.check_user_id_exist(user_id): # occurs only while testing or spamming
-        return "NOPE"
-
-    if user_id not in os.listdir(f"status"):
-        os.mkdir(f"status/{user_id}")
-    
-
-    format = str(img.filename).split('.')[-1].split("'")[0]
-    file_location = f"status/{user_id}/img.{format}"
-    with open(file_location, "wb+") as buffer:
-        shutil.copyfileobj(img.file, buffer)
-
-    response = await sync_to_async(start_verify)(user_id, format)
-    return "WAIT"
-
-
-# @app.post('/check_in')
-# def update_log(
-#     user_id : str = Form(...),
-#     date_time: str = Form(...)
-# ):
-#     user_id = user_id[1:-1]
-#     mydb.check_in(user_id, date_time)
-
-#     return "CHECKED IN"
-
-
-# @app.post('/check_out')
-# def check_out(
-#     user_id : str = Form(...),
-#     date_time: str = Form(...)
-# ):
-#     user_id = user_id[1:-1]
-#     mydb.check_out(user_id, date_time)
-
-#     return "CHECKED OUT"
-
 @app.post('/update_log')
 def update_log(
     user_id : str = Form(...),
-    date_time: str = Form(...)
+    check_in: str = Form(...),
+    check_out: str = Form(...)
 ):
     user_id = user_id[1:-1]
-    mydb.update_log(user_id, date_time)
+    mydb.update_log(user_id, check_in, check_out)
 
     return "LOG UPDATED"
 
@@ -153,10 +84,12 @@ async def signup(
     address: str = Form(...),
     contact_no: str = Form(...),
     blood_grp: str = Form(...),
+    embed1 : list = Form(...),
+    embed2 : list = Form(...),
+    embed3 : list = Form(...),
     files: List[UploadFile] = File(...)
 ):
-
-    data = [mail_id, user_name, password, name, age, address, contact_no, blood_grp]
+    data = [mail_id, user_name, password, name, age, address, contact_no, blood_grp, embed1, embed2, embed3]
 
     user_name_availablity, user_id = mydb.sign_up(tuple(data))
     if user_id is None:
@@ -197,6 +130,23 @@ async def get_info(
         return "NOPE"
 
     data_args = 'name,age,address,contact_no,blood_grp,log'.split(',')
+    data = mydb.get_user_details(user_id)
+    
+    form = {}
+    for i, j in zip(data_args, data):
+        form[i] = j
+        
+    return form
+
+@app.post('/get_embed')
+async def get_embed(
+    user_id: str = Form(...)
+):
+    user_id = user_id[1:-1]
+    if not mydb.get_embeds(user_id):
+        return "NOPE"
+
+    data_args = 'embed1,embed2,embed3'.split(',')
     data = mydb.get_user_details(user_id)
     
     form = {}

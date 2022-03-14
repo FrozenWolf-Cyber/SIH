@@ -19,6 +19,9 @@ class Database:
                           address VARCHAR(20) NOT NULL ,
                           contact_no VARCHAR(20) NOT NULL ,
                           blood_grp VARCHAR(20) NOT NULL ,
+                          embed1 text[],
+                          embed2 text[],
+                          embed3 text[],
                           PRIMARY KEY (id));
         ''')
 
@@ -32,7 +35,8 @@ class Database:
 
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS USER_LOG ( 
                           id VARCHAR(20) UNIQUE ,
-                          log VARCHAR(10000),
+                          check_in VARCHAR(10000),
+                          check_out VARCHAR(10000),
                           PRIMARY KEY (id));
         ''')
 
@@ -73,17 +77,32 @@ class Database:
         return check
 
     def add_db(self, data):
-        user_name, password, mail_id, name, age, user_id, address, contact_no, blood_grp = data
+        user_name, password, mail_id, name, age, user_id, address, contact_no, blood_grp, embed1, embed2, embed3 = data
         self.cursor.execute('INSERT INTO USER_LOGIN (mail_id , user_name , password , id) VALUES (%s, %s, %s, %s)',(mail_id, user_name, password, user_id))
-        self.cursor.execute('INSERT INTO USER_INFO (id , name , age , address , contact_no , blood_grp) VALUES (%s, %s, %s, %s, %s, %s)',(user_id, name, age, address, contact_no, blood_grp))
-        self.cursor.execute('INSERT INTO USER_LOG (id , log ) VALUES (%s , %s)', (user_id, ''))
+        self.cursor.execute('INSERT INTO USER_INFO (id , name , age , address , contact_no , blood_grp, embed1, embed2, embed3) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',(user_id, name, age, address, contact_no, blood_grp, embed1, embed2, embed3))
+        self.cursor.execute('INSERT INTO USER_LOG (id , check_in, check_out) VALUES (%s , %s, %s)', (user_id, '', ''))
         self.db.commit()
         self.cursor.close()
         self.cursor = self.db.cursor()
         return 1
 
-    def check_in_out(self, user_id):
-        pass
+    def get_embeds(self, user_id):
+        details = None
+        self.cursor.execute("SELECT embed1, embed2, embed3 FROM USER_INFO WHERE id = %s", (user_id,))
+
+        for i in self.cursor:
+            details = i
+
+        details = list(details)
+        self.cursor.execute("SELECT log FROM USER_LOG WHERE id = %s", (user_id,))
+        
+        for i in self.cursor:
+            details.append(i[0])
+
+        self.cursor.close()
+        self.cursor = self.db.cursor()
+        
+        return details
 
     def update_db(self, data):
         user_name, password, mail_id, name, age, user_id, contact_no, address, blood_grp = data
@@ -95,7 +114,7 @@ class Database:
         return 1
 
     def sign_up(self, data):
-        mail_id, user_name, password, name, age, address, contact_no, blood_grp = data
+        mail_id, user_name, password, name, age, address, contact_no, blood_grp, embed1, embed2, embed3 = data
         user_name_availablity = self.check_unique_data((mail_id, user_name))
         unique_id = None
         if user_name_availablity:
@@ -105,7 +124,7 @@ class Database:
                     continue
                 
                 else :
-                    self.add_db((user_name, password, mail_id, name, age, unique_id, address, contact_no, blood_grp))
+                    self.add_db((user_name, password, mail_id, name, age, unique_id, address, contact_no, blood_grp, embed1, embed2, embed3))
                     break
 
         return  user_name_availablity, unique_id
@@ -157,7 +176,7 @@ class Database:
             details = i
 
         details = list(details)
-        self.cursor.execute("SELECT log FROM USER_LOG WHERE id = %s", (user_id,))
+        self.cursor.execute("SELECT check_in, check_out FROM USER_LOG WHERE id = %s", (user_id,))
         
         for i in self.cursor:
             details.append(i[0])
@@ -172,53 +191,42 @@ class Database:
         output = ""
 
         for i in self.cursor:
-            output = output + "\n" + " | ".join(i)
+            for j in i:
+                if isinstance(j, list):
+                    j = "".join(j)
+                output = output + " | " + j
+
+            output = output + '\n'
 
         self.cursor.close()
         self.cursor = self.db.cursor() 
 
         return output
-    
+      
 
-    # def check_in(self, user_id, time_date):
-    #     # if user_id not in list(self.live_users.keys()):
-    #     self.cursor.execute("SELECT log FROM USER_LOG WHERE id = %s", (user_id,))
-    #     log = '' # Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year
-    #     for i in self.cursor:
-    #         log = i
-    #     log = log[0]
-    #     log = log + time_date + '-'
-    #     self.cursor.execute("UPDATE USER_LOG set log = %s WHERE id = %s", (log, user_id))
-    #     self.cursor.close()
-    #     self.db.commit()   
-    #     self.cursor = self.db.cursor()
-
-    # def check_out(self, user_id, time_date):
-    #     self.cursor.execute("SELECT log FROM USER_LOG WHERE id = %s", (user_id,))
-
-    #     log = '' # Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year
-    #     for i in self.cursor:
-    #         log = i
-
-    #     log = log[0]
-    #     log  = log + time_date + ' '
-
-    #     self.cursor.execute("UPDATE USER_LOG set log = %s WHERE id = %s", (log, user_id))
-    #     self.cursor.close()
-    #     self.db.commit()  
-    #     self.cursor = self.db.cursor()   
-
-    def update_log(self, user_id, time_date):
-        self.cursor.execute("SELECT log FROM USER_LOG WHERE id = %s", (user_id,))
+    def update_log(self, user_id, check_in, check_out):
+        self.cursor.execute("SELECT check_in FROM USER_LOG WHERE id = %s", (user_id,))
 
         log = '' # Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year
         for i in self.cursor:
             log = i
 
         log = log[0]
-        log  = log + time_date
+        log  = log + check_in
 
-        self.cursor.execute("UPDATE USER_LOG set log = %s WHERE id = %s", (log, user_id))
+        self.cursor.execute("UPDATE USER_LOG set check_in = %s WHERE id = %s", (check_in, user_id))
+
+        self.cursor.execute("SELECT check_out FROM USER_LOG WHERE id = %s", (user_id,))
+
+        log = '' # Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year
+        for i in self.cursor:
+            log = i
+
+        log = log[0]
+        log  = log + check_out
+
+        self.cursor.execute("UPDATE USER_LOG set check_out = %s WHERE id = %s", (check_out, user_id))
+
         self.cursor.close()
         self.db.commit()  
         self.cursor = self.db.cursor()   
