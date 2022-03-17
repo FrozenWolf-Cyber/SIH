@@ -14,11 +14,12 @@ class Database:
 
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS USER_INFO (
                           id VARCHAR(20) UNIQUE ,
-                          name VARCHAR(20) NOT NULL , 
-                          age VARCHAR(20) ,
-                          address VARCHAR(20) NOT NULL ,
+                          name VARCHAR(100) NOT NULL ,
+                          designation VARCHAR(100), 
+                          emp_no VARCHAR(20) NOT NULL ,
+                          gender VARCHAR(20) NOT NULL ,
+                          office_address VARCHAR(100) NOT NULL ,
                           contact_no VARCHAR(20) NOT NULL ,
-                          blood_grp VARCHAR(20) NOT NULL ,
                           embed1 text[],
                           embed2 text[],
                           embed3 text[],
@@ -77,9 +78,9 @@ class Database:
         return check
 
     def add_db(self, data):
-        user_name, password, mail_id, name, age, user_id, address, contact_no, blood_grp, embed1, embed2, embed3 = data
+        user_name, password, mail_id, name, designation, emp_no, gender, user_id, office_address, contact_no, embed1, embed2, embed3 = data
         self.cursor.execute('INSERT INTO USER_LOGIN (mail_id , user_name , password , id) VALUES (%s, %s, %s, %s)',(mail_id, user_name, password, user_id))
-        self.cursor.execute('INSERT INTO USER_INFO (id , name , age , address , contact_no , blood_grp, embed1, embed2, embed3) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',(user_id, name, age, address, contact_no, blood_grp, embed1, embed2, embed3))
+        self.cursor.execute('INSERT INTO USER_INFO (id , name , designation, emp_no , gender, office_address , contact_no , embed1, embed2, embed3) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',(user_id, name, designation, emp_no, gender, office_address, contact_no, embed1, embed2, embed3))
         self.cursor.execute('INSERT INTO USER_LOG (id , check_in, check_out) VALUES (%s , %s, %s)', (user_id, '', ''))
         self.db.commit()
         self.cursor.close()
@@ -105,16 +106,16 @@ class Database:
         return details
 
     def update_db(self, data):
-        user_name, password, mail_id, name, age, user_id, contact_no, address, blood_grp = data
+        user_name, password, mail_id, name, designation, emp_no, gender, user_id, office_address, contact_no = data
         self.cursor.execute('UPDATE USER_LOGIN set mail_id = %s, user_name = %s, password = %s WHERE id = %s',(mail_id, user_name, password, user_id))
-        self.cursor.execute('UPDATE USER_INFO set name = %s, age = %s, address = %s, contact_no = %s, blood_grp = %s WHERE id = %s',(name, age, address, contact_no, blood_grp, user_id))
+        self.cursor.execute('UPDATE USER_INFO set name = %s, designation = %s, emp_no = %s, gender = %s, office_address = %s, contact_no = %s WHERE id = %s',(name, designation, emp_no, gender, office_address, contact_no, user_id))
         self.db.commit()
         self.cursor.close()
         self.cursor = self.db.cursor()
         return 1
 
     def sign_up(self, data):
-        mail_id, user_name, password, name, age, address, contact_no, blood_grp, embed1, embed2, embed3 = data
+        mail_id, user_name, password, name, designation, emp_no, gender, office_address, contact_no, embed1, embed2, embed3 = data
         user_name_availablity = self.check_unique_data((mail_id, user_name))
         unique_id = None
         if user_name_availablity:
@@ -124,7 +125,7 @@ class Database:
                     continue
                 
                 else :
-                    self.add_db((user_name, password, mail_id, name, age, unique_id, address, contact_no, blood_grp, embed1, embed2, embed3))
+                    self.add_db((user_name, password, mail_id, name, designation, emp_no, gender, unique_id, office_address, contact_no, embed1, embed2, embed3))
                     break
 
         return  user_name_availablity, unique_id
@@ -170,7 +171,7 @@ class Database:
 
     def get_user_details(self, user_id):
         details = None
-        self.cursor.execute("SELECT name, age, address, contact_no, blood_grp FROM USER_INFO WHERE id = %s", (user_id,))
+        self.cursor.execute("SELECT name, designation, emp_no, gender, office_address, contact_no FROM USER_INFO WHERE id = %s", (user_id,))
 
         for i in self.cursor:
             details = i

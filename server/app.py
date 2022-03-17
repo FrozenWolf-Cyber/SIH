@@ -10,7 +10,7 @@ from fastapi import FastAPI, File, UploadFile, Form
 
 # db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
 # db_user =  'postgres' #'be6a5ab891fb44'
-# db_psswrd = '3112003' #heroku-psswrd
+# db_psswrd = 'aadarsh2003' #heroku-psswrd
 # db_name = 'sih_attendance' #heroku-db
 
 db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
@@ -80,27 +80,29 @@ async def signup(
     user_name: str = Form(...),
     password: str = Form(...),
     name: str = Form(...),
-    age: str = Form(...),
-    address: str = Form(...),
+    designation: str = Form(...),
+    emp_no: str = Form(...),
+    gender: str = Form(...),
+    office_address: str = Form(...),
     contact_no: str = Form(...),
-    blood_grp: str = Form(...),
     embed1 : list = Form(...),
     embed2 : list = Form(...),
     embed3 : list = Form(...),
-    files: List[UploadFile] = File(...)
+    files: UploadFile = File(...)
 ):
-    data = [mail_id, user_name, password, name, age, address, contact_no, blood_grp, embed1, embed2, embed3]
+    data = [mail_id, user_name, password, name, designation, emp_no, gender, office_address, contact_no, embed1, embed2, embed3]
 
     user_name_availablity, user_id = mydb.sign_up(tuple(data))
     if user_id is None:
         return "ALREADY IN USE"
 
     os.mkdir(f"img_db/{user_id}")
-    for each_image in files:
-        img = each_image.filename
-        file_location = f"img_db/{user_id}/{img}"
-        with open(file_location, "wb+") as buffer:
-            shutil.copyfileobj(each_image.file, buffer)
+    
+    each_image = files
+    img = each_image.filename
+    file_location = f"img_db/{user_id}/{img}"
+    with open(file_location, "wb+") as buffer:
+        shutil.copyfileobj(each_image.file, buffer)
 
     mydrive.upload_img_folder(user_id)
     clear_local_data(user_id)
@@ -129,7 +131,7 @@ async def get_info(
     if not mydb.check_user_id_exist(user_id):
         return "NOPE"
 
-    data_args = 'name,age,address,contact_no,blood_grp,log'.split(',')
+    data_args = 'name,designation,emp_no,gender,office_address,contact_no,log'.split(',')
     data = mydb.get_user_details(user_id)
     
     form = {}
