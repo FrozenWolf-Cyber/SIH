@@ -25,7 +25,12 @@ files = [('files', ("img", open("sp/sp_left.png", "rb"), 'image/png'))]
 x = requests.post(url, data= data, files=files)
 print(x.text)
 
+## CHECK USERNAME
+url = 'http://127.0.0.1:5000/check_username'
+data = {'username' : 'p'}
 
+x = requests.post(url, data= data)
+print(x.text)
 
 ## LOGIN
 url = 'http://127.0.0.1:5000/login'

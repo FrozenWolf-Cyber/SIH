@@ -121,6 +121,16 @@ async def login(
     unique_id = mydb.user_login_details(data, type_of_login = type_of_login)
     return unique_id
 
+@app.post('/check_username')
+async def check_username(
+    username: str = Form(...),
+):
+    data = [username]
+
+    if mydb.check_username(data):
+        return "YES"
+
+    return "NO"
 
 
 @app.post('/get_info')

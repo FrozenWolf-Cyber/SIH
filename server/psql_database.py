@@ -77,6 +77,21 @@ class Database:
         self.cursor = self.db.cursor()
         return check
 
+    def check_username(self, data):
+        check = False
+        self.cursor.execute("SELECT user_name FROM USER_LOGIN")
+        for i in self.cursor:
+            #mail_id , user_nam
+            if data[0] == i[0]:
+                check = True
+                break
+
+        self.cursor.close()
+        self.cursor = self.db.cursor()
+        return check
+
+
+
     def add_db(self, data):
         user_name, password, mail_id, name, designation, emp_no, gender, user_id, office_address, contact_no, embed1, embed2, embed3 = data
         self.cursor.execute('INSERT INTO USER_LOGIN (mail_id , user_name , password , id) VALUES (%s, %s, %s, %s)',(mail_id, user_name, password, user_id))
