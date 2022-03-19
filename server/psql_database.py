@@ -230,7 +230,7 @@ class Database:
         log = log[0]
         log  = log + check_in
 
-        self.cursor.execute("UPDATE USER_LOG set check_in = %s WHERE id = %s", (check_in, user_id))
+        self.cursor.execute("UPDATE USER_LOG set check_in = %s WHERE id = %s", (log, user_id))
 
         self.cursor.execute("SELECT check_out FROM USER_LOG WHERE id = %s", (user_id,))
 
@@ -241,7 +241,7 @@ class Database:
         log = log[0]
         log  = log + check_out
 
-        self.cursor.execute("UPDATE USER_LOG set check_out = %s WHERE id = %s", (check_out, user_id))
+        self.cursor.execute("UPDATE USER_LOG set check_out = %s WHERE id = %s", (log, user_id))
 
         self.cursor.close()
         self.db.commit()  

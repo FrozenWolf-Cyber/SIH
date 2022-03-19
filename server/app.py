@@ -37,6 +37,13 @@ def update_log(
     check_out: str = Form(...)
 ):
     user_id = user_id[1:-1]
+
+    if check_in == "blah-null":
+        check_in = ""
+
+    if check_out == "blah-null":
+        check_out = ""
+
     mydb.update_log(user_id, check_in, check_out)
 
     return "LOG UPDATED"
