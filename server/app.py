@@ -119,7 +119,7 @@ async def login(
     data = [user_name_or_mail_id, password]
 
     unique_id = mydb.user_login_details(data, type_of_login = type_of_login)
-    return unique_id
+    return str(unique_id)
 
 @app.post('/check_username')
 async def check_username(
