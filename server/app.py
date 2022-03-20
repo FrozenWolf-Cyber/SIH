@@ -1,7 +1,6 @@
 import os
 import shutil
 import uvicorn
-from typing import List
 from gdrive_wrapper import gdrive
 from asgiref.sync import sync_to_async
 from psql_database import Database
@@ -137,7 +136,10 @@ async def get_embed(
     data = mydb.get_embeds(user_id)
     
     form = {}
+    print(data, flush=True)
     for i, j in zip(data_args, data):
+        j = j[0][1:-1].split(', ')
+        j = list(map(float,j))
         form[i] = j
         
     return form
