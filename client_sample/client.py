@@ -54,11 +54,6 @@ print(x.text)
 
 ## CHECK TABLES
 url = 'http://127.0.0.1:5000/master_cmd'
-### mail_id user_name password name age address contact_no blood_grp
-data = {'cmd' : "SELECT * FROM USER_INFO"}
-
-x = requests.post(url, data= data)
-print(x.text)
 
 data = {'cmd' : "SELECT * FROM USER_LOGIN"}
 
@@ -70,6 +65,13 @@ data = {'cmd' : "SELECT * FROM USER_LOG"}
 x = requests.post(url, data= data)
 print(x.text)
 
+## GET EMBEDS
+url = 'http://127.0.0.1:5000/get_embed'
+
+data = {'user_id' : user_id}
+
+x = requests.post(url, data= data)
+print(x.text)
 
 ## UPDATE LOG
 time.sleep(0.1)

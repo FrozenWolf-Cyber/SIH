@@ -49,38 +49,6 @@ def update_log(
     return "LOG UPDATED"
 
 
-@app.post('/status')
-async def status(
-    user_id: str = Form(...)
-):
-    user_id = user_id[1:-1]
-    if not mydb.check_user_id_exist(user_id):
-        return "NOPE"
-
-    if user_id not in os.listdir("status"):
-        return "NOT IN PATH"
-        
-    directories = os.listdir(f"status/{user_id}")
-
-    if len(directories) == 2:
-        
-        if "VERIFIED" in directories :
-            os.rmdir(f"status/{user_id}/VERIFIED")
-            directories.remove('VERIFIED')
-            os.remove(f"status/{user_id}/{directories[0]}")
-            os.rmdir(f"status/{user_id}")
-            return "VERIFIED"
-
-        os.rmdir(f"status/{user_id}/UNVERIFIED")
-        directories.remove('UNVERIFIED')
-        os.remove(f"status/{user_id}/{directories[0]}")
-        os.rmdir(f"status/{user_id}")
-
-        return "UNVERIFIED"
-    else:
-        return "WAIT"        
-            
-
 @app.post('/signup')
 async def signup(
     mail_id: str = Form(...),
@@ -162,11 +130,11 @@ async def get_embed(
     user_id: str = Form(...)
 ):
     user_id = user_id[1:-1]
-    if not mydb.get_embeds(user_id):
+    if not mydb.check_user_id_exist(user_id):
         return "NOPE"
 
     data_args = 'embed1,embed2,embed3'.split(',')
-    data = mydb.get_user_details(user_id)
+    data = mydb.get_embeds(user_id)
     
     form = {}
     for i, j in zip(data_args, data):

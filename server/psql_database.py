@@ -27,9 +27,9 @@ class Database:
         ''')
 
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS USER_LOGIN ( 
-                          mail_id VARCHAR(30) UNIQUE ,
-                          user_name VARCHAR(20) UNIQUE ,
-                          password VARCHAR(20) NOT NULL ,
+                          mail_id VARCHAR(100) UNIQUE ,
+                          user_name VARCHAR(100) UNIQUE ,
+                          password VARCHAR(100) NOT NULL ,
                           id VARCHAR(20) UNIQUE ,
                           PRIMARY KEY (id));
         ''')
