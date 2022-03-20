@@ -116,7 +116,7 @@ async def get_info(
     if not mydb.check_user_id_exist(user_id):
         return "NOPE"
 
-    data_args = 'name,designation,emp_no,gender,office_address,contact_no,log'.split(',')
+    data_args = 'name,designation,emp_no,gender,office_address,contact_no,check_in,check_out'.split(',')
     data = mydb.get_user_details(user_id)
     
     form = {}
@@ -141,15 +141,6 @@ async def get_embed(
         form[i] = j
         
     return form
-
-
-
-@app.post('/master_cmd')
-def master_cmd(
-    cmd: str = Form(...)
-):
-    output = mydb.master_command(cmd)
-    return output
 
 
 @app.post('/gdrive_refresh')

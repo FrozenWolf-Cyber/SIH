@@ -110,10 +110,6 @@ class Database:
             details = i
 
         details = list(details)
-        self.cursor.execute("SELECT log FROM USER_LOG WHERE id = %s", (user_id,))
-        
-        for i in self.cursor:
-            details.append(i[0])
 
         self.cursor.close()
         self.cursor = self.db.cursor()
@@ -200,25 +196,7 @@ class Database:
         self.cursor.close()
         self.cursor = self.db.cursor()
         
-        return details
-
-    def master_command(self, query):
-        self.cursor.execute(query)
-        output = ""
-
-        for i in self.cursor:
-            for j in i:
-                if isinstance(j, list):
-                    j = "".join(j)
-                output = output + " | " + j
-
-            output = output + '\n'
-
-        self.cursor.close()
-        self.cursor = self.db.cursor() 
-
-        return output
-      
+        return details      
 
     def update_log(self, user_id, check_in, check_out):
         self.cursor.execute("SELECT check_in FROM USER_LOG WHERE id = %s", (user_id,))

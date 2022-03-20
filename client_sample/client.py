@@ -46,21 +46,7 @@ user_id = x.text
 
 ## GET INFO
 url = 'http://127.0.0.1:5000/get_info'
-### mail_id user_name password name age address contact_no blood_grp
 data = {'user_id' : user_id}
-
-x = requests.post(url, data= data)
-print(x.text)
-
-## CHECK TABLES
-url = 'http://127.0.0.1:5000/master_cmd'
-
-data = {'cmd' : "SELECT * FROM USER_LOGIN"}
-
-x = requests.post(url, data= data)
-print(x.text)
-
-data = {'cmd' : "SELECT * FROM USER_LOG"}
 
 x = requests.post(url, data= data)
 print(x.text)
@@ -69,7 +55,6 @@ print(x.text)
 url = 'http://127.0.0.1:5000/get_embed'
 
 data = {'user_id' : user_id}
-
 x = requests.post(url, data= data)
 print(x.text)
 
@@ -79,10 +64,3 @@ url = 'http://127.0.0.1:5000/update_log'
 x = requests.post(url, data= {'user_id' : user_id, "check_in":"10:53:56@06.03.2022 10:53:56@06.03.2022", "check_out":"14:53:56@06.03.2022 14:53:56@06.03.2022"})
 print(x.text)
 
-
-## CHECK TABLES
-url = 'http://127.0.0.1:5000/master_cmd'
-data = {'cmd' : "SELECT * FROM USER_LOG"}
-
-x = requests.post(url, data= data)
-print(x.text)
