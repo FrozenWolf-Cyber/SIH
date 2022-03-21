@@ -35,10 +35,9 @@ class Database:
         ''')
 
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS USER_LOG ( 
-                          id VARCHAR(20) UNIQUE ,
-                          check_in VARCHAR(10000),
-                          check_out VARCHAR(10000),
-                          PRIMARY KEY (id));
+                          id VARCHAR(20)  ,
+                          check_in TIMESTAMP,
+                          check_out TIMESTAMP);
         ''')
 
         self.cursor.close()
@@ -96,7 +95,7 @@ class Database:
         user_name, password, mail_id, name, designation, emp_no, gender, user_id, office_address, contact_no, embed1, embed2, embed3 = data
         self.cursor.execute('INSERT INTO USER_LOGIN (mail_id , user_name , password , id) VALUES (%s, %s, %s, %s)',(mail_id, user_name, password, user_id))
         self.cursor.execute('INSERT INTO USER_INFO (id , name , designation, emp_no , gender, office_address , contact_no , embed1, embed2, embed3) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',(user_id, name, designation, emp_no, gender, office_address, contact_no, embed1, embed2, embed3))
-        self.cursor.execute('INSERT INTO USER_LOG (id , check_in, check_out) VALUES (%s , %s, %s)', (user_id, '', ''))
+        # self.cursor.execute('INSERT INTO USER_LOG (id) VALUES (%s)', (user_id,))
         self.db.commit()
         self.cursor.close()
         self.cursor = self.db.cursor()
@@ -199,28 +198,16 @@ class Database:
         return details      
 
     def update_log(self, user_id, check_in, check_out):
-        self.cursor.execute("SELECT check_in FROM USER_LOG WHERE id = %s", (user_id,))
+        # Input format : Date-Month-Year@Hour:Minute:Seconds
+        # Required format : Year-Month-Date@Hour:Minute:Seconds
 
-        log = '' # Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year
-        for i in self.cursor:
-            log = i
+        temp = check_in.split('@')
+        check_in = '-'.join(temp[0].split('-')[::-1]) + '@' + temp[1]
 
-        log = log[0]
-        log  = log + check_in
+        temp = check_out.split('@')
+        check_out = '-'.join(temp[0].split('-')[::-1])
 
-        self.cursor.execute("UPDATE USER_LOG set check_in = %s WHERE id = %s", (log, user_id))
-
-        self.cursor.execute("SELECT check_out FROM USER_LOG WHERE id = %s", (user_id,))
-
-        log = '' # Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year Hour:Minute:Second@Date.Month.Year-Hour:Minute:Second@Date.Month.Year
-        for i in self.cursor:
-            log = i
-
-        log = log[0]
-        log  = log + check_out
-
-        self.cursor.execute("UPDATE USER_LOG set check_out = %s WHERE id = %s", (log, user_id))
-
+        self.cursor.execute("INSERT INTO USER_LOG (id, check_in, check_out) VALUES (%s, %s, %s)", (user_id,check_in, check_out))
         self.cursor.close()
         self.db.commit()  
         self.cursor = self.db.cursor()   
