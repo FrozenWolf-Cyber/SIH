@@ -38,10 +38,10 @@ def update_log(
     user_id = user_id[1:-1]
 
     if check_in == "blah-null":
-        check_in = ""
+        check_in = None
 
     if check_out == "blah-null":
-        check_out = ""
+        check_out = None
 
     mydb.update_log(user_id, check_in, check_out)
 

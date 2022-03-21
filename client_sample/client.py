@@ -59,8 +59,12 @@ x = requests.post(url, data= data)
 print(x.text)
 
 ## UPDATE LOG
-time.sleep(0.1)
 url = 'http://127.0.0.1:5000/update_log'
-x = requests.post(url, data= {'user_id' : user_id, "check_in":"10:53:56@06.03.2022 10:53:56@06.03.2022", "check_out":"14:53:56@06.03.2022 14:53:56@06.03.2022"})
+x = requests.post(url, data= {'user_id' : user_id, "check_in":"06.03.2022@10:53:56", "check_out":"blah-null"})
 print(x.text)
 
+x = requests.post(url, data= {'user_id' : user_id, "check_in":"blah-null","check_out":"06.03.2022@10:53:56"})
+print(x.text)
+
+x = requests.post(url, data= {'user_id' : user_id, "check_in":"06.03.2022@10:53:56", "check_out":"blah-null"})
+print(x.text)

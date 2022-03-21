@@ -201,13 +201,17 @@ class Database:
         # Input format : Date-Month-Year@Hour:Minute:Seconds
         # Required format : Year-Month-Date@Hour:Minute:Seconds
 
-        temp = check_in.split('@')
-        check_in = '-'.join(temp[0].split('-')[::-1]) + '@' + temp[1]
+        if check_in is not None:
+            temp = check_in.split('@')
+            check_in = '-'.join(temp[0].split('-')[::-1]) + '@' + temp[1]
+            self.cursor.execute("INSERT INTO USER_LOG (id, check_in) VALUES (%s, %s)", (user_id,check_in))
 
-        temp = check_out.split('@')
-        check_out = '-'.join(temp[0].split('-')[::-1])
+        else :
+            temp = check_out.split('@')
+            check_out = '-'.join(temp[0].split('-')[::-1])
+            self.cursor.execute("UPDATE USER_LOG set check_out = %s WHERE id = %s AND check_out IS NULL", (check_out, user_id))
 
-        self.cursor.execute("INSERT INTO USER_LOG (id, check_in, check_out) VALUES (%s, %s, %s)", (user_id,check_in, check_out))
+        
         self.cursor.close()
         self.db.commit()  
         self.cursor = self.db.cursor()   
