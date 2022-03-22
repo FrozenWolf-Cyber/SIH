@@ -37,6 +37,9 @@ def update_log(
 ):
     user_id = user_id[1:-1]
 
+    if not mydb.check_user_id_exist(user_id):
+        return "NOPE"
+
     if check_in == "blah-null":
         check_in = None
 
@@ -47,6 +50,16 @@ def update_log(
 
     return "LOG UPDATED"
 
+@app.post('/check_in_out_status')
+def check_in_out_status(
+    user_id : str = Form(...),
+):
+    user_id = user_id[1:-1]
+
+    if not mydb.check_user_id_exist(user_id):
+        return "NOPE"
+
+    return mydb.check_in_out(user_id)
 
 @app.post('/signup')
 async def signup(
@@ -136,7 +149,6 @@ async def get_embed(
     data = mydb.get_embeds(user_id)
     
     form = {}
-    print(data, flush=True)
     for i, j in zip(data_args, data):
         j = j[0][1:-1].split(', ')
         j = list(map(float,j))

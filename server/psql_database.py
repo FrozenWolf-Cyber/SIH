@@ -217,6 +217,26 @@ class Database:
         self.cursor = self.db.cursor()   
             
 
+    def check_in_out(self, user_id):
+        self.cursor.execute("SELECT COUNT(*) FROM USER_LOG WHERE id = %s AND check_out IS NULL", (user_id,))
+        results = None
+        code = None
+        #loop to print all the fetched details
+        for r in self.cursor.fetchone():
+            results = r
+
+        if int(results) == 0:
+            code = "CHECKED OUT"
+
+        else :
+            code = "CHECKED IN"
+
+        self.cursor.close()
+        self.db.commit() 
+        self.cursor = self.db.cursor()  
+
+        return code
+
 
 
 
