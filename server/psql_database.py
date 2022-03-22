@@ -208,7 +208,7 @@ class Database:
 
         else :
             temp = check_out.split('@')
-            check_out = '-'.join(temp[0].split('-')[::-1])
+            check_out = '-'.join(temp[0].split('-')[::-1]) + '@' + temp[1]
             self.cursor.execute("UPDATE USER_LOG set check_out = %s WHERE id = %s AND check_out IS NULL", (check_out, user_id))
 
         
