@@ -18,7 +18,7 @@ class Database:
                           designation VARCHAR(100), 
                           emp_no VARCHAR(20) NOT NULL ,
                           gender VARCHAR(20) NOT NULL ,
-                          office_address VARCHAR(100) NOT NULL ,
+                          branch_name VARCHAR(100) NOT NULL ,
                           contact_no VARCHAR(20) NOT NULL ,
                           embed1 text[],
                           embed2 text[],
@@ -39,6 +39,21 @@ class Database:
                           check_in TIMESTAMP,
                           check_out TIMESTAMP);
         ''')
+
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS GEO_LOCATION ( 
+                          branch_name VARCHAR(100)  ,
+                          latitude VARCHAR(20),
+                          longitude VARCHAR(20));
+        ''')
+
+        self.branchinfo = [('Chennai', '13.0827', '80.2707'),
+                           ('Mumbai', '19.0760', '72.8777'),
+                           ('Delhi', '28.7041', '77.1025'),
+                           ('Kolkata ', '22.5726', '88.3639'),
+                          ]
+
+        for (name_, latitude_, longitude_) in self.branchinfo:
+            self.cursor.execute('INSERT INTO GEO_LOCATION (branch_name, latitude, longitude) VALUES (%s, %s, %s)', (name_, latitude_, longitude_,))
 
         self.cursor.close()
         self.cursor = self.db.cursor()
@@ -92,9 +107,9 @@ class Database:
 
 
     def add_db(self, data):
-        user_name, password, mail_id, name, designation, emp_no, gender, user_id, office_address, contact_no, embed1, embed2, embed3 = data
+        user_name, password, mail_id, name, designation, emp_no, gender, user_id, branch_name, contact_no, embed1, embed2, embed3 = data
         self.cursor.execute('INSERT INTO USER_LOGIN (mail_id , user_name , password , id) VALUES (%s, %s, %s, %s)',(mail_id, user_name, password, user_id))
-        self.cursor.execute('INSERT INTO USER_INFO (id , name , designation, emp_no , gender, office_address , contact_no , embed1, embed2, embed3) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',(user_id, name, designation, emp_no, gender, office_address, contact_no, embed1, embed2, embed3))
+        self.cursor.execute('INSERT INTO USER_INFO (id , name , designation, emp_no , gender, branch_name , contact_no , embed1, embed2, embed3) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',(user_id, name, designation, emp_no, gender, branch_name, contact_no, embed1, embed2, embed3))
         # self.cursor.execute('INSERT INTO USER_LOG (id) VALUES (%s)', (user_id,))
         self.db.commit()
         self.cursor.close()
@@ -116,16 +131,16 @@ class Database:
         return details
 
     def update_db(self, data):
-        user_name, password, mail_id, name, designation, emp_no, gender, user_id, office_address, contact_no = data
+        user_name, password, mail_id, name, designation, emp_no, gender, user_id, branch_name, contact_no = data
         self.cursor.execute('UPDATE USER_LOGIN set mail_id = %s, user_name = %s, password = %s WHERE id = %s',(mail_id, user_name, password, user_id))
-        self.cursor.execute('UPDATE USER_INFO set name = %s, designation = %s, emp_no = %s, gender = %s, office_address = %s, contact_no = %s WHERE id = %s',(name, designation, emp_no, gender, office_address, contact_no, user_id))
+        self.cursor.execute('UPDATE USER_INFO set name = %s, designation = %s, emp_no = %s, gender = %s, branch_name = %s, contact_no = %s WHERE id = %s',(name, designation, emp_no, gender, branch_name, contact_no, user_id))
         self.db.commit()
         self.cursor.close()
         self.cursor = self.db.cursor()
         return 1
 
     def sign_up(self, data):
-        mail_id, user_name, password, name, designation, emp_no, gender, office_address, contact_no, embed1, embed2, embed3 = data
+        mail_id, user_name, password, name, designation, emp_no, gender, branch_name, contact_no, embed1, embed2, embed3 = data
         user_name_availablity = self.check_unique_data((mail_id, user_name))
         unique_id = None
         if user_name_availablity:
@@ -135,7 +150,7 @@ class Database:
                     continue
                 
                 else :
-                    self.add_db((user_name, password, mail_id, name, designation, emp_no, gender, unique_id, office_address, contact_no, embed1, embed2, embed3))
+                    self.add_db((user_name, password, mail_id, name, designation, emp_no, gender, unique_id, branch_name, contact_no, embed1, embed2, embed3))
                     break
 
         return  user_name_availablity, unique_id
@@ -181,7 +196,7 @@ class Database:
 
     def get_user_details(self, user_id):
         details = None
-        self.cursor.execute("SELECT name, designation, emp_no, gender, office_address, contact_no FROM USER_INFO WHERE id = %s", (user_id,))
+        self.cursor.execute("SELECT name, designation, emp_no, gender, branch_name, contact_no FROM USER_INFO WHERE id = %s", (user_id,))
 
         for i in self.cursor:
             details = i
@@ -238,6 +253,14 @@ class Database:
         return code
 
 
+    def get_branch_info(self, branch_name):
+        coords = []
+        self.cursor.execute("SELECT latitude, longitude FROM GEO_LOCATION WHERE branch_name = %s", (branch_name,))
+        
+        for i in self.cursor:
+            coords.append(i[0])
+
+        return {"latitude": coords[0], "longitude": coords[1]}
 
 
 
