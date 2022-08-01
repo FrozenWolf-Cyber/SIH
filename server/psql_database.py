@@ -46,6 +46,12 @@ class Database:
                           longitude VARCHAR(20));
         ''')
 
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS USER_IMG ( 
+                          id VARCHAR(20)  ,
+                          data BYTEA,
+                          PRIMARY KEY (id));
+        ''')
+
         self.branchinfo = [('Chennai', '13.0827', '80.2707'),
                            ('Mumbai', '19.0760', '72.8777'),
                            ('Delhi', '28.7041', '77.1025'),
@@ -138,6 +144,20 @@ class Database:
         self.cursor.close()
         self.cursor = self.db.cursor()
         return 1
+
+    def upload_img(self, user_id, file):
+        self.cursor.execute('INSERT INTO USER_IMG (id, data) VALUES (%s, %s)', (user_id,file))
+        self.db.commit()
+        self.cursor.close()
+        self.cursor = self.db.cursor()        
+
+    def get_img(self, user_id):
+        self.cursor.execute('SELECT data FROM USER_IMG WHERE id = %s', (user_id,))
+        data = self.cursor.fetchall()
+        self.cursor.close()
+        self.cursor = self.db.cursor()   
+
+        return data[0][0]
 
     def sign_up(self, data):
         mail_id, user_name, password, name, designation, emp_no, gender, branch_name, contact_no, embed1, embed2, embed3 = data

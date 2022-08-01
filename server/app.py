@@ -1,10 +1,15 @@
 import os
+import io
 import shutil
+import time
+import base64
 import uvicorn
-from gdrive_wrapper import gdrive
+# from gdrive_wrapper import gdrive
 from asgiref.sync import sync_to_async
+# from PIL import Image
 from psql_database import Database
 from fastapi import FastAPI, File, UploadFile, Form
+from fastapi.responses import StreamingResponse, Response
 
 
 db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
@@ -18,7 +23,7 @@ db_name = 'sih_attendance' #heroku-db
 # db_name = 'd3rhldildqlaje'
 
 mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
-mydrive = gdrive()
+# mydrive = gdrive()
 
 app = FastAPI()
 
@@ -87,12 +92,26 @@ async def signup(
     
     each_image = files
     img = each_image.filename
-    file_location = f"img_db/{user_id}/{img}"
+    file_location = f"img_db/{user_id}/{img}.png"
+
     with open(file_location, "wb+") as buffer:
         shutil.copyfileobj(each_image.file, buffer)
 
-    mydrive.upload_img_folder(user_id)
+    # pil_img = Image.open(f"img_db/{user_id}/{img}.png")
+    # pil_img.save(f"img_db/{user_id}/{img}_optimized.png", optimize=True)
+
+    # if os.path.getsize(f"img_db/{user_id}/{img}_optimized.png")>os.path.getsize(f"img_db/{user_id}/{img}.png"):
+    #     os.remove(f"img_db/{user_id}/{img}_optimized.png")
+    # else:
+    #     os.remove(f"img_db/{user_id}/{img}.png")
+    #     os.rename(f"img_db/{user_id}/{img}_optimized.png", f"img_db/{user_id}/{img}.png")
+
+
+    start = time.time()
+    mydb.upload_img(user_id, base64.b64encode(open(f"img_db/{user_id}/{img}.png",'rb').read()))
     clear_local_data(user_id)
+
+    print(start-time.time(), flush=True)
 
     return user_id
 
@@ -157,10 +176,10 @@ async def get_embed(
     return form
 
 
-@app.post('/gdrive_refresh')
-def gdrive_refresh():
-    mydrive.refresh()
-    return "FINISHED REFRESHING"
+# @app.post('/gdrive_refresh')
+# def gdrive_refresh():
+#     mydrive.refresh()
+#     return "FINISHED REFRESHING"
 
 
 @app.post('/get_branch_info')
@@ -173,6 +192,19 @@ async def get_branch_info(
         return "NOPE"
 
     return mydb.get_branch_info(branch_name)
+
+@app.post('/get_img')
+async def get_img(
+    user_id: str = Form(...),
+):
+    if not mydb.check_user_id_exist(user_id):
+        return "NOPE"
+
+    # from PIL import Image
+    # image = Image.open()
+    # image.show()
+    
+    return Response(content=base64.b64decode(mydb.get_img(user_id)), media_type="image/png")
 
 if __name__ == '__main__':
     uvicorn.run(app, port=5000)
