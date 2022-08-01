@@ -207,5 +207,16 @@ async def get_img(
     
     return Response(content=base64.b64decode(mydb.get_img(user_id)), media_type="image/png")
 
+@app.post('/get_branch_info')
+async def get_branch_info(
+    user_id: str = Form(...),
+    branch_name: str = Form(...)
+):
+    user_id = user_id[1:-1]
+    if not mydb.check_user_id_exist(user_id):
+        return "NOPE"
+
+    return mydb.get_branch_info(branch_name)
+
 if __name__ == '__main__':
     uvicorn.run(app, port=5000)
