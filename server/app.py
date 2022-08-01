@@ -197,6 +197,7 @@ async def get_branch_info(
 async def get_img(
     user_id: str = Form(...),
 ):
+    user_id = user_id[1:-1]
     if not mydb.check_user_id_exist(user_id):
         return "NOPE"
 
