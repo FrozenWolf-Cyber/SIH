@@ -1,15 +1,13 @@
 import os
-import io
 import shutil
-import time
 import base64
+from black import E
 import uvicorn
-# from gdrive_wrapper import gdrive
+import logging
 from asgiref.sync import sync_to_async
-# from PIL import Image
 from psql_database import Database
 from fastapi import FastAPI, File, UploadFile, Form
-from fastapi.responses import Response
+from fastapi.responses import Response, JSONResponse
 
 
 db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
@@ -34,6 +32,26 @@ def clear_local_data(user_id):
     os.rmdir(f"img_db/{user_id}")
 
 
+def write_img_data(user_id, each_image):
+    img = each_image.filename
+    file_location = f"img_db/{user_id}/{img}.jpg"
+
+    with open(file_location, "wb+") as buffer:
+        shutil.copyfileobj(each_image.file, buffer)
+
+
+def exception_handle(msg, func, *args):
+    try:
+        return func(*args)
+
+    except:
+        logger = logging.getLogger()
+        logging.exception(msg)
+        logger.handlers[0].flush()
+
+        return msg
+
+
 @app.post('/update_log')
 def update_log(
     user_id : str = Form(...),
@@ -51,9 +69,8 @@ def update_log(
     if check_out == "blah-null":
         check_out = None
 
-    mydb.update_log(user_id, check_in, check_out)
+    return exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.update_log, user_id, check_in, check_out)
 
-    return "LOG UPDATED"
 
 @app.post('/check_in_out_status')
 def check_in_out_status(
@@ -63,8 +80,9 @@ def check_in_out_status(
 
     if not mydb.check_user_id_exist(user_id):
         return "NOPE"
+    
+    return exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.check_in_out, user_id)
 
-    return mydb.check_in_out(user_id)
 
 @app.post('/signup')
 async def signup(
@@ -84,35 +102,33 @@ async def signup(
 ):
     data = [mail_id, user_name, password, name, designation, emp_no, gender, office_address, contact_no, embed1, embed2, embed3]
 
-    user_name_availablity, user_id = mydb.sign_up(tuple(data))
+    e = exception_handle("SERVER ERROR WHILE UPDATING SIGNUP IN PSQL", mydb.sign_up, tuple(data))
+
+    if len(e)==2:
+        user_name_availablity, user_id = e
+
+    else:
+        return e
+
     if user_id is None:
         return "ALREADY IN USE"
 
     os.mkdir(f"img_db/{user_id}")
     
     each_image = files
-    img = each_image.filename
-    file_location = f"img_db/{user_id}/{img}.jpg"
 
-    with open(file_location, "wb+") as buffer:
-        shutil.copyfileobj(each_image.file, buffer)
+    e = exception_handle("SERVER ERROR WHILE PROCESSING IMAGE DATA", write_img_data, user_id, each_image)
 
-    # pil_img = Image.open(f"img_db/{user_id}/{img}.png")
-    # pil_img.save(f"img_db/{user_id}/{img}_optimized.png", optimize=True)
+    if e is not None:
+        clear_local_data(user_id)
+        return e
 
-    # if os.path.getsize(f"img_db/{user_id}/{img}_optimized.png")>os.path.getsize(f"img_db/{user_id}/{img}.png"):
-    #     os.remove(f"img_db/{user_id}/{img}_optimized.png")
-    # else:
-    #     os.remove(f"img_db/{user_id}/{img}.png")
-    #     os.rename(f"img_db/{user_id}/{img}_optimized.png", f"img_db/{user_id}/{img}.png")
+    e = exception_handle("SERVER ERROR WHILE UPLOADING IMAGE DATA TO PSQL", mydb.upload_img, user_id, base64.b64encode(open(f"img_db/{user_id}/{each_image.filename}.jpg",'rb').read()))
 
+    if e is not None:
+        return e
 
-    start = time.time()
-    mydb.upload_img(user_id, base64.b64encode(open(f"img_db/{user_id}/{img}.jpg",'rb').read()))
     clear_local_data(user_id)
-
-    print(start-time.time(), flush=True)
-
     return user_id
 
 
@@ -124,8 +140,7 @@ async def login(
 ):
     data = [user_name_or_mail_id, password]
 
-    unique_id = mydb.user_login_details(data, type_of_login = type_of_login)
-    return str(unique_id)
+    return str(exception_handle("SERVER ERROR WHILE CHECKING LOGIN DETAILS", mydb.user_login_details, data, type_of_login))
 
 @app.post('/check_username')
 async def check_username(
@@ -145,10 +160,14 @@ async def get_info(
 ):
     user_id = user_id[1:-1]
     if not mydb.check_user_id_exist(user_id):
-        return "NOPE"
+        return "USERID DOESN'T EXIST"
 
     data_args = 'name,designation,emp_no,gender,office_address,contact_no,check_in,check_out'.split(',')
-    data = mydb.get_user_details(user_id)
+    e = exception_handle("SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL", mydb.get_user_details, user_id)
+    if e == "SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL":
+        return e
+    else:
+        data = e
     
     form = {}
     for i, j in zip(data_args, data):
@@ -162,11 +181,16 @@ async def get_embed(
 ):
     user_id = user_id[1:-1]
     if not mydb.check_user_id_exist(user_id):
-        return "NOPE"
+        return "USERID DOESN'T EXIST"
 
     data_args = 'embed1,embed2,embed3'.split(',')
-    data = mydb.get_embeds(user_id)
     
+    e = exception_handle("SERVER ERROR WHILE RETRIEVING EMBEDDINGS FROM PSQL", mydb.get_embeds, user_id)
+    if e == "SERVER ERROR WHILE RETRIEVING EMBEDDINGS FROM PSQL":
+        return e
+    else:
+        data = e
+
     form = {}
     for i, j in zip(data_args, data):
         j = j[0][1:-1].split(', ')
@@ -176,12 +200,6 @@ async def get_embed(
     return form
 
 
-# @app.post('/gdrive_refresh')
-# def gdrive_refresh():
-#     mydrive.refresh()
-#     return "FINISHED REFRESHING"
-
-
 @app.post('/get_branch_info')
 async def get_branch_info(
     user_id: str = Form(...),
@@ -189,9 +207,9 @@ async def get_branch_info(
 ):
     user_id = user_id[1:-1]
     if not mydb.check_user_id_exist(user_id):
-        return "NOPE"
+        return "USERID DOESN'T EXIST"
 
-    return mydb.get_branch_info(branch_name)
+    return exception_handle("SERVER ERROR WHILE GETTING OFFICE ADDRESS FROM PSQL", mydb.get_branch_info, branch_name)
 
 @app.post('/get_img')
 async def get_img(
@@ -199,14 +217,21 @@ async def get_img(
 ):
     user_id = user_id[1:-1]
     if not mydb.check_user_id_exist(user_id):
-        return "NOPE"
+        return "USERID DOESN'T EXIST"
 
-    # from PIL import Image
-    # image = Image.open()
-    # image.show()
-    
-    return Response(content=base64.b64decode(mydb.get_img(user_id)), media_type="image/jpg")
+    e = exception_handle("SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER", mydb.get_img, user_id)
+    if e == "SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER":
+        return e
 
+    decode_img = lambda y: Response(content=base64.b64decode(y), media_type="image/jpg")
+    return exception_handle("SERVER ERROR WHILE LOADING IMAGE FROM PSQL", decode_img, e)
+
+
+@app.exception_handler(Exception)
+async def validation_exception_handler(request, err):
+    base_error_message = f"Failed to execute: {request.method}: {request.url}"
+    # Change here to LOGGER
+    return JSONResponse(status_code=400, content={"message": f"{base_error_message}. Detail: {err}"})
 
 if __name__ == '__main__':
     uvicorn.run(app, port=5000)
