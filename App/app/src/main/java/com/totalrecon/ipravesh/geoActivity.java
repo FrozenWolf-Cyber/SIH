@@ -107,12 +107,18 @@ public class geoActivity extends AppCompatActivity {
                             if (locationResult != null && locationResult.getLocations().size() > 0) {
 
                                 int index = locationResult.getLocations().size() - 1;
+
                                 double latitude = locationResult.getLocations().get(index).getLatitude();
                                 double longitude = locationResult.getLocations().get(index).getLongitude();
-                                double init_lat = 10, init_long = 90;
-//                                if (distance(init_lat, init_long, latitude, longitude) < 100) {
 
-                                    show_coordinates("Latitude: " + latitude + "\n" + "Longitude: " + longitude,latitude,longitude);
+                                double office_ad[] = new double[2];
+                                office_ad = get_office_add();
+
+                                double dis = distance(office_ad[0], office_ad[1], latitude, longitude);
+                                // dis is in km
+                                if (dis < 0.1) {
+
+                                    show_coordinates("distance : "+(float)(dis*1000)+"m \nLatitude: " + latitude + "\n" + "Longitude: " + longitude,latitude,longitude);
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
@@ -124,9 +130,9 @@ public class geoActivity extends AppCompatActivity {
                                     }, 2000);
 
 
-//                                } else {
-//                                    display_distance_error();
-//                                }
+                                } else {
+                                    display_distance_error(dis);
+                                }
                             }
                         }
                     }, Looper.getMainLooper());
@@ -211,13 +217,19 @@ public class geoActivity extends AppCompatActivity {
         write_data(fileName , a+" "+b);
     }
 
-    public void display_distance_error() {
+    public void display_distance_error(double dis) {
         // person not in campus , automatically exit ....
+        Toast.makeText(getApplicationContext(),"Sorry , You are not in the specific location !\nDistance "+(float)(1000*dis)+" m",Toast.LENGTH_LONG).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // proceed further
+                Intent i = new Intent(geoActivity.this, check_status.class);
+                startActivity(i);
+                finish();
+            }
+        }, 2000);
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("Sorry , You are not in the specific location ! ");
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
     }
 
     public void show_error(String s) {
@@ -228,12 +240,33 @@ public class geoActivity extends AppCompatActivity {
         alertDialogBuilder.setMessage(s);
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+
     }
 
-    public double distance(double a, double b, double c, double d) {
-        double dis = sqrt((a - c) * (a - c) + (b - d) * (b - d));
-        double conversion_factor = 1;                   // to convert latitude dist to meter distsnace
-        return dis * (conversion_factor);
+    public static double[] get_office_add()
+    {
+        double [] coord = new double[2];
+        coord[0] = 10.8329443;
+        coord[1] = 78.6872046;
+        return coord;
+    }
+    public double distance(double lat1, double lon1,double lat2,double lon2)
+    {
+
+        lon1 = Math.toRadians(lon1);
+        lon2 = Math.toRadians(lon2);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+
+        // Haversine formula
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
+        double a = Math.pow(Math.sin(dlat / 2), 2)
+                + Math.cos(lat1) * Math.cos(lat2)
+                * Math.pow(Math.sin(dlon / 2),2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double r = 6371;
+        return(c * r);
     }
     public String read_data(String filename)
     {

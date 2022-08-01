@@ -84,7 +84,7 @@ public class get_password extends AppCompatActivity{
 
                             String resp1 = "\"0\"";
                             if (json_rec.equals(resp1)) {
-                                show_message("Your password is wrong!");
+                                show_message("Your password is wrong! ");
                             }
                             else {
                                 show_message("You have been logged in!");
