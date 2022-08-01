@@ -75,7 +75,7 @@ class Database:
 
     def check_user_id_exist(self, user_id):
         exist = False
-        self.cursor.execute("SELECT id FROM USER_LOGIN")
+        self.cursor.execute("SELECT id FROM USER_LOGIN WHERE id = %s",(user_id,))
         for i in self.cursor:
             if user_id == i[0]:
                 exist = True
@@ -191,15 +191,19 @@ class Database:
 
         self.cursor.close()
         self.cursor = self.db.cursor()
-        if len(id_psswrd) == 2: # id, password
+
+        if id_psswrd is None:
+            return "USERNAME/MAILID DOESN'T EXIST"
+
+        elif len(id_psswrd) == 2: # id, password
             if id_psswrd[1] == data[1]:
                 return id_psswrd[0] # returns id
             else :
-                return  pswrd_incorrect # incorrect password
+                return  "INCORRECT PASSWORD" # incorrect password
 
         else:
             #username doesnt exist
-            return 3
+            return "WHAT IN THE WORLD IS GOING ON"
 
 
     def user_login_details(self, data, type_of_login):
@@ -238,11 +242,17 @@ class Database:
 
         if check_in is not None:
             temp = check_in.split('@')
+            if len(temp)!=2:
+                return "GIVEN CHECKIN TIME IS IN WRONG FORMAT"
+
             check_in = '-'.join(temp[0].split('-')[::-1]) + '@' + temp[1]
             self.cursor.execute("INSERT INTO USER_LOG (id, check_in) VALUES (%s, %s)", (user_id,check_in))
 
         else :
             temp = check_out.split('@')
+            if len(temp)!=2:
+                return "GIVEN CHECKOUT TIME IS IN WRONG FORMAT"
+
             check_out = '-'.join(temp[0].split('-')[::-1]) + '@' + temp[1]
             self.cursor.execute("UPDATE USER_LOG set check_out = %s WHERE id = %s AND check_out IS NULL", (check_out, user_id))
 
@@ -251,6 +261,7 @@ class Database:
         self.db.commit()  
         self.cursor = self.db.cursor()   
             
+        return "LOG UPDATED"
 
     def check_in_out(self, user_id):
         self.cursor.execute("SELECT COUNT(*) FROM USER_LOG WHERE id = %s AND check_out IS NULL", (user_id,))
@@ -279,6 +290,9 @@ class Database:
         
         for i in self.cursor:
             coords.append(i[0])
+
+        if len(coords) == 0:
+            return "INCORRECT BRANCH NAME"
 
         return {"latitude": coords[0], "longitude": coords[1]}
 
