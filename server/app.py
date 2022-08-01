@@ -9,7 +9,7 @@ from asgiref.sync import sync_to_async
 # from PIL import Image
 from psql_database import Database
 from fastapi import FastAPI, File, UploadFile, Form
-from fastapi.responses import StreamingResponse, Response
+from fastapi.responses import Response
 
 
 db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
@@ -92,7 +92,7 @@ async def signup(
     
     each_image = files
     img = each_image.filename
-    file_location = f"img_db/{user_id}/{img}.png"
+    file_location = f"img_db/{user_id}/{img}.jpg"
 
     with open(file_location, "wb+") as buffer:
         shutil.copyfileobj(each_image.file, buffer)
@@ -108,7 +108,7 @@ async def signup(
 
 
     start = time.time()
-    mydb.upload_img(user_id, base64.b64encode(open(f"img_db/{user_id}/{img}.png",'rb').read()))
+    mydb.upload_img(user_id, base64.b64encode(open(f"img_db/{user_id}/{img}.jpg",'rb').read()))
     clear_local_data(user_id)
 
     print(start-time.time(), flush=True)
@@ -205,7 +205,7 @@ async def get_img(
     # image = Image.open()
     # image.show()
     
-    return Response(content=base64.b64decode(mydb.get_img(user_id)), media_type="image/png")
+    return Response(content=base64.b64decode(mydb.get_img(user_id)), media_type="image/jpg")
 
 
 if __name__ == '__main__':
