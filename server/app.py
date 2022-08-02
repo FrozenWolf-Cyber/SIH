@@ -146,9 +146,8 @@ async def login(
 async def check_username(
     username: str = Form(...),
 ):
-    data = [username]
 
-    if mydb.check_username(data):
+    if mydb.check_username(username):
         return "YES"
 
     return "NO"
@@ -225,6 +224,22 @@ async def get_img(
 
     decode_img = lambda y: Response(content=base64.b64decode(y), media_type="image/jpg")
     return exception_handle("SERVER ERROR WHILE LOADING IMAGE FROM PSQL", decode_img, e)
+
+
+# HANDLING WEBSITE REQUESTS
+@app.post('/get_log_data')
+async def get_log_data(
+    last_n_days: int = Form(...),
+):
+
+    e = exception_handle("SERVER ERROR WHILE RETRIEVING LOG DATA FROM PSQL", mydb.get_log_data, last_n_days)
+
+    return e
+
+@app.post('/get_user_overview')
+async def get_user_overview():
+
+    return exception_handle("SERVER ERROR WHILE RETRIEVING USER OVERVIEW DATA FROM PSQL", mydb.get_user_overview)
 
 
 @app.exception_handler(Exception)

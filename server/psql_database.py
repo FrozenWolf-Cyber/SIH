@@ -62,8 +62,8 @@ class Database:
             self.cursor.execute('INSERT INTO GEO_LOCATION (branch_name, latitude, longitude) VALUES (%s, %s, %s)', (name_, latitude_, longitude_,))
 
         self.cursor.close()
-        self.cursor = self.db.cursor()
         self.db.commit()
+        self.cursor = self.db.cursor()
         
 
     def generate_user_id(self): # unique id varies from 8-15 characters
@@ -75,6 +75,7 @@ class Database:
 
     def check_user_id_exist(self, user_id):
         exist = False
+        self.cursor = self.db.cursor()  
         self.cursor.execute("SELECT id FROM USER_LOGIN WHERE id = %s",(user_id,))
         for i in self.cursor:
             if user_id == i[0]:
@@ -82,11 +83,11 @@ class Database:
                 break
 
         self.cursor.close()
-        self.cursor = self.db.cursor()
         return exist
 
     def check_unique_data(self, data):
         check = True
+        self.cursor = self.db.cursor()  
         self.cursor.execute("SELECT mail_id , user_name FROM USER_LOGIN")
         for i in self.cursor:
             #mail_id , user_nam
@@ -94,36 +95,36 @@ class Database:
                 check = False
                 break
         self.cursor.close()
-        self.cursor = self.db.cursor()
         return check
 
-    def check_username(self, data):
-        check = False
-        self.cursor.execute("SELECT user_name FROM USER_LOGIN")
+    def check_username(self, user_name):
+        exist = False
+        self.cursor = self.db.cursor()  
+        self.cursor.execute("SELECT user_name FROM USER_LOGIN WHERE user_name = %s",(user_name,))
         for i in self.cursor:
-            #mail_id , user_nam
-            if data[0] == i[0]:
-                check = True
+            if user_name == i[0]:
+                exist = True
                 break
 
         self.cursor.close()
-        self.cursor = self.db.cursor()
-        return check
+        return exist
 
 
 
     def add_db(self, data):
+        self.cursor = self.db.cursor()  
         user_name, password, mail_id, name, designation, emp_no, gender, user_id, branch_name, contact_no, embed1, embed2, embed3 = data
         self.cursor.execute('INSERT INTO USER_LOGIN (mail_id , user_name , password , id) VALUES (%s, %s, %s, %s)',(mail_id, user_name, password, user_id))
         self.cursor.execute('INSERT INTO USER_INFO (id , name , designation, emp_no , gender, branch_name , contact_no , embed1, embed2, embed3) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',(user_id, name, designation, emp_no, gender, branch_name, contact_no, embed1, embed2, embed3))
         # self.cursor.execute('INSERT INTO USER_LOG (id) VALUES (%s)', (user_id,))
-        self.db.commit()
+        
         self.cursor.close()
-        self.cursor = self.db.cursor()
+        self.db.commit()
         return 1
 
     def get_embeds(self, user_id):
         details = None
+        self.cursor = self.db.cursor()  
         self.cursor.execute("SELECT embed1, embed2, embed3 FROM USER_INFO WHERE id = %s", (user_id,))
 
         for i in self.cursor:
@@ -137,25 +138,26 @@ class Database:
         return details
 
     def update_db(self, data):
+        self.cursor = self.db.cursor()  
         user_name, password, mail_id, name, designation, emp_no, gender, user_id, branch_name, contact_no = data
         self.cursor.execute('UPDATE USER_LOGIN set mail_id = %s, user_name = %s, password = %s WHERE id = %s',(mail_id, user_name, password, user_id))
         self.cursor.execute('UPDATE USER_INFO set name = %s, designation = %s, emp_no = %s, gender = %s, branch_name = %s, contact_no = %s WHERE id = %s',(name, designation, emp_no, gender, branch_name, contact_no, user_id))
-        self.db.commit()
+    
         self.cursor.close()
-        self.cursor = self.db.cursor()
+        self.db.commit()
         return 1
 
     def upload_img(self, user_id, file):
+        self.cursor = self.db.cursor()  
         self.cursor.execute('INSERT INTO USER_IMG (id, data) VALUES (%s, %s)', (user_id,file))
-        self.db.commit()
         self.cursor.close()
-        self.cursor = self.db.cursor()        
+        self.db.commit()   
 
     def get_img(self, user_id):
+        self.cursor = self.db.cursor()  
         self.cursor.execute('SELECT data FROM USER_IMG WHERE id = %s', (user_id,))
         data = self.cursor.fetchall()
         self.cursor.close()
-        self.cursor = self.db.cursor()   
 
         return data[0][0]
 
@@ -179,6 +181,8 @@ class Database:
     def check_credentials(self, data, user_name_or_mail_id): # data = [username, password]
         id_psswrd = None
         pswrd_incorrect = 0
+        self.cursor = self.db.cursor()  
+
         if user_name_or_mail_id == 'username' :
             self.cursor.execute('SELECT id , password FROM USER_LOGIN WHERE user_name = %s ', (data[0], ) )
             for i in self.cursor:
@@ -190,7 +194,6 @@ class Database:
                 id_psswrd = i
 
         self.cursor.close()
-        self.cursor = self.db.cursor()
 
         if id_psswrd is None:
             return "USERNAME/MAILID DOESN'T EXIST"
@@ -220,6 +223,7 @@ class Database:
 
     def get_user_details(self, user_id):
         details = None
+        self.cursor = self.db.cursor()  
         self.cursor.execute("SELECT name, designation, emp_no, gender, branch_name, contact_no FROM USER_INFO WHERE id = %s", (user_id,))
 
         for i in self.cursor:
@@ -232,13 +236,14 @@ class Database:
             details.append(i[0])
 
         self.cursor.close()
-        self.cursor = self.db.cursor()
         
         return details      
 
     def update_log(self, user_id, check_in, check_out):
         # Input format : Date-Month-Year@Hour:Minute:Seconds
         # Required format : Year-Month-Date@Hour:Minute:Seconds
+
+        self.cursor = self.db.cursor()  
 
         if check_in is not None:
             temp = check_in.split('@')
@@ -259,11 +264,11 @@ class Database:
         
         self.cursor.close()
         self.db.commit()  
-        self.cursor = self.db.cursor()   
             
         return "LOG UPDATED"
 
     def check_in_out(self, user_id):
+        self.cursor = self.db.cursor()  
         self.cursor.execute("SELECT COUNT(*) FROM USER_LOG WHERE id = %s AND check_out IS NULL", (user_id,))
         results = None
         code = None
@@ -278,23 +283,56 @@ class Database:
             code = "CHECKED IN"
 
         self.cursor.close()
-        self.db.commit() 
-        self.cursor = self.db.cursor()  
 
         return code
 
 
     def get_branch_info(self, branch_name):
         coords = []
+        self.cursor = self.db.cursor()
         self.cursor.execute("SELECT latitude, longitude FROM GEO_LOCATION WHERE branch_name = %s", (branch_name,))
-        
+
         for i in self.cursor:
             coords.append(i[0])
+
+        self.cursor.close()
 
         if len(coords) == 0:
             return "INCORRECT BRANCH NAME"
 
         return {"latitude": coords[0], "longitude": coords[1]}
+
+
+    def get_log_data(self, last_n_days):
+        data = {'user_id':[], 'check_in':[], 'check_out':[]}
+
+        self.cursor = self.db.cursor()
+        self.cursor.execute("SELECT id, check_in, check_out  FROM USER_LOG WHERE DATE_PART('day', CURRENT_TIMESTAMP- check_in) <= %s;", (last_n_days,))
+
+        for i in self.cursor:
+            data['user_id'].append(i[0])
+            data['check_in'].append(i[1])
+            data['check_out'].append(i[2])
+
+        self.cursor.close()
+
+        return data
+
+    def get_user_overview(self):
+        args = "id name designation emp_no gender branch_name".split(" ")
+        data = {i:[] for i in args}
+
+        self.cursor = self.db.cursor()
+        self.cursor.execute("SELECT id, name, designation, emp_no, gender, branch_name FROM USER_INFO;")
+
+        for i in self.cursor:
+            for arg_, value in zip(args, list(i)):
+                 data[arg_].append(value)
+                
+        self.cursor.close()
+
+        return data
+        
 
 
 
