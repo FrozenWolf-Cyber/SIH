@@ -21,8 +21,16 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.totalrecon.ipravesh.R;
 
 import com.google.android.gms.common.api.ApiException;
@@ -36,6 +44,13 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
+import com.totalrecon.ipravesh.data.model.VolleySingleton;
+import com.totalrecon.ipravesh.ui.login.get_password;
+
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class geoActivity extends AppCompatActivity {
 
@@ -52,7 +67,6 @@ public class geoActivity extends AppCompatActivity {
         locationRequest.setFastestInterval(2000);
 
         getCurrentLocation();
-
 
     }
 
@@ -111,28 +125,8 @@ public class geoActivity extends AppCompatActivity {
                                 double latitude = locationResult.getLocations().get(index).getLatitude();
                                 double longitude = locationResult.getLocations().get(index).getLongitude();
 
-                                double office_ad[] = new double[2];
-                                office_ad = get_office_add();
+                                check_distance(latitude , longitude);
 
-                                double dis = distance(office_ad[0], office_ad[1], latitude, longitude);
-                                // dis is in km
-                                if (dis < 0.1) {
-
-                                    show_coordinates("distance : "+(float)(dis*1000)+"m \nLatitude: " + latitude + "\n" + "Longitude: " + longitude,latitude,longitude);
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            // proceed further
-                                            Intent i = new Intent(geoActivity.this, cameraActivity.class);
-                                            startActivity(i);
-                                            finish();
-                                        }
-                                    }, 2000);
-
-
-                                } else {
-                                    display_distance_error(dis);
-                                }
                             }
                         }
                     }, Looper.getMainLooper());
@@ -202,28 +196,29 @@ public class geoActivity extends AppCompatActivity {
     }
 
     public void debug(String s) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("Message :" + s);
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-
+        Log.i("debug message","Message :" + s);
     }
 
-    public void show_coordinates(String s,double a,double b) {
-        Toast.makeText(getApplicationContext(),s + "\nGreat, you are inside your office!",Toast.LENGTH_SHORT).show();
-        // write the gps stored for further use ....
 
+    public void show_coordinates(String s,double a,double b) {
+
+        Toast.makeText(getApplicationContext(),s + "\nGreat, you are inside your office!",Toast.LENGTH_SHORT).show();
+
+        // write the gps stored for further use ....
         String fileName = "myGps";
         write_data(fileName , a+" "+b);
     }
 
     public void display_distance_error(double dis) {
         // person not in campus , automatically exit ....
-        Toast.makeText(getApplicationContext(),"Sorry , You are not in the specific location !\nDistance "+(float)(1000*dis)+" m",Toast.LENGTH_LONG).show();
+
+        show_message("Sorry , You are not in the specific location !");
+
+        // go to checkin/checkout page when out of location
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // proceed further
                 Intent i = new Intent(geoActivity.this, check_status.class);
                 startActivity(i);
                 finish();
@@ -232,23 +227,86 @@ public class geoActivity extends AppCompatActivity {
 
     }
 
-    public void show_error(String s) {
-
-        // error due to file writing and other operations
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage(s);
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-
+    public void show_message(String s) {
+        try {
+            // error due to file writing and other operations
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setMessage(s);
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
+        catch(Exception e)
+        {
+            Log.e("AlertBoxError" , e+"");
+        }
     }
 
-    public static double[] get_office_add()
+    public void check_distance(double latitude , double longitude)
     {
+
         double [] coord = new double[2];
-        coord[0] = 10.8329443;
-        coord[1] = 78.6872046;
-        return coord;
+
+        String user_id = read_data("user_id");
+        String branch_name = "Chennai";
+        // post request for fetching office address
+        String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_branch_info";
+        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
+                try {
+                    String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                    json_rec.replaceAll("\\P{Print}", "");
+
+                    Log.i("RESPONSE ", json_rec);
+
+                    Map jsonObject = new Gson().fromJson(json_rec, Map.class);
+
+                    coord[0] = Double.parseDouble(""+jsonObject.get("latitude"));
+                    coord[1] = Double.parseDouble(""+jsonObject.get("longitude"));
+                    // calculate distance
+
+                    double dis = distance(coord[0], coord[1], latitude, longitude);
+
+                    Log.i("RESPONSE",dis+"\n"+latitude+"\n"+longitude);
+
+                    // dis is in km
+                    double zero_error = 2.88 *(0.001);
+                    if (dis < 0.1 + zero_error) {
+
+                        show_coordinates("distance : "+(float)(dis*1000)+"m \nLatitude: " + latitude + "\n" + "Longitude: " + longitude,latitude,longitude);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(geoActivity.this, cameraActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        }, 2000);
+
+                    } else {
+                        display_distance_error(dis);
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_id", user_id);
+                params.put("branch_name", branch_name);
+                return params;
+            }
+        };
+        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+
     }
     public double distance(double lat1, double lon1,double lat2,double lon2)
     {
@@ -265,8 +323,9 @@ public class geoActivity extends AppCompatActivity {
                 + Math.cos(lat1) * Math.cos(lat2)
                 * Math.pow(Math.sin(dlon / 2),2);
         double c = 2 * Math.asin(Math.sqrt(a));
-        double r = 6371;
-        return(c * r);
+        double r = 6371;        // radius of earth
+        return(c * r);          // in km
+
     }
     public String read_data(String filename)
     {
