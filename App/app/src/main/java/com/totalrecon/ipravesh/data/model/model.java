@@ -3,6 +3,7 @@ package com.totalrecon.ipravesh.data.model;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -26,41 +28,55 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
-import org.tensorflow.lite.Interpreter;
+// import org.tensorflow.lite.Interpreter;
+
+import org.pytorch.IValue;
+import org.pytorch.LiteModuleLoader;
+import org.pytorch.Module;
+import org.pytorch.Tensor;
+import org.pytorch.torchvision.TensorImageUtils;
+import org.pytorch.MemoryFormat;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class model {
     FaceDetector detector;
-    Interpreter tfLite;
+    Module module;
+//    Interpreter tfLite;
 
-    int[] intValues;
-    int inputSize=112;  //Input size for model
-    boolean isModelQuantized=false;
-    float[][] embeedings;
-    float IMAGE_MEAN = 128.0f;
-    float IMAGE_STD = 128.0f;
+//    int[] intValues;
+//    int inputSize=112;  //Input size for model
+//    boolean isModelQuantized=false;
+//    float[][] embeedings;
+//    float IMAGE_MEAN = 128.0f;
+//    float IMAGE_STD = 128.0f;
     public float embeds[];
-    int OUTPUT_SIZE=192; //Output size of model
+//    int OUTPUT_SIZE=512; //Output size of model
 
-    String modelFile="mobile_face_net.tflite"; //model name
+    String modelFile="DW_seesawFaceNetv2.pt"; //model name
     Activity activity;
 
     public model(String model_name, Activity activity){
         this.modelFile = model_name;
         this.activity = activity;
         try {
-            tfLite=new Interpreter(loadModelFile(this.activity,modelFile));
+//            tfLite=new Interpreter(loadModelFile(this.activity,modelFile));
+            module = LiteModuleLoader.load(assetFilePath(this.activity, modelFile));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,9 +118,7 @@ public class model {
 
                                             recognizeImage(scaled); //Send scaled bitmap to create face embeddings.
 
-
                                         }
-
 
                                     }
                                 }).addOnCompleteListener(new OnCompleteListener<List<Face>>() {
@@ -117,6 +131,29 @@ public class model {
 
     }
 
+    /**
+     * Copies specified asset to the file in /files app directory and returns this file absolute path.
+     *
+     * @return absolute file path
+     */
+    public static String assetFilePath(Context context, String assetName) throws IOException {
+        File file = new File(context.getFilesDir(), assetName);
+        if (file.exists() && file.length() > 0) {
+            return file.getAbsolutePath();
+        }
+
+        try (InputStream is = context.getAssets().open(assetName)) {
+            try (OutputStream os = new FileOutputStream(file)) {
+                byte[] buffer = new byte[4 * 1024];
+                int read;
+                while ((read = is.read(buffer)) != -1) {
+                    os.write(buffer, 0, read);
+                }
+                os.flush();
+            }
+            return file.getAbsolutePath();
+        }
+    }
 
     private MappedByteBuffer loadModelFile(Activity activity, String MODEL_FILE) throws IOException {
 
@@ -130,57 +167,60 @@ public class model {
 
     private void recognizeImage(final Bitmap bitmap) {
         //Create ByteBuffer to store normalized image
+//
+//        ByteBuffer imgData = ByteBuffer.allocateDirect(1 * inputSize * inputSize * 3 * 4);
+//
+//        imgData.order(ByteOrder.nativeOrder());
+//
+//        intValues = new int[inputSize * inputSize];
+//
+//        //get pixel values from Bitmap to normalize
+//        bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+//
+//        imgData.rewind();
 
-        ByteBuffer imgData = ByteBuffer.allocateDirect(1 * inputSize * inputSize * 3 * 4);
-
-        imgData.order(ByteOrder.nativeOrder());
-
-        intValues = new int[inputSize * inputSize];
-
-        //get pixel values from Bitmap to normalize
-        bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-        imgData.rewind();
-
-        for (int i = 0; i < inputSize; ++i) {
-            for (int j = 0; j < inputSize; ++j) {
-                int pixelValue = intValues[i * inputSize + j];
-                if (isModelQuantized) {
-                    // Quantized model
-                    imgData.put((byte) ((pixelValue >> 16) & 0xFF));
-                    imgData.put((byte) ((pixelValue >> 8) & 0xFF));
-                    imgData.put((byte) (pixelValue & 0xFF));
-                } else { // Float model
-                    imgData.putFloat((((pixelValue >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    imgData.putFloat((((pixelValue >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    imgData.putFloat(((pixelValue & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-
-                }
-            }
-        }
+//        for (int i = 0; i < inputSize; ++i) {
+//            for (int j = 0; j < inputSize; ++j) {
+//                int pixelValue = intValues[i * inputSize + j];
+//                if (isModelQuantized) {
+//                    // Quantized model
+//                    imgData.put((byte) ((pixelValue >> 16) & 0xFF));
+//                    imgData.put((byte) ((pixelValue >> 8) & 0xFF));
+//                    imgData.put((byte) (pixelValue & 0xFF));
+//                } else { // Float model
+//                    imgData.putFloat((((pixelValue >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+//                    imgData.putFloat((((pixelValue >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+//                    imgData.putFloat(((pixelValue & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+//
+//                }
+//            }
+//        }
         //imgData is input to our model
-        Object[] inputArray = {imgData};
-
-        Map<Integer, Object> outputMap = new HashMap<>();
-
-
-        embeedings = new float[1][OUTPUT_SIZE]; //output of model will be stored in this variable
-
-        outputMap.put(0, embeedings);
+//        Object[] inputArray = {imgData};
 //
-        tfLite.runForMultipleInputsOutputs(inputArray, outputMap); //Run model
+//        Map<Integer, Object> outputMap = new HashMap<>();
 //
 //
+//        embeedings = new float[1][OUTPUT_SIZE]; //output of model will be stored in this variable
 //
-        float distance = Float.MAX_VALUE;
-        String id = "0";
-        String label = "?";
+//        outputMap.put(0, embeedings);
 
-        String[][] x = new String[][] {
-                new String[] { "foo", "bar" },
-                new String[] { "bazz" }
-        };
-        this.embeds =  embeedings[0];
+        final Tensor inputTensor = TensorImageUtils.bitmapToFloat32Tensor(bitmap,
+                TensorImageUtils.TORCHVISION_NORM_MEAN_RGB, TensorImageUtils.TORCHVISION_NORM_STD_RGB, MemoryFormat.CHANNELS_LAST);
+
+        // running the model
+        final Tensor outputTensor = module.forward(IValue.from(inputTensor)).toTensor();
+
+        // getting tensor content as java array of floats
+        final float[] scores = outputTensor.getDataAsFloatArray();
+
+//        Log.i("embeds", Arrays.toString(scores));
+
+//        tfLite.runForMultipleInputsOutputs(inputArray, outputMap); //Run model
+//
+//
+//
+        this.embeds =  scores;
     }
 
          //Compare Faces by distance between face embeddings
@@ -238,44 +278,44 @@ public class model {
     }
 
 
-
-//    Save Faces to Shared Preferences.Conversion of Recognition objects to json string
-     public void insertToSP(HashMap<String, SimilarityClassifier.Recognition> jsonMap,boolean clear) {
-         if(clear)
-             jsonMap.clear();
-         else
-             jsonMap.putAll(readFromSP());
-         String jsonString = new Gson().toJson(jsonMap);
-
-         SharedPreferences sharedPreferences = this.activity.getSharedPreferences("HashMap", MODE_PRIVATE);
-         SharedPreferences.Editor editor = sharedPreferences.edit();
-         editor.putString("map", jsonString);
-         editor.apply();
-     }
 //
-     //Load Faces from Shared Preferences.Json String to Recognition object
-     public HashMap<String, SimilarityClassifier.Recognition> readFromSP(){
-         SharedPreferences sharedPreferences = this.activity.getSharedPreferences("HashMap", MODE_PRIVATE);
-         String defValue = new Gson().toJson(new HashMap<String, SimilarityClassifier.Recognition>());
-         String json=sharedPreferences.getString("map",defValue);
-
-         TypeToken<HashMap<String,SimilarityClassifier.Recognition>> token = new TypeToken<HashMap<String,SimilarityClassifier.Recognition>>() {};
-         HashMap<String,SimilarityClassifier.Recognition> retrievedMap=new Gson().fromJson(json,token.getType());
-
-         for (Map.Entry<String, SimilarityClassifier.Recognition> entry : retrievedMap.entrySet())
-         {
-             float[][] output=new float[1][OUTPUT_SIZE];
-             ArrayList arrayList= (ArrayList) entry.getValue().getExtra();
-             arrayList = (ArrayList) arrayList.get(0);
-             for (int counter = 0; counter < arrayList.size(); counter++) {
-                 output[0][counter]= ((Double) arrayList.get(counter)).floatValue();
-             }
-             entry.getValue().setExtra(output);
-
-
-         }
-         return retrievedMap;
-     }
+////    Save Faces to Shared Preferences.Conversion of Recognition objects to json string
+//     public void insertToSP(HashMap<String, SimilarityClassifier.Recognition> jsonMap,boolean clear) {
+//         if(clear)
+//             jsonMap.clear();
+//         else
+//             jsonMap.putAll(readFromSP());
+//         String jsonString = new Gson().toJson(jsonMap);
+//
+//         SharedPreferences sharedPreferences = this.activity.getSharedPreferences("HashMap", MODE_PRIVATE);
+//         SharedPreferences.Editor editor = sharedPreferences.edit();
+//         editor.putString("map", jsonString);
+//         editor.apply();
+//     }
+////
+//     //Load Faces from Shared Preferences.Json String to Recognition object
+//     public HashMap<String, SimilarityClassifier.Recognition> readFromSP(){
+//         SharedPreferences sharedPreferences = this.activity.getSharedPreferences("HashMap", MODE_PRIVATE);
+//         String defValue = new Gson().toJson(new HashMap<String, SimilarityClassifier.Recognition>());
+//         String json=sharedPreferences.getString("map",defValue);
+//
+//         TypeToken<HashMap<String,SimilarityClassifier.Recognition>> token = new TypeToken<HashMap<String,SimilarityClassifier.Recognition>>() {};
+//         HashMap<String,SimilarityClassifier.Recognition> retrievedMap=new Gson().fromJson(json,token.getType());
+//
+//         for (Map.Entry<String, SimilarityClassifier.Recognition> entry : retrievedMap.entrySet())
+//         {
+//             float[][] output=new float[1][OUTPUT_SIZE];
+//             ArrayList arrayList= (ArrayList) entry.getValue().getExtra();
+//             arrayList = (ArrayList) arrayList.get(0);
+//             for (int counter = 0; counter < arrayList.size(); counter++) {
+//                 output[0][counter]= ((Double) arrayList.get(counter)).floatValue();
+//             }
+//             entry.getValue().setExtra(output);
+//
+//
+//         }
+//         return retrievedMap;
+//     }
 
 
 }
