@@ -1,7 +1,6 @@
 import os
 import shutil
 import base64
-from black import E
 import uvicorn
 import logging
 from psql_database import Database

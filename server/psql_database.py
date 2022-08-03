@@ -1,6 +1,5 @@
 import databases
 import sqlalchemy
-from pydantic import PostgresDsn
 import random
 import string
 
@@ -12,7 +11,7 @@ class Database:
         self.database = databases.Database(DATABASE_URL)
         self.metadata = sqlalchemy.MetaData()
 
-        self.engine = sqlalchemy.create_engine(DATABASE_URL, pool_size=3, max_overflow=0)
+        self.engine = sqlalchemy.create_engine(DATABASE_URL)
         self.metadata.create_all(self.engine)
 
 
