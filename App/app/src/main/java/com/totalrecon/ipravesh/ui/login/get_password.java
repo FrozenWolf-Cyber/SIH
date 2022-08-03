@@ -84,7 +84,7 @@ public class get_password extends AppCompatActivity{
 
                             String resp1 = "\"0\"";
                             if (json_rec.equals(resp1)) {
-                                show_message("Your password is wrong!");
+                                show_message("Your password is wrong! ");
                             }
                             else {
                                 show_message("You have been logged in!");
@@ -106,6 +106,8 @@ public class get_password extends AppCompatActivity{
 
                                 Log.i("USERID in obj2",obj2.user_id);
                                 json_rec.replaceAll("\"","");
+
+                                write_data("user_id" , json_rec);
 
                                 if (obj2.user_id.equals(json_rec)) {
                                     // Embeds already there
