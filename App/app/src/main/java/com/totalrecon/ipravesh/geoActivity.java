@@ -247,45 +247,61 @@ public class geoActivity extends AppCompatActivity {
         double [] coord = new double[2];
 
         String user_id = read_data("user_id");
-        String branch_name = "Chennai";
+        String branch_name = read_data("branch_name");
         // post request for fetching office address
         String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_branch_info";
+
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
             @Override
             public void onResponse(NetworkResponse response) {
                 try {
                     String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                     json_rec.replaceAll("\\P{Print}", "");
-
                     Log.i("RESPONSE ", json_rec);
-
-                    Map jsonObject = new Gson().fromJson(json_rec, Map.class);
-
-                    coord[0] = Double.parseDouble(""+jsonObject.get("latitude"));
-                    coord[1] = Double.parseDouble(""+jsonObject.get("longitude"));
-                    // calculate distance
-
-                    double dis = distance(coord[0], coord[1], latitude, longitude);
-
-                    Log.i("RESPONSE",dis+"\n"+latitude+"\n"+longitude);
-
-                    // dis is in km
-                    double zero_error = 2.88 *(0.001);
-                    if (dis < 0.1 + zero_error) {
-
-                        show_coordinates("distance : "+(float)(dis*1000)+"m \nLatitude: " + latitude + "\n" + "Longitude: " + longitude,latitude,longitude);
+                    debug(json_rec);
+                    if(json_rec.equals("\"INCORRECT BRANCH NAME\""))
+                    {
+                        show_message("Incorrect branch name of employee\n"+"branch_name : "+branch_name);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Intent i = new Intent(geoActivity.this, cameraActivity.class);
+                                Intent i = new Intent(geoActivity.this, check_status.class);
                                 startActivity(i);
                                 finish();
                             }
                         }, 2000);
 
-                    } else {
-                        display_distance_error(dis);
                     }
+                    else{
+                        Map jsonObject = new Gson().fromJson(json_rec, Map.class);
+
+                        coord[0] = Double.parseDouble(""+jsonObject.get("latitude"));
+                        coord[1] = Double.parseDouble(""+jsonObject.get("longitude"));
+                        // calculate distance
+
+                        double dis = distance(coord[0], coord[1], latitude, longitude);
+
+                        Log.i("RESPONSE",dis+"\n"+latitude+"\n"+longitude);
+
+                        // dis is in km
+                        double zero_error = 2.88 *(0.001);
+                        if (dis < 0.1 + zero_error) {
+
+                            show_coordinates("distance : "+(float)(dis*1000)+"m \nLatitude: " + latitude + "\n" + "Longitude: " + longitude,latitude,longitude);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent i = new Intent(geoActivity.this, cameraActivity.class);
+                                    startActivity(i);
+                                    finish();
+                                }
+                            }, 2000);
+
+                        } else {
+                            display_distance_error(dis);
+                        }
+                    }
+
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
