@@ -4,9 +4,9 @@ import base64
 from black import E
 import uvicorn
 import logging
-from asgiref.sync import sync_to_async
 from psql_database import Database
 from fastapi import FastAPI, File, UploadFile, Form
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse
 
 
@@ -21,18 +21,26 @@ db_name = 'sih_attendance' #heroku-db
 # db_name = 'd3rhldildqlaje'
 
 mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
+
 # mydrive = gdrive()
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
-def clear_local_data(user_id):
+async def clear_local_data(user_id):
     for img in os.listdir(f"img_db/{user_id}"):
         os.remove(f"img_db/{user_id}/{img}")
 
     os.rmdir(f"img_db/{user_id}")
 
 
-def write_img_data(user_id, each_image):
+async def write_img_data(user_id, each_image):
     img = each_image.filename
     file_location = f"img_db/{user_id}/{img}.jpg"
 
@@ -40,9 +48,9 @@ def write_img_data(user_id, each_image):
         shutil.copyfileobj(each_image.file, buffer)
 
 
-def exception_handle(msg, func, *args):
+async def exception_handle(msg, func, *args):
     try:
-        return func(*args)
+        return await func(*args)
 
     except:
         logger = logging.getLogger()
@@ -53,14 +61,14 @@ def exception_handle(msg, func, *args):
 
 
 @app.post('/update_log')
-def update_log(
+async def update_log(
     user_id : str = Form(...),
     check_in: str = Form(...),
     check_out: str = Form(...)
 ):
     user_id = user_id[1:-1]
 
-    if not mydb.check_user_id_exist(user_id):
+    if not await mydb.check_user_id_exist(user_id):
         return "NOPE"
 
     if check_in == "blah-null":
@@ -69,19 +77,19 @@ def update_log(
     if check_out == "blah-null":
         check_out = None
 
-    return exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.update_log, user_id, check_in, check_out)
+    return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.update_log, user_id, check_in, check_out)
 
 
 @app.post('/check_in_out_status')
-def check_in_out_status(
+async def check_in_out_status(
     user_id : str = Form(...),
 ):
     user_id = user_id[1:-1]
 
-    if not mydb.check_user_id_exist(user_id):
+    if not await mydb.check_user_id_exist(user_id):
         return "NOPE"
     
-    return exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.check_in_out, user_id)
+    return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.check_in_out, user_id)
 
 
 @app.post('/signup')
@@ -102,7 +110,7 @@ async def signup(
 ):
     data = [mail_id, user_name, password, name, designation, emp_no, gender, office_address, contact_no, embed1, embed2, embed3]
 
-    e = exception_handle("SERVER ERROR WHILE UPDATING SIGNUP IN PSQL", mydb.sign_up, tuple(data))
+    e = await exception_handle("SERVER ERROR WHILE UPDATING SIGNUP IN PSQL", mydb.sign_up, tuple(data))
 
     if len(e)==2:
         user_name_availablity, user_id = e
@@ -117,18 +125,18 @@ async def signup(
     
     each_image = files
 
-    e = exception_handle("SERVER ERROR WHILE PROCESSING IMAGE DATA", write_img_data, user_id, each_image)
+    e = await exception_handle("SERVER ERROR WHILE PROCESSING IMAGE DATA", write_img_data, user_id, each_image)
 
     if e is not None:
-        clear_local_data(user_id)
+        await clear_local_data(user_id)
         return e
 
-    e = exception_handle("SERVER ERROR WHILE UPLOADING IMAGE DATA TO PSQL", mydb.upload_img, user_id, base64.b64encode(open(f"img_db/{user_id}/{each_image.filename}.jpg",'rb').read()))
+    e = await exception_handle("SERVER ERROR WHILE UPLOADING IMAGE DATA TO PSQL", mydb.upload_img, user_id, base64.b64encode(open(f"img_db/{user_id}/{each_image.filename}.jpg",'rb').read()))
 
     if e is not None:
         return e
 
-    clear_local_data(user_id)
+    await clear_local_data(user_id)
     return user_id
 
 
@@ -140,14 +148,14 @@ async def login(
 ):
     data = [user_name_or_mail_id, password]
 
-    return str(exception_handle("SERVER ERROR WHILE CHECKING LOGIN DETAILS", mydb.user_login_details, data, type_of_login))
+    return str(await exception_handle("SERVER ERROR WHILE CHECKING LOGIN DETAILS", mydb.user_login_details, data, type_of_login))
 
 @app.post('/check_username')
 async def check_username(
     username: str = Form(...),
 ):
 
-    if mydb.check_username(username):
+    if await mydb.check_username(username):
         return "YES"
 
     return "NO"
@@ -158,11 +166,11 @@ async def get_info(
     user_id: str = Form(...)
 ):
     user_id = user_id[1:-1]
-    if not mydb.check_user_id_exist(user_id):
+    if not await mydb.check_user_id_exist(user_id):
         return "USERID DOESN'T EXIST"
 
     data_args = 'name,designation,emp_no,gender,office_address,contact_no,check_in,check_out'.split(',')
-    e = exception_handle("SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL", mydb.get_user_details, user_id)
+    e = await exception_handle("SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL", mydb.get_user_details, user_id)
     if e == "SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL":
         return e
     else:
@@ -179,20 +187,20 @@ async def get_embed(
     user_id: str = Form(...)
 ):
     user_id = user_id[1:-1]
-    if not mydb.check_user_id_exist(user_id):
+    if not await mydb.check_user_id_exist(user_id):
         return "USERID DOESN'T EXIST"
 
     data_args = 'embed1,embed2,embed3'.split(',')
     
-    e = exception_handle("SERVER ERROR WHILE RETRIEVING EMBEDDINGS FROM PSQL", mydb.get_embeds, user_id)
+    e = await exception_handle("SERVER ERROR WHILE RETRIEVING EMBEDDINGS FROM PSQL", mydb.get_embeds, user_id)
     if e == "SERVER ERROR WHILE RETRIEVING EMBEDDINGS FROM PSQL":
         return e
     else:
         data = e
 
+    # print(len(data), flush=True)
     form = {}
     for i, j in zip(data_args, data):
-        j = j[0][1:-1].split(', ')
         j = list(map(float,j))
         form[i] = j
         
@@ -205,25 +213,25 @@ async def get_branch_info(
     branch_name: str = Form(...)
 ):
     user_id = user_id[1:-1]
-    if not mydb.check_user_id_exist(user_id):
+    if not await mydb.check_user_id_exist(user_id):
         return "USERID DOESN'T EXIST"
 
-    return exception_handle("SERVER ERROR WHILE GETTING OFFICE ADDRESS FROM PSQL", mydb.get_branch_info, branch_name)
+    return await exception_handle("SERVER ERROR WHILE GETTING OFFICE ADDRESS FROM PSQL", mydb.get_branch_info, branch_name)
 
 @app.post('/get_img')
 async def get_img(
     user_id: str = Form(...),
 ):
     user_id = user_id[1:-1]
-    if not mydb.check_user_id_exist(user_id):
+    if not await mydb.check_user_id_exist(user_id):
         return "USERID DOESN'T EXIST"
 
-    e = exception_handle("SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER", mydb.get_img, user_id)
+    e = await exception_handle("SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER", mydb.get_img, user_id)
     if e == "SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER":
         return e
 
     decode_img = lambda y: Response(content=base64.b64decode(y), media_type="image/jpg")
-    return exception_handle("SERVER ERROR WHILE LOADING IMAGE FROM PSQL", decode_img, e)
+    return decode_img(e)
 
 
 # HANDLING WEBSITE REQUESTS
@@ -232,14 +240,13 @@ async def get_log_data(
     last_n_days: int = Form(...),
 ):
 
-    e = exception_handle("SERVER ERROR WHILE RETRIEVING LOG DATA FROM PSQL", mydb.get_log_data, last_n_days)
+    return await exception_handle("SERVER ERROR WHILE RETRIEVING LOG DATA FROM PSQL", mydb.get_log_data, last_n_days)
 
-    return e
 
 @app.post('/get_user_overview')
 async def get_user_overview():
 
-    return exception_handle("SERVER ERROR WHILE RETRIEVING USER OVERVIEW DATA FROM PSQL", mydb.get_user_overview)
+    return await exception_handle("SERVER ERROR WHILE RETRIEVING USER OVERVIEW DATA FROM PSQL", mydb.get_user_overview)
 
 
 @app.exception_handler(Exception)
@@ -247,6 +254,15 @@ async def validation_exception_handler(request, err):
     base_error_message = f"Failed to execute: {request.method}: {request.url}"
     # Change here to LOGGER
     return JSONResponse(status_code=400, content={"message": f"{base_error_message}. Detail: {err}"})
+
+@app.on_event("startup")
+async def startup():
+    await mydb.database.connect()
+    await mydb.create()
+
+@app.on_event("shutdown")
+async def shutdown():
+    await mydb.database.disconnect()
 
 if __name__ == '__main__':
     uvicorn.run(app, port=5000)
