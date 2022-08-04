@@ -250,11 +250,6 @@ public class geoActivity extends AppCompatActivity {
 
         String branch_name = read_data("branch_name");
 
-        // temporary code:
-             if (branch_name.equals("Office1")){branch_name = "Chennai";}
-        else if (branch_name.equals("Office2")){branch_name = "Mumbai"; }
-        else if (branch_name.equals("Office3")){branch_name = "Kolkata";}
-
         // post request for fetching office address
         String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_branch_info";
         String finalBranch_name = branch_name;
@@ -296,7 +291,7 @@ public class geoActivity extends AppCompatActivity {
                         double zero_error = 2.88 *(0.001);
                         if (dis < 0.1 + zero_error) {
 
-                            show_coordinates("distance : "+(float)(dis*1000)+"m \nLatitude: " + latitude + "\n" + "Longitude: " + longitude,latitude,longitude);
+                            show_message("Geolocation verified successfully!");
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
