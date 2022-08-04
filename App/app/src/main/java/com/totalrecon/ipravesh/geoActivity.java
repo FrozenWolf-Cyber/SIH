@@ -288,7 +288,7 @@ public class geoActivity extends AppCompatActivity {
                         Log.i("RESPONSE",dis+"\n"+latitude+"\n"+longitude);
 
                         // dis is in km
-                        double zero_error = 2.88 *(0.001);
+                        double zero_error = 10 *(0.001);
                         if (dis < 0.1 + zero_error) {
 
                             show_message("Geolocation verified successfully!");
