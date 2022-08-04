@@ -247,9 +247,17 @@ public class geoActivity extends AppCompatActivity {
         double [] coord = new double[2];
 
         String user_id = read_data("user_id");
+
         String branch_name = read_data("branch_name");
+
+        // temporary code:
+             if (branch_name.equals("Office1")){branch_name = "Chennai";}
+        else if (branch_name.equals("Office2")){branch_name = "Mumbai"; }
+        else if (branch_name.equals("Office3")){branch_name = "Kolkata";}
+
         // post request for fetching office address
         String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_branch_info";
+        String finalBranch_name = branch_name;
 
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
             @Override
@@ -258,10 +266,11 @@ public class geoActivity extends AppCompatActivity {
                     String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                     json_rec.replaceAll("\\P{Print}", "");
                     Log.i("RESPONSE ", json_rec);
-                    debug(json_rec);
+
+
                     if(json_rec.equals("\"INCORRECT BRANCH NAME\""))
                     {
-                        show_message("Incorrect branch name of employee\n"+"branch_name : "+branch_name);
+                        show_message("Incorrect branch name of employee\n"+"branch_name : "+ finalBranch_name);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -317,7 +326,7 @@ public class geoActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("user_id", user_id);
-                params.put("branch_name", branch_name);
+                params.put("branch_name", finalBranch_name);
                 return params;
             }
         };
