@@ -11,13 +11,14 @@ app.use(sassMiddleware({
     src:path.join(__dirname,'/assets/scss'),
     dest:path.join(__dirname,'/assets/css'),
     debug:true, //untill production stage it should be true
-    outputStyle:"compressed",
+    outputStyle:"expanded",
     prefix:"/css"
  }));
 app.use(express.static('./assets'));
-app.set('views',path.join(__dirname,'/templates'));
+app.set('views',path.join(__dirname,'/views'));
 app.set('view engine','ejs');
 
+app.use('/',require('./router'));
 app.listen(port,() => {
     console.log('app :: listening on port',port);
 });
