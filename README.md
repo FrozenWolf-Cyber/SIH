@@ -70,10 +70,13 @@ FPR: 0.2126, TPR: 0.9427
 Best Threshold: 1.2628 with G-Mean: 0.8678
 FPR: 0.1963, TPR: 0.937
 
+```
+
 **6) MobileFaceNet**
 
 ![image](https://user-images.githubusercontent.com/57902078/182843910-33aa50a3-8c93-4aa2-9b82-09c5bacde5b4.png)
 
+```
 Best Threshold: 48.703 with G-Mean: 0.85
 FPR: 0.1579, TPR: 0.8579
 
