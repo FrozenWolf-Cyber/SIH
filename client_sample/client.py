@@ -29,9 +29,9 @@ def do_analysis(nth_parallel):
             'gender' : 'M',
             'office_address' : 'India',
             'contact_no' : '100',
-            'embed1' : embed,
-            'embed2' : embed,
-            'embed3' : embed,
+            'embed1' : [embed],
+            'embed2' : [embed],
+            'embed3' : [embed],
             }
 
     files = [('files', ("img", open("sp/sp_left.png", "rb"), 'image/png'))]

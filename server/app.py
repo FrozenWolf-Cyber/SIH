@@ -200,7 +200,7 @@ async def get_embed(
     # print(len(data), flush=True)
     form = {}
     for i, j in zip(data_args, data):
-        j = list(map(float,j))
+        j = list(map(float,j[0]))
         form[i] = j
         
     return form
