@@ -72,7 +72,7 @@ public class cameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         Button buttonFirst = (Button)findViewById(R.id.button_first);
 
-        my_model = new model("inference_model_993_quant.tflite", cameraActivity.this);
+        my_model = new model("mobilefacenet.tflite", cameraActivity.this);
         buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -224,19 +224,19 @@ public class cameraActivity extends AppCompatActivity {
         try {
             embeds_n = obj.embed1;
             distance = my_model.findDistance(embeds_n, user_embeds);
-            if (distance<1.000f){
+            if (distance<48.703f){
                 return "true";
             }
 
             embeds_n = obj.embed2;
             distance = my_model.findDistance(embeds_n, user_embeds);
-            if (distance<1.000f){
+            if (distance<48.703f){
                 return "true";
             }
 
             embeds_n = obj.embed3;
             distance = my_model.findDistance(embeds_n, user_embeds);
-            if (distance<1.000f){
+            if (distance<48.703f){
                 return "true";
             }
 

@@ -53,7 +53,7 @@ public class model {
     public float embeds[];
     int OUTPUT_SIZE=128; //Output size of model
 
-    String modelFile="inference_model_993_quant.tflite"; //model name
+    String modelFile="mobilefacenet.tflite"; //model name
     Activity activity;
 
     public model(String model_name, Activity activity){

@@ -61,7 +61,7 @@ public class threeshot extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_threeshot);
-        my_model = new model("inference_model_993_quant.tflite", threeshot.this);
+        my_model = new model("mobilefacenet.tflite", threeshot.this);
         imageView5 = (ImageView)findViewById(R.id.imageView5);
         imageView6 = (ImageView)findViewById(R.id.imageView6);
         imageView7 = (ImageView)findViewById(R.id.imageView7);
