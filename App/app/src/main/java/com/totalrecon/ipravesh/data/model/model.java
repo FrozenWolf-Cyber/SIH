@@ -51,9 +51,9 @@ public class model {
     float IMAGE_MEAN = 128.0f;
     float IMAGE_STD = 128.0f;
     public float embeds[];
-    int OUTPUT_SIZE=192; //Output size of model
+    int OUTPUT_SIZE=128; //Output size of model
 
-    String modelFile="mobile_face_net.tflite"; //model name
+    String modelFile="inference_model_993_quant.tflite"; //model name
     Activity activity;
 
     public model(String model_name, Activity activity){
@@ -98,7 +98,7 @@ public class model {
                                             Bitmap cropped_face = getCropBitmapByCPU(frame_bmp1, boundingBox);
 
                                             //Scale the acquired Face to 112*112 which is required input for model
-                                            Bitmap scaled = getResizedBitmap(cropped_face, 112, 112);
+                                            Bitmap scaled = getResizedBitmap(cropped_face, 112, 96);
 
                                             recognizeImage(scaled); //Send scaled bitmap to create face embeddings.
 
@@ -112,9 +112,6 @@ public class model {
                                         public void onComplete(@NonNull Task<List<Face>> task) {
                     }
                 });
-
-
-
     }
 
 
@@ -131,20 +128,20 @@ public class model {
     private void recognizeImage(final Bitmap bitmap) {
         //Create ByteBuffer to store normalized image
 
-        ByteBuffer imgData = ByteBuffer.allocateDirect(1 * inputSize * inputSize * 3 * 4);
+        ByteBuffer imgData = ByteBuffer.allocateDirect(1 * 112 * 96 * 3 * 4);
 
         imgData.order(ByteOrder.nativeOrder());
 
-        intValues = new int[inputSize * inputSize];
+        intValues = new int[112 * 96];
 
         //get pixel values from Bitmap to normalize
         bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
         imgData.rewind();
 
-        for (int i = 0; i < inputSize; ++i) {
-            for (int j = 0; j < inputSize; ++j) {
-                int pixelValue = intValues[i * inputSize + j];
+        for (int i = 0; i < 112; ++i) {
+            for (int j = 0; j < 96; ++j) {
+                int pixelValue = intValues[i * 96 + j];
                 if (isModelQuantized) {
                     // Quantized model
                     imgData.put((byte) ((pixelValue >> 16) & 0xFF));

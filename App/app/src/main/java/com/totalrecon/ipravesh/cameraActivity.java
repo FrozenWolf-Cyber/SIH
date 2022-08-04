@@ -72,7 +72,7 @@ public class cameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         Button buttonFirst = (Button)findViewById(R.id.button_first);
 
-        my_model = new model("mobile_face_net.tflite", cameraActivity.this);
+        my_model = new model("inference_model_993_quant.tflite", cameraActivity.this);
         buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
