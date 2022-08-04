@@ -105,7 +105,7 @@ public class cameraActivity extends AppCompatActivity {
 //            Log.i("BITMAP","NULL");
 //        }
         Log.i("BITMAP",photo.toString());
-        my_model.getEmbeddings((photo));
+        my_model.getEmbeddings();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

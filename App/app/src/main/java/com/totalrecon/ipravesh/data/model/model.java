@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -25,6 +27,7 @@ import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
+import com.totalrecon.ipravesh.R;
 
 import org.tensorflow.lite.Interpreter;
 
@@ -36,6 +39,7 @@ import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +52,7 @@ public class model {
     int inputSize=112;  //Input size for model
     boolean isModelQuantized=false;
     float[][] embeedings;
-    float IMAGE_MEAN = 128.0f;
+    float IMAGE_MEAN = 127.5f;
     float IMAGE_STD = 128.0f;
     public float embeds[];
     int OUTPUT_SIZE=128; //Output size of model
@@ -71,8 +75,10 @@ public class model {
         detector = FaceDetection.getClient(highAccuracyOpts);
     }
 
-    public void getEmbeddings(Bitmap img_bitmap){
-//        Bitmap img_bitmap = BitmapFactory.decodeResource(activity.getResources(), id);
+    public void getEmbeddings(){
+        Bitmap img_bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.imggokul);
+//        AssetManager assetManager = this.getAssets();
+
         InputImage image = InputImage.fromBitmap(img_bitmap, 0);
 
         Task<List<Face>> result =
@@ -91,14 +97,14 @@ public class model {
 //
                                             Bitmap frame_bmp1 =BitmapFactory.decodeByteArray(imageBytes,0,imageBytes.length);
 
-                                            //Get bounding box of face
-                                            RectF boundingBox = new RectF(face.getBoundingBox());
-
-                                            //Crop out bounding box from whole Bitmap(image)
-                                            Bitmap cropped_face = getCropBitmapByCPU(frame_bmp1, boundingBox);
+//                                            //Get bounding box of face
+//                                            RectF boundingBox = new RectF(face.getBoundingBox());
+//
+//                                            //Crop out bounding box from whole Bitmap(image)
+//                                            Bitmap cropped_face = getCropBitmapByCPU(frame_bmp1, boundingBox);
 
                                             //Scale the acquired Face to 112*112 which is required input for model
-                                            Bitmap scaled = getResizedBitmap(cropped_face, 112, 96);
+                                            Bitmap scaled = getResizedBitmap(frame_bmp1, 112, 96);
 
                                             recognizeImage(scaled); //Send scaled bitmap to create face embeddings.
 
@@ -151,12 +157,14 @@ public class model {
                     imgData.putFloat((((pixelValue >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
                     imgData.putFloat((((pixelValue >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
                     imgData.putFloat(((pixelValue & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
+                    Log.i("pixel", String.valueOf((pixelValue >> 16) & 0xFF)+' '+String.valueOf((pixelValue >> 8) & 0xFF)+' '+String.valueOf(pixelValue & 0xFF));
 
                 }
             }
         }
         //imgData is input to our model
         Object[] inputArray = {imgData};
+        Log.i("IMAGE", Arrays.toString(imgData.array()));
 
         Map<Integer, Object> outputMap = new HashMap<>();
 

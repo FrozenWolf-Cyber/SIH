@@ -121,7 +121,7 @@ public class threeshot extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == pic_id1) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            my_model.getEmbeddings((photo));
+            my_model.getEmbeddings();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -171,7 +171,7 @@ public class threeshot extends AppCompatActivity {
         }
         if (requestCode == pic_id2) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            my_model.getEmbeddings((photo));
+            my_model.getEmbeddings();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -221,7 +221,7 @@ public class threeshot extends AppCompatActivity {
         }
         if (requestCode == pic_id3) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            my_model.getEmbeddings((photo));
+            my_model.getEmbeddings();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
