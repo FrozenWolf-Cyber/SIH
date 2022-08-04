@@ -58,6 +58,8 @@ body{
                border:0px solid;
                border-radius: 50%;
                display: inline-block;
+               background-size: contain;
+               background-position: center;
             }
             .emp_name{
                 display: inline-block;
@@ -65,10 +67,10 @@ body{
             }
             .Male{
                 background-image: url('https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png');
-                background-size: contain;
-                background-position: center;
             }
-                   
+            .Female{
+                background-image: url('https://cdn3.iconfinder.com/data/icons/avatar-set/512/Avatar08-512.png'); 
+            }       
         }    
     }
 }

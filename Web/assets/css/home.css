@@ -41,6 +41,8 @@ body #emp-list .emp {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: black;
+  text-decoration: none;
 }
 
 body #emp-list .emp i {

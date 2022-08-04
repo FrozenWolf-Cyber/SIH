@@ -6,14 +6,14 @@ const data1 = {'last_n_days':300};
 const url2 = 'https://sih-smart-attendance.herokuapp.com/get_user_overview'
 
 
-// var attendance_log;
-// $.ajax(url1, {
-//     type: 'POST',  // http method
-//     data: data1,  // data to submit
-//     success: function (data, status, xhr) {
-//         attendance_log = JSON.parse(JSON.stringify(data));
-//     }
-// });
+var attendance_log;
+$.ajax(url1, {
+    type: 'POST',  
+    data: data1,  
+    success: function (data, status, xhr) {
+        attendance_log = JSON.parse(JSON.stringify(data));
+    }
+});
 
 var emp_list;
 $.ajax(url2, {
@@ -59,8 +59,13 @@ function sqlToNosql(){
 }
 function createEmpElement(emp){
    console.log(emp);
+   let emp_details = JSON.stringify({
+    id:emp.id,
+    name:emp.name
+   })
+   console.log('emp_details',emp_details);
     return `
-        <div class = 'emp'>
+        <a class = 'emp' href='/emp-info?emp_details=${emp_details}'>
             <div>
                 <div class="${ 'avatar' + " " + emp.gender}"></div>
                 <div class="emp_name">${emp.name}</div>
@@ -80,3 +85,4 @@ function startWork()
         emp_list_container.innerHTML += emp_element;
     }
 }
+
