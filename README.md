@@ -5,11 +5,13 @@ Models Analyzed :
 - [Seesaw_shareFaceNet_160](https://github.com/cvtower/seesawfacenet_pytorch) (5,392 KB)
 - [Seesaw_shuffleFaceNet_160](https://github.com/cvtower/seesawfacenet_pytorch) (5,401 KB)
 - [Seesaw_shuffleFaceNet_192](https://github.com/cvtower/seesawfacenet_pytorch) (5,401 KB)
+- MobileFaceNet (3,180 KB)
 
 ## Pretrained Models & training logs & Performance
 
 [seesawfacenet @ googledrive](https://drive.google.com/drive/folders/1n4Zi7YTqG4YoLdK3-aO8qWWEjOCcD7w9?usp=sharing) <br />
 [seesawfaceet reimplementation @ googledrive](https://drive.google.com/file/d/1Ub5CI3nqTekLnG1AH1cGrQcwblW5YWoa/edit)
+
 
 ![Image text](https://github.com/cvtower/seesawfacenet_pytorch/raw/master/figures/mobile_version.jpg)
 ![Image text](https://github.com/cvtower/seesawfacenet_pytorch/raw/master/figures/dw_version.jpg)
@@ -67,4 +69,12 @@ FPR: 0.2126, TPR: 0.9427
 ```
 Best Threshold: 1.2628 with G-Mean: 0.8678
 FPR: 0.1963, TPR: 0.937
+
+**6) MobileFaceNet**
+
+![image](https://user-images.githubusercontent.com/57902078/182843910-33aa50a3-8c93-4aa2-9b82-09c5bacde5b4.png)
+
+Best Threshold: 48.703 with G-Mean: 0.85
+FPR: 0.1579, TPR: 0.8579
+
 ```
