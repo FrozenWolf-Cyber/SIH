@@ -9,35 +9,19 @@
     <title>i-Pravesh</title>
     <link rel="stylesheet" href="/css/home.css">
     <script src="https://kit.fontawesome.com/62ef345795.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="node_modules/attendance-calendar/dist/css/attendance-calendar.css">
 </head>
 <body>
-    <h1> Admin Dashboard - Employee Info</h1>
-    <div id = 'davis'></div>
-    <div id="calender-container">
-        <div id="left-cal-nav" class="calender-nav"> <i class="fa-solid fa-left"></i> </div>
-        <div id="calender">
-            <div class="day">sun</div>
-            <div class="day">mon</div>
-            <div class="day">tues</div>
-            <div class="day">wed</div>
-            <div class="day">thu</div>
-            <div class="day">fri</div>
-            <div class="day">sat</div>
-
-            <%for(let i = 1;i <= 31;i++){%>
-                <div class="dates" id="<%= 'd'+i %>"><%= i %></div>
-            <%}%>    
-        </div>
-        <div id="right-cal-nav" class="calender-nav"><i class="fa-solid fa-right"></i></div>
-    </div>
-
-    <input type="text" name="emp_id" value="<%= locals.emp_details.id %>">
-    <input type="text" name="emp_name" value = "<%= locals.emp_details.name %>">
+    <!-- <h1> Admin Dashboard - Employee Info</h1>
+    <div id = 'davis'>
+        
+    </div> -->
+    <div id="calender_container" class="calender_container"></div>
+    <!-- <input type="text" name="emp_id" value="<%= locals.emp_details.id %>">
+    <input type="text" name="emp_name" value = "<%= locals.emp_details.name %>"> -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js"></script>
+    <script src="node_modules/attendance-calendar/dist/js/attendance-calendar.min.js"></script>
     <script src = '/js/emp_info.js'></script>
-    <script>
-
-    </script>
 </body>
 </html>
