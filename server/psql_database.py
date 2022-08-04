@@ -15,10 +15,10 @@ class Database:
         self.metadata.create_all(self.engine)
 
 
-        self.loc_database = [('Chennai', '13.0827', '80.2707'),
-                           ('Mumbai', '19.0760', '72.8777'),
-                           ('Delhi', '28.7041', '77.1025'),
-                           ('Kolkata ', '22.5726', '88.3639'),
+        self.loc_database = [('Office1', '10.83049819448061', '78.68589874213778'),
+                           ('Office2', '19.0760', '72.8777'),
+                           ('Office3', '28.7041', '77.1025'),
+                           ('Office4 ', '22.5726', '88.3639'),
                           ]
 
     
@@ -62,6 +62,10 @@ class Database:
                           data BYTEA,
                           PRIMARY KEY (id));
         ''')
+
+        for i,j,k in self.loc_database:
+            await self.database.execute("INSERT INTO GEO_LOCATION (branch_name , latitude , longitude) SELECT * FROM (SELECT '%s', '%s', '%s') AS tmp WHERE NOT EXISTS (SELECT branch_name FROM GEO_LOCATION WHERE branch_name = '%s') LIMIT 1;" % (i, j, k, i))
+        
 
 
     def generate_user_id(self): # unique id varies from 8-15 characters
@@ -254,7 +258,7 @@ class Database:
 
         for i in await self.database.fetch_all("SELECT latitude, longitude FROM GEO_LOCATION WHERE branch_name = '%s'" % (branch_name,)):
             i = tuple(i.values())
-            coords.append(i[0])
+            coords = tuple(i[0])
 
         if len(coords) == 0:
             return "INCORRECT BRANCH NAME"

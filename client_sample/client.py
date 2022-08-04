@@ -130,7 +130,7 @@ def do_analysis(nth_parallel):
     print(f"\n{nth_parallel} Get Branch nName......")
     url = 'http://127.0.0.1:5000/get_branch_info'
 
-    x = requests.post(url, data= {'user_id' : user_id, 'branch_name':'Chennai'})
+    x = requests.post(url, data= {'user_id' : user_id, 'branch_name':'Office1'})
     print(x.text)
 
     print(f"\n{nth_parallel} Get Image......")
@@ -157,7 +157,7 @@ def do_analysis(nth_parallel):
 
 
 threads = []
-for i in range(100):
+for i in range(1):
 	t = threading.Thread(target=do_analysis, args=[i])
 	t.start()
 	threads.append(t)
