@@ -7,21 +7,51 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>i-Pravesh</title>
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/emp_info.css">
     <script src="https://kit.fontawesome.com/62ef345795.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="node_modules/attendance-calendar/dist/css/attendance-calendar.css">
 </head>
 <body>
-    <!-- <h1> Admin Dashboard - Employee Info</h1>
-    <div id = 'davis'>
+    <h1> Admin Dashboard - Employee Info</h1>
+    <div id = 'davis'></div>
+    <div id="calender-container">
+        <div id="left-cal-nav" class="calender-nav"><img src="/images/left-arrow.png" alt=""></div>
+        <div id="calender">
+            <div class="day">sun</div>
+            <div class="day">mon</div>
+            <div class="day">tues</div>
+            <div class="day">wed</div>
+            <div class="day">thu</div>
+            <div class="day">fri</div>
+            <div class="day">sat</div>
+
+            <%for(let i = 1;i <= 37;i++){%>
+                <div class="dates" id="<%= 'd'+i %>"></div>
+            <%}%>    
+        </div>
+        <div id="right-cal-nav" class="calender-nav"><img src="/images/left-arrow.png" alt=""></div>
+    </div>
+    <form action="">
+        <div>
+            <label for="check-in">Check in</label>
+            <input type="text" id="check-in">
+            <button class="edit">edit</button>
+        </div>
         
-    </div> -->
-    <div id="calender_container" class="calender_container"></div>
-    <!-- <input type="text" name="emp_id" value="<%= locals.emp_details.id %>">
-    <input type="text" name="emp_name" value = "<%= locals.emp_details.name %>"> -->
+        <div>
+            <label for="check-out">Check out</label>
+            <input type="text" id="check-out">
+            <button class="edit">edit</button>
+        </div>
+        
+    </form>
+
+    <input type="text" name="emp_id" value="<%= locals.emp_details.id %>">
+    <input type="text" name="emp_name" value = "<%= locals.emp_details.name %>">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js"></script>
-    <script src="node_modules/attendance-calendar/dist/js/attendance-calendar.min.js"></script>
     <script src = '/js/emp_info.js'></script>
+    <script>
+
+    </script>
 </body>
 </html>

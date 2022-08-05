@@ -1,0 +1,111 @@
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  gap: 21px;
+  justify-items: center;
+  overflow-y: scroll;
+}
+
+body h1 {
+  border: 2px solid;
+  height: 60px;
+  width: 100%;
+  font-size: 3rem;
+  box-sizing: border-box;
+}
+
+body #davis {
+  height: 300px;
+  width: 81%;
+  border: 2px solid;
+}
+
+body #calender-container {
+  height: 450px;
+  width: 660px;
+  border: 2px solid;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+body #calender-container .calender-nav {
+  height: fit-content;
+  width: fit-content;
+}
+
+body #calender-container .calender-nav img {
+  height: 64px;
+  width: 64px;
+}
+
+body #calender-container #right-cal-nav img {
+  transform: rotate(180deg);
+}
+
+body #calender-container #calender {
+  height: fit-content;
+  width: fit-content;
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(7, 60px);
+}
+
+body #calender-container #calender .day {
+  height: 30px;
+  width: 60px;
+  border: 2px solid;
+}
+
+body #calender-container #calender .dates {
+  height: 60px !important;
+  width: 60px !important;
+}
+
+body #calender-container #calender .highlight {
+  background-color: lightgrey;
+}
+
+body #calender-container #calender .present {
+  background-color: #6eec6e;
+}
+
+body form {
+  border: 2px solid;
+  height: 90px;
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+body form input {
+  pointer-events: none;
+}
+
+body form .edit {
+  font-size: smaller;
+  color: white;
+  border: 0px solid;
+  border-radius: 0.3rem;
+  height: fit-content;
+  width: fit-content;
+  padding: 1px 3px 1px 3px;
+  background-color: grey;
+}
+
+body form .editable-input {
+  pointer-events: inherit;
+}
+
+body form #update-button {
+  background-color: #2b23c1;
+  color: white;
+  font-size: larger;
+  padding: 3px 6px 3px 6px;
+  border: 0px solid;
+  border-radius: 0.5rem;
+}
