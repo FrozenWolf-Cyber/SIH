@@ -3,6 +3,9 @@ import sqlalchemy
 import random
 import string
 
+def convert_str_to_date(x):
+    temp = x.split('@')
+    return '-'.join(temp[0].split('-')[::-1]) + '@' + temp[1]
 
 class Database:
     def __init__(self,host,user,passwd,database):
@@ -88,7 +91,7 @@ class Database:
     async def check_unique_data(self, data):
         check = True
         # d = await self.database.execute()
-        for i in await self.database.fetch_all(f"SELECT mail_id , user_name FROM USER_LOGIN WHERE user_name = '{data[1]}'"):
+        for i in await self.database.fetch_all(f"SELECT mail_id , user_name FROM USER_LOGIN WHERE user_name = '{data[1]}' OR mail_id = '{data[0]}'"):
             #mail_id , user_nam
             i = tuple(i.values())
             if data[0] == i[0] or data[1] == i[1]:
@@ -240,7 +243,17 @@ class Database:
         return "LOG UPDATED"
 
 
-    async def check_in_out(self, user_id):
+    async def modify_log(self, user_id, old_check_in, old_check_out, new_check_in, new_check_out):
+        # Input format : Date-Month-Year@Hour:Minute:Seconds
+        # Required format : Year-Month-Date@Hour:Minute:Seconds
+        old_check_in, old_check_out, new_check_in, new_check_out = convert_str_to_date(old_check_in), convert_str_to_date(old_check_out), convert_str_to_date(new_check_in), convert_str_to_date(new_check_out)
+        print("UPDATE USER_LOG set check_in = '%s' check_out = '%s' WHERE id = '%s' AND check_in = '%s' AND check_out = '%s'" % (new_check_in, new_check_out, user_id, old_check_in, old_check_out),flush=True)
+        await self.database.execute("UPDATE USER_LOG set check_in = '%s', check_out = '%s' WHERE id = '%s' AND check_in = '%s' AND check_out = '%s'" % (new_check_in, new_check_out, user_id, old_check_in, old_check_out))
+
+        return "LOG MODIFIED"
+        
+
+    async def check_in_out_status(self, user_id):
         results = await self.database.fetch_one("SELECT COUNT(*) FROM USER_LOG WHERE id = '%s' AND check_out IS NULL" % (user_id,))
         code = None
 
