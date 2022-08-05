@@ -17,9 +17,45 @@ body h1 {
 }
 
 body #davis {
-  height: 300px;
-  width: 81%;
+  height: 600px;
+  width: 100%;
   border: 2px solid;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+body #davis #emp-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 360px;
+  width: 240px;
+  border: 6px  groove grey;
+}
+
+body #davis #emp-details #emp-image {
+  height: 120px;
+  width: 120px;
+  border: 0px solid;
+  border-radius: 50%;
+  background-size: contain;
+  background-position: center;
+  border: 1px solid;
+}
+
+body #davis #emp-details > div {
+  width: 81%;
+  height: 45px;
+  border: 2px solid;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+body #davis #emp-details > div span {
+  font-size: smaller;
+  color: grey;
 }
 
 body #calender-container {

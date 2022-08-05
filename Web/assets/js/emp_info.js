@@ -64,14 +64,7 @@ class Calender{
       this.select_date;
       this.CheckInElement = document.querySelector('#check-in');
       this.CheckOutElement = document.querySelector('#check-out');
-      document.querySelector('#right-cal-nav').addEventListener('click',(event) => {
-        this.incMonth();
-        event.stopPropagation();
-      });
-      document.querySelector('#left-cal-nav').addEventListener('click',(event) => {
-        this.decMonth();
-        event.stopPropagation();
-      });
+      
       this.DomElement.addEventListener('click',(event) => {
          if(event.target.classList.contains('present'))
          {
@@ -169,8 +162,27 @@ class Calender{
                                                                         });
         this.renderMonth();
    }
-};
+   getDaysnum()
+   {
+      const first_date = new Date(this.year+'-'+this.month+'-01');
+      console.log(first_date);
+      const month = getAllDaysInMonth(first_date.getFullYear(), first_date.getMonth());
+      let total = 0,sun = 0;
+      month.forEach(date => {
+        if(date.getDay() == 0)
+        { 
+           sun++;
+        }
+        total++;
+      });
 
+      return {
+          total:total,
+          sundays:sun,
+          working:(total - sun)
+      };
+   }
+};
 
 const form = document.querySelector('form');
 let isUpdated = false;
@@ -216,6 +228,9 @@ form.addEventListener('click',(event) => {
 //         </div>
 //     `;   
 // }
+
+var emp_data;
+var calender;
 function startWork()
 {
     // var emp_list = sqlToNosql();
@@ -226,10 +241,9 @@ function startWork()
     //     let emp_element = createEmpElement(emp_list[emp]);
     //     emp_list_container.innerHTML += emp_element;
     // }
-
-    
-    console.log(getEmpData());
-    const calender = new Calender(getEmpData());
+    emp_data = getEmpData();
+    console.log(emp_data)
+    calender = new Calender(emp_data);
     calender.renderMonth();
 }
 
@@ -245,4 +259,5 @@ function getAllDaysInMonth(year, month) {
   
     return dates;
   }
-  
+
+console.log(emp_data);

@@ -59,10 +59,7 @@ function sqlToNosql(){
 }
 function createEmpElement(emp){
    console.log(emp);
-   let emp_details = JSON.stringify({
-    id:emp.id,
-    name:emp.name
-   })
+   let emp_details = JSON.stringify(emp)
    console.log('emp_details',emp_details);
     return `
         <a class = 'emp' href='/emp-info?emp_details=${emp_details}'>

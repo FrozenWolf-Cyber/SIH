@@ -9,9 +9,11 @@
   "author": "anandavenkatesh-a",
   "license": "ISC",
   "dependencies": {
+    "d3": "^7.6.1",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
     "node-sass-middleware": "^1.0.1",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "svg": "^0.1.0"
   }
 }
