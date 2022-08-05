@@ -49,6 +49,7 @@ function getEmpData()
         }
      }
 
+     console.log('Anand emp_log',emp_logs);
      return emp_logs;
 }
 class Calender{
@@ -75,6 +76,7 @@ class Calender{
             console.log(event.target.getAttribute('data-in').substr(11),event.target.getAttribute('data-out').substr(11));
             this.CheckInElement.value = event.target.getAttribute('data-in').substr(11);
             this.CheckOutElement.value = event.target.getAttribute('data-out').substr(11);
+            this.select_date = event.target;
          }
          else if(event.target.classList.contains('dates'))
          {
@@ -193,25 +195,49 @@ form.addEventListener('click',(event) => {
         event.preventDefault();
         let CheckInElement = document.querySelector('#check-in');
         let CheckOutElement = document.querySelector('#check-out');
-        let x = CheckInElement.value;
-        let y = CheckOutElement.value;
-        event.target.parentNode.querySelector('input').classList.add('editable-input');
-        if(!isUpdated)
-        {
-            isUpdated = true;
-            form.innerHTML += `
-            <button id='update-button'>
-                 Update 
-            </button>
-        `;
-            form.querySelector('#update-button').addEventListener('click',() => {
-                document.querySelector('#check-in').value = '';
-                document.querySelector('#check-out').value ='';        
-                window.location.reload();
-            })
-        }
-        document.querySelector('#check-in').value = x;
-        document.querySelector('#check-out').value = y;
+
+           let x = CheckInElement.value;
+           let y = CheckOutElement.value;
+            
+           event.target.parentNode.querySelector('input').classList.add('editable-input');
+            if(!isUpdated)
+            {
+                isUpdated = true;
+                form.innerHTML += `
+                <button id='update-button'>
+                    Update 
+                </button>
+            `;
+                form.querySelector('#update-button').addEventListener('click',(event) => {
+                    event.preventDefault();
+                    if(!calender.select_date.classList.contains('present'))
+                    {
+                        let data = JSON.parse(JSON.stringify({
+                            "user_id":'a'+emp_id +'a',
+                            "check_in":  calender.month + '.' + parseInt(calender.select_date.innerHTML).toLocaleString('en-US', {
+                                minimumIntegerDigits: 2,
+                                useGrouping: false
+                                                })+ '.' + calender.year
++'@'+ document.querySelector('#check-in').value,
+                            "check_out":document.querySelector('#check-out').value
+                        }));
+                        console.log(data);
+                        $.ajax('https://sih-smart-attendance.herokuapp.com/update_log', {
+                            type: 'POST',  
+                            data:data,  
+                            success: function (data, status, xhr) {
+                                console.log(data);
+                                document.querySelector('#check-in').value = '';
+                                document.querySelector('#check-out').value ='';        
+                            }
+                        });    
+                    }
+                    
+                })
+            }
+
+            document.querySelector('#check-in').value = x;
+            document.querySelector('#check-out').value = y;        
     }
 });
 //     return emp_list1;
@@ -228,6 +254,7 @@ form.addEventListener('click',(event) => {
 //         </div>
 //     `;   
 // }
+
 
 var emp_data;
 var calender;
