@@ -79,6 +79,22 @@ async def update_log(
     return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.update_log, user_id, check_in, check_out)
 
 
+@app.post('/modify_log')
+async def modify_log(
+    user_id : str = Form(...),
+    old_check_in: str = Form(...),
+    old_check_out: str = Form(...),
+    new_check_in: str = Form(...),
+    new_check_out: str = Form(...)
+):
+    user_id = user_id[1:-1]
+
+    if not await mydb.check_user_id_exist(user_id):
+        return "NOPE"
+
+    return await exception_handle("SERVER ERROR WHILE MODIFYING LOG", mydb.modify_log, user_id, old_check_in, old_check_out, new_check_in, new_check_out)
+
+
 @app.post('/check_in_out_status')
 async def check_in_out_status(
     user_id : str = Form(...),
@@ -88,7 +104,7 @@ async def check_in_out_status(
     if not await mydb.check_user_id_exist(user_id):
         return "NOPE"
     
-    return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.check_in_out, user_id)
+    return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.check_in_out_status, user_id)
 
 
 @app.post('/signup')
