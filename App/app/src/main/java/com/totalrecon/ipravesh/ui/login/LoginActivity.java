@@ -67,6 +67,8 @@ public class LoginActivity extends AppCompatActivity {
         final Button loginButton = binding.login;
         final Button signupButton = binding.signup;
 
+
+
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {
@@ -288,6 +290,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+
+    }
+    @Override
+    public void onBackPressed() {
 
     }
 

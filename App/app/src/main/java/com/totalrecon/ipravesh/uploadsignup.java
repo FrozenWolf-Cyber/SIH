@@ -101,7 +101,8 @@ public class uploadsignup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_final_upload);
-        Button button = (Button) findViewById(R.id.button2);
+        Button button = (Button) findViewById(R.id.button3);
+        Button button1 = findViewById(R.id.button4);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,6 +134,7 @@ public class uploadsignup extends AppCompatActivity {
                             clearSP();
                             Intent i = new Intent(uploadsignup.this, LoginActivity.class);
                             startActivity(i);
+                            finish();
 
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
@@ -183,6 +185,13 @@ public class uploadsignup extends AppCompatActivity {
 
             }
 
+        });
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(uploadsignup.this, threeshot.class);
+                startActivity(i);
+            }
         });
     }
 }
