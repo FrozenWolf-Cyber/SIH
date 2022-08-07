@@ -127,9 +127,8 @@ public class threeshot extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(threeshot.this, register.class);
+                Intent i = new Intent(threeshot.this, register_new_employee_cred.class);
                 startActivity(i);
-
             }
         });
     }
