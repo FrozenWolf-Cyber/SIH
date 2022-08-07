@@ -52,6 +52,13 @@ body{
             font-weight: 900;
         }
     }
+    #month-year{
+        font-size: 1.8rem;
+        height: fit-content;
+        width:fit-content;
+        padding:3px 6px 3px 6px;
+        border:2px solid;
+    }
     #calender-container{
         height: 450px;
         width: 660px;
@@ -92,6 +99,9 @@ body{
             }
             .present{
                 background-color: rgb(110, 236, 110);
+            }
+            .select{
+                border:2px solid yellow;
             }
         }
     }

@@ -1,19 +1,7 @@
 
 
-const url1 = 'https://sih-smart-attendance.herokuapp.com/get_log_data'
-const data1 = {'last_n_days':300};
-
 const url2 = 'https://sih-smart-attendance.herokuapp.com/get_user_overview'
 
-
-var attendance_log;
-$.ajax(url1, {
-    type: 'POST',  
-    data: data1,  
-    success: function (data, status, xhr) {
-        attendance_log = JSON.parse(JSON.stringify(data));
-    }
-});
 
 var emp_list;
 $.ajax(url2, {
@@ -41,7 +29,7 @@ const waitForData = async () => {
 
 waitForData();
 function sqlToNosql(){
-    var emp_list1 = {};
+    var emp_list1 = [];
     
     for(let i = 0;i < emp_list.id.length;i++)
     {
@@ -55,12 +43,12 @@ function sqlToNosql(){
         }
     }
 
+    console.log(emp_list1)
     return emp_list1;
 }
 function createEmpElement(emp){
-   console.log(emp);
+    console.log(emp)
    let emp_details = JSON.stringify(emp)
-   console.log('emp_details',emp_details);
     return `
         <a class = 'emp' href='/emp-info?emp_details=${emp_details}'>
             <div>
@@ -71,14 +59,14 @@ function createEmpElement(emp){
         </div>
     `;   
 }
+var emp_list1;
 function startWork()
 {
-    var emp_list = sqlToNosql();
-    console.log(emp_list);
+    emp_list1 = sqlToNosql();
     const emp_list_container = document.querySelector('#emp-list');
-    for(emp in emp_list)
+    for(emp of emp_list1)
     {
-        let emp_element = createEmpElement(emp_list[emp]);
+        let emp_element = createEmpElement(emp);
         emp_list_container.innerHTML += emp_element;
     }
 }

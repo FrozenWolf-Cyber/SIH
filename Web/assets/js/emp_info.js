@@ -52,6 +52,8 @@ function getEmpData()
      console.log('Anand emp_log',emp_logs);
      return emp_logs;
 }
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"];
 class Calender{
    constructor(logs)
    {
@@ -66,6 +68,7 @@ class Calender{
       this.CheckInElement = document.querySelector('#check-in');
       this.CheckOutElement = document.querySelector('#check-out');
       
+      document.querySelector('#month-year').innerHTML = monthNames[(new Date(`${this.year}-${this.month}-01`)).getMonth()] + '-'+this.year;
       this.DomElement.addEventListener('click',(event) => {
          if(event.target.classList.contains('present'))
          {
@@ -77,6 +80,11 @@ class Calender{
             this.CheckInElement.value = event.target.getAttribute('data-in').substr(11);
             this.CheckOutElement.value = event.target.getAttribute('data-out').substr(11);
             this.select_date = event.target;
+            for(let id = 1;id <= 37;id++)
+            {
+                try{this.DomElement.querySelector('#d'+id).classList.remove('select');}catch{}
+            }
+            event.target.classList.add('select');
          }
          else if(event.target.classList.contains('dates'))
          {
@@ -84,6 +92,11 @@ class Calender{
             this.CheckOutElement.value = '';
             this.select_date = event.target;
             console.log('select',this.select_date);
+            for(let id = 1;id <= 37;id++)
+            {
+                try{this.DomElement.querySelector('#d'+id).classList.remove('select');}catch{}
+            }
+            event.target.classList.add('select');
          }
          event.stopPropagation();
       });
@@ -127,6 +140,7 @@ class Calender{
 
       this.CheckInElement.value = '';
       this.CheckOutElement.value = '';
+      document.querySelector('#month-year').innerHTML = monthNames[(new Date(`${this.year}-${this.month}-01`)).getMonth()] + '-'+this.year;
    }
    incMonth()
    {
@@ -212,6 +226,19 @@ form.addEventListener('click',(event) => {
                     event.preventDefault();
                     if(!calender.select_date.classList.contains('present'))
                     {
+                        let data_check_out;
+                        if(document.querySelector('#check-out').value == '')
+                        {
+                            data_check_out = 'blah-null'
+                        }    
+                        else
+                        {
+                            data_check_out = calender.month + '.' + parseInt(calender.select_date.innerHTML).toLocaleString('en-US', {
+                                minimumIntegerDigits: 2,
+                                useGrouping: false
+                                                })+ '.' + calender.year
++'@'+ document.querySelector('#check-out').value
+                        }
                         let data = JSON.parse(JSON.stringify({
                             "user_id":'a'+emp_id +'a',
                             "check_in":  calender.month + '.' + parseInt(calender.select_date.innerHTML).toLocaleString('en-US', {
@@ -219,7 +246,7 @@ form.addEventListener('click',(event) => {
                                 useGrouping: false
                                                 })+ '.' + calender.year
 +'@'+ document.querySelector('#check-in').value,
-                            "check_out":document.querySelector('#check-out').value
+                            "check_out":data_check_out
                         }));
                         console.log(data);
                         $.ajax('https://sih-smart-attendance.herokuapp.com/update_log', {
@@ -228,7 +255,8 @@ form.addEventListener('click',(event) => {
                             success: function (data, status, xhr) {
                                 console.log(data);
                                 document.querySelector('#check-in').value = '';
-                                document.querySelector('#check-out').value ='';        
+                                document.querySelector('#check-out').value ='';     
+                                window.location.reload();   
                             }
                         });    
                     }

@@ -36,7 +36,7 @@ async function wait_for_empdata()
 }
 
 
-function davis()
+async function davis()
 {
    
     console.log('no davis');
@@ -68,6 +68,7 @@ function davis()
         catch{
             time_interval = 9*1000*60*60;
         }; 
+        console.log('in-out',check_in,check_out);
         // console.log(check_in_date,check_out_date,check_in_time,check_out_time);
         worked_time += time_interval;
       }
@@ -80,20 +81,22 @@ function davis()
     ], {
     name: d => d.name,
     value: d => d.value,
-    width:450,
-    height:450
+    width:420,
+    height:420
   });
 
-  workTimeDisplay(Math.floor((worked_time)/100/60/60)/10)
+  await workTimeDisplay(Math.floor((worked_time)/100/60/60)/10);
 }     
 wait_for_empdata();
 document.querySelector('#right-cal-nav').addEventListener('click',(event) => {
     calender.incMonth();
+    document.querySelector('#worked-time').remove();
     davis();
     event.stopPropagation();    
 });
 document.querySelector('#left-cal-nav').addEventListener('click',(event) => {
     calender.decMonth();
+    document.querySelector('#worked-time').remove();
     davis();
     event.stopPropagation();
 });
@@ -211,7 +214,7 @@ function DonutChart(data, {
     names = new d3.InternSet(names);
   
     // Chose a default color scheme based on cardinality.
-    if (colors === undefined) colors = ['green','yellow','red'];
+    if (colors === undefined) colors = ['green','red','yellow'];
     if (colors === undefined) colors = d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), names.size);
   
     // Construct scales.
@@ -270,32 +273,62 @@ function DonutChart(data, {
         .text(d => d);
   
 }
-function workTimeDisplay(worked_time)
+async function workTimeDisplay(work_time)
 {
-     //Create the SVG
-      const svg = d3.select("#worked-time")
-      .append('g');
+    let worked_time = d3.select('#davis')
+                              .append('svg')
+                              .attr('id','worked-time')
+                              .attr('height',420)
+                              .attr('width',420)
+                              .append('g');
 
-      //Create an SVG arc 
-      const arc = d3.arc()
-            .innerRadius(177)
-            .outerRadius(180)
-            .startAngle(100)
-            .endAngle(2 * 180);
-       
-      svg.append("path")
-         .attr('transform','translate(210,210)')
-         .attr("id", "arc")
-         .attr("d", arc)
-         .attr("fill","green");   
-      
-      svg.append('text')
-         .attr('id','w_time')
-         .attr('x',160)
-         .attr('y',223)
-         .style('fill','green')
-         .style('font-size','3rem')
-         .text(`${worked_time} hrs`)
+        let arc = d3.arc()
+              .innerRadius(177)
+              .outerRadius(180)
+              .startAngle(0)
+              .endAngle((2*Math.PI));
+        
+        let arc_path = worked_time.append("path")
+          .attr('transform','translate(210,210)')
+          .attr("id", "arc")
+          .attr("d", arc)
+          .attr("fill","green");   
+        
+        let text = worked_time.append('text')
+          .attr('id','w_time')
+          .style('fill','green')
+          .style('font-size','3rem')
+          .text(`${Math.floor(work_time)} hrs`);
+        
+        let text_dim_info = document.querySelector('#w_time').getBoundingClientRect();
+        let svg_dim = document.querySelector('#worked-time').getBoundingClientRect();
+        let text_x = (svg_dim.width - text_dim_info.width)/2;
+        let text_y = svg_dim.height/2;
+        
+        text.attr('x',text_x)
+            .attr('y',text_y);
+
+    for(let i = 0;i <= 100;i++)
+     {
+        //update
+        console.log('not update')
+         arc.endAngle((2*Math.PI)*(i/100));   
+         arc_path.attr('d',arc)
+         text.text(`${Math.floor(work_time*(i/100))} hrs`);
+        
+        text_dim_info = document.querySelector('#w_time').getBoundingClientRect();
+        svg_dim = document.querySelector('#worked-time').getBoundingClientRect();
+        text_x = (svg_dim.width - text_dim_info.width)/2;
+        text_y = svg_dim.height/2;
+        
+        text.attr('x',text_x)
+            .attr('y',text_y);
+
+        //wait
+        await sleep(15);
+
+     }     
+     
       //Create an SVG text element and append a textPath element
       // svg.append("text")
       // .append("textPath") //append a textPath to the text element

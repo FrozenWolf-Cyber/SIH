@@ -19,6 +19,9 @@ body{
         height: 300px;
         width: 81%;
         border:2px solid;
+        #num-of-emp{
+
+        }
     }
     #emp-list{
         height:fit-content;
@@ -63,12 +66,16 @@ body{
                 display: inline-block;
                 font-size: 2.1rem;   
             }
-            .Male{
+            .Male {
                 background-image: url('https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png');
                 background-size: contain;
                 background-position: center;
             }
-                   
+            .M{
+                background-image: url('https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png');
+                background-size: contain;
+                background-position: center;
+            }       
         }    
     }
 }

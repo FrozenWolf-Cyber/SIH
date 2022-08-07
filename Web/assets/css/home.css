@@ -78,3 +78,9 @@ body #emp-list .emp > div .Male {
   background-size: contain;
   background-position: center;
 }
+
+body #emp-list .emp > div .M {
+  background-image: url("https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png");
+  background-size: contain;
+  background-position: center;
+}
