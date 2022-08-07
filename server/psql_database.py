@@ -2,6 +2,7 @@ import databases
 import sqlalchemy
 import random
 import string
+import pickle
 
 def convert_str_to_date(x):
     temp = x.split('@')
@@ -18,22 +19,28 @@ class Database:
         self.metadata.create_all(self.engine)
 
 
-        self.loc_database = [('Office1', '10.83049819448061', '78.68589874213778'),
-                           ('Office2', '19.0760', '72.8777'),
-                           ('Office3', '28.7041', '77.1025'),
-                           ('Office4 ', '22.5726', '88.3639'),
+        self.loc_database = [{'branch_name':'Office1','latitude': '10.83049819448061', 'longitude': '78.68589874213778'},
+                           {'branch_name':'Office2', 'latitude':'19.0760', 'longitude':'72.8777'},
+                           {'branch_name':'Office3', 'latitude':'28.7041', 'longitude':'77.1025'},
+                           {'branch_name':'Office4 ','latitude': '22.5726','longitude': '88.3639'}
                           ]
 
     
     async def create(self):
-        await self.database.execute('''CREATE TABLE IF NOT EXISTS USER_INFO (
-                          id VARCHAR(20) UNIQUE ,
+        await self.database.execute('''CREATE TABLE IF NOT EXISTS EMPLOYEE_DETAILS (
+                          emp_no VARCHAR(100) UNIQUE ,
                           name VARCHAR(100) NOT NULL ,
+                          mail_id VARCHAR(100) UNIQUE ,
                           designation VARCHAR(100), 
-                          emp_no VARCHAR(20) NOT NULL ,
                           gender VARCHAR(20) NOT NULL ,
                           branch_name VARCHAR(100) NOT NULL ,
-                          contact_no VARCHAR(20) NOT NULL ,
+                          contact_no VARCHAR(100) NOT NULL ,
+                          PRIMARY KEY (emp_no));
+                          
+        ''')
+
+        await self.database.execute('''CREATE TABLE IF NOT EXISTS USER_INFO (
+                          id VARCHAR(20) UNIQUE ,
                           embed1 text[],
                           embed2 text[],
                           embed3 text[],
@@ -41,9 +48,9 @@ class Database:
         ''')
 
         await self.database.execute('''CREATE TABLE IF NOT EXISTS USER_LOGIN ( 
-                          mail_id VARCHAR(100) UNIQUE ,
                           user_name VARCHAR(100) UNIQUE ,
                           password VARCHAR(100) NOT NULL ,
+                          emp_no VARCHAR(20) UNIQUE ,
                           id VARCHAR(20) UNIQUE ,
                           PRIMARY KEY (id));
         ''')
@@ -66,8 +73,10 @@ class Database:
                           PRIMARY KEY (id));
         ''')
 
-        for i,j,k in self.loc_database:
-            await self.database.execute("INSERT INTO GEO_LOCATION (branch_name , latitude , longitude) SELECT * FROM (SELECT '%s', '%s', '%s') AS tmp WHERE NOT EXISTS (SELECT branch_name FROM GEO_LOCATION WHERE branch_name = '%s') LIMIT 1;" % (i, j, k, i))
+        await self.database.execute_many("INSERT INTO GEO_LOCATION (branch_name , latitude , longitude) SELECT * FROM (SELECT :branch_name , :latitude , :longitude) AS tmp WHERE NOT EXISTS (SELECT branch_name FROM GEO_LOCATION WHERE branch_name = :branch_name) LIMIT 1;", self.loc_database)
+        
+        sample = pickle.load(open('employee_sample.pkl','rb')) 
+        await self.database.execute_many("INSERT INTO EMPLOYEE_DETAILS (emp_no, name, mail_id, designation, gender, branch_name, contact_no) SELECT * FROM (SELECT :emp_no, :name, :mail_id, :designation, :gender, :branch_name, :contact_no) AS tmp WHERE NOT EXISTS (SELECT emp_no FROM EMPLOYEE_DETAILS WHERE emp_no = :emp_no OR mail_id = :mail_id) LIMIT 1;", sample)
         
 
 
@@ -78,20 +87,27 @@ class Database:
 
         return unique_id
 
+    async def generate_next_employee_no(self):
+        result = await self.database.fetch_one("SELECT COUNT(emp_no) FROM EMPLOYEE_DETAILS")
+        return int(tuple(result.values())[0])+1
+
+
     async def check_user_id_exist(self, user_id):
         exist = False
-        r = await self.database.execute(f"SELECT id FROM USER_LOGIN WHERE id = '{user_id}'")
-        if r is None:
-            return False
+        # print(f"SELECT id FROM USER_LOGIN WHERE id = '{user_id}'", flush=True)
+        for i in await self.database.fetch_all(f"SELECT id FROM USER_LOGIN WHERE id = '{user_id}'"):
+            i = tuple(i.values())
+            if user_id == i[0]:
+                exist = True
+                break
 
-        else: 
-            return True
+        return exist
 
 
-    async def check_unique_data(self, data):
+    async def check_master_unique_data(self, data):  #(mail_id, contact no)
         check = True
         # d = await self.database.execute()
-        for i in await self.database.fetch_all(f"SELECT mail_id , user_name FROM USER_LOGIN WHERE user_name = '{data[1]}' OR mail_id = '{data[0]}'"):
+        for i in await self.database.fetch_all(f"SELECT mail_id , contact_no FROM EMPLOYEE_DETAILS WHERE contact_no = '{data[1]}' OR mail_id = '{data[0]}'"):
             #mail_id , user_nam
             i = tuple(i.values())
             if data[0] == i[0] or data[1] == i[1]:
@@ -102,7 +118,6 @@ class Database:
 
     async def check_username(self, user_name):
         exist = False
-
         for i in await self.database.fetch_all(f"SELECT user_name FROM USER_LOGIN WHERE user_name = '{user_name}'"):
             i = tuple(i.values())
             if user_name == i[0]:
@@ -114,26 +129,29 @@ class Database:
 
 
     async def add_db(self, data):
-        user_name, password, mail_id, name, designation, emp_no, gender, user_id, branch_name, contact_no, embed1, embed2, embed3 = data
-        await self.database.execute("INSERT INTO USER_LOGIN (mail_id , user_name , password , id) VALUES ('%s', '%s', '%s', '%s')" % (mail_id, user_name, password, user_id))
-        await self.database.execute("INSERT INTO USER_INFO (id , name , designation, emp_no , gender, branch_name , contact_no , embed1, embed2, embed3) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '{%s}', '{%s}', '{%s}')" % (user_id, name, designation, emp_no, gender, branch_name, contact_no, ', '.join(embed1), ', '.join(embed2), ', '.join(embed3)))
-
+        user_name, password, emp_no, user_id, embed1, embed2, embed3 = data
+        await self.database.execute("INSERT INTO USER_LOGIN (user_name , password , id, emp_no) VALUES ('%s', '%s', '%s', '%s')" % (user_name, password, user_id, emp_no))
+        await self.database.execute("INSERT INTO USER_INFO (id, embed1, embed2, embed3) VALUES ('%s', '{%s}', '{%s}', '{%s}')" % (user_id, ', '.join(embed1), ', '.join(embed2), ', '.join(embed3)))
         return 1
 
 
-    async def get_embeds(self, user_id):
-        
+    async def add_master_db(self, data):
+        mail_id, name, designation, emp_no, gender, emp_no, contact_no, branch_name = data
+        await self.database.execute("INSERT INTO EMPLOYEE_DETAILS (mail_id, name, designation, emp_no, gender, contact_no, branch_name) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (mail_id, name, designation, emp_no, gender, contact_no, branch_name))
+        return 1
+
+
+    async def get_embeds(self, user_id):        
         for i in await self.database.fetch_all("SELECT embed1, embed2, embed3 FROM USER_INFO WHERE id = '%s'"% (user_id,)):
             details = list(i.values())
-
         return details
 
 
-    async def update_db(self, data):
-        user_name, password, mail_id, name, designation, emp_no, gender, user_id, branch_name, contact_no = data
-        await self.database.execute("UPDATE USER_LOGIN set mail_id = '%s', user_name = '%s', password = '%s' WHERE id = '%s'" % (mail_id, user_name, password, user_id))
-        await self.database.execute("UPDATE USER_INFO set name = '%s', designation = '%s', emp_no = '%s', gender = '%s', branch_name = '%s', contact_no = '%s' WHERE id = '%s'" % (name, designation, emp_no, gender, branch_name, contact_no, user_id))
-        return 1
+    # async def update_db(self, data):
+    #     user_name, password, mail_id, name, designation, emp_no, gender, user_id, branch_name, contact_no = data
+    #     await self.database.execute("UPDATE USER_LOGIN set mail_id = '%s', user_name = '%s', password = '%s' WHERE id = '%s'" % (mail_id, user_name, password, user_id))
+    #     await self.database.execute("UPDATE USER_INFO set name = '%s', designation = '%s', emp_no = '%s', gender = '%s', branch_name = '%s', contact_no = '%s' WHERE id = '%s'" % (name, designation, emp_no, gender, branch_name, contact_no, user_id))
+    #     return 1
 
 
     async def upload_img(self, user_id, file):
@@ -147,23 +165,38 @@ class Database:
         return tuple(data[0].values())[0]
 
 
-    async def sign_up(self, data):
-        mail_id, user_name, password, name, designation, emp_no, gender, branch_name, contact_no, embed1, embed2, embed3 = data
-        user_name_availablity = await self.check_unique_data((mail_id, user_name))
-        unique_id = None
+
+    async def admin_signup(self, data):
+        mail_id, name, designation, gender, branch_name, contact_no = data
+        user_name_availablity = await self.check_master_unique_data((mail_id, contact_no))
+        emp_no = None
         if user_name_availablity:
+            while True:
+                emp_no = await self.generate_next_employee_no()
+                await self.add_master_db((mail_id, name, designation, emp_no, gender, emp_no, contact_no, branch_name))
+                break
+
+        return  user_name_availablity, emp_no
+
+
+
+    async def signup(self, data):
+        user_name, password, emp_no, embed1, embed2, embed3 = data
+        user_name_availablity = await self.check_username(user_name)
+        unique_id = None
+        if not user_name_availablity:
             while True:
                 unique_id = self.generate_user_id()
                 if await self.check_user_id_exist(unique_id):
                     continue
                 
                 else :
-                    await self.add_db((user_name, password, mail_id, name, designation, emp_no, gender, unique_id, branch_name, contact_no, embed1, embed2, embed3))
+                    await self.add_db((user_name, password, emp_no, unique_id, embed1, embed2, embed3))
                     break
 
         return  user_name_availablity, unique_id
-
     
+
     async def check_credentials(self, data, user_name_or_mail_id): # data = [username, password]
         id_psswrd = None
         pswrd_incorrect = 0
@@ -174,7 +207,7 @@ class Database:
                 id_psswrd = i
 
         elif user_name_or_mail_id == 'mail_id' :
-            for i in await self.database.fetch_all("SELECT id , password  FROM USER_LOGIN WHERE mail_id = '%s' " % (data[0],) ):
+            for i in await self.database.fetch_all("SELECT USER_LOGIN.id , USER_LOGIN.password  FROM USER_LOGIN, EMPLOYEE_DETAILS  WHERE EMPLOYEE_DETAILS.mail_id = '%s' AND  USER_LOGIN.emp_no = EMPLOYEE_DETAILS.emp_no" % (data[0],) ):
                 i = tuple(i.values())
                 id_psswrd = i
 
@@ -207,7 +240,7 @@ class Database:
     async def get_user_details(self, user_id):
         details = None
 
-        for i in await self.database.fetch_all("SELECT name, designation, emp_no, gender, branch_name, contact_no FROM USER_INFO WHERE id = '%s'" % (user_id,)):
+        for i in await self.database.fetch_all("SELECT EMPLOYEE_DETAILS.name, EMPLOYEE_DETAILS.designation, EMPLOYEE_DETAILS.emp_no, EMPLOYEE_DETAILS.gender, EMPLOYEE_DETAILS.branch_name, EMPLOYEE_DETAILS.contact_no FROM USER_LOGIN, EMPLOYEE_DETAILS  WHERE USER_LOGIN.id = '%s' AND USER_LOGIN.emp_no = EMPLOYEE_DETAILS.emp_no" % (user_id,)):
             i = tuple(i.values())
             details = i
 
@@ -247,7 +280,7 @@ class Database:
         # Input format : Date-Month-Year@Hour:Minute:Seconds
         # Required format : Year-Month-Date@Hour:Minute:Seconds
         old_check_in, old_check_out, new_check_in, new_check_out = convert_str_to_date(old_check_in), convert_str_to_date(old_check_out), convert_str_to_date(new_check_in), convert_str_to_date(new_check_out)
-        print("UPDATE USER_LOG set check_in = '%s' check_out = '%s' WHERE id = '%s' AND check_in = '%s' AND check_out = '%s'" % (new_check_in, new_check_out, user_id, old_check_in, old_check_out),flush=True)
+        # print("UPDATE USER_LOG set check_in = '%s' check_out = '%s' WHERE id = '%s' AND check_in = '%s' AND check_out = '%s'" % (new_check_in, new_check_out, user_id, old_check_in, old_check_out),flush=True)
         await self.database.execute("UPDATE USER_LOG set check_in = '%s', check_out = '%s' WHERE id = '%s' AND check_in = '%s' AND check_out = '%s'" % (new_check_in, new_check_out, user_id, old_check_in, old_check_out))
 
         return "LOG MODIFIED"
@@ -295,7 +328,7 @@ class Database:
         args = "id name designation emp_no gender branch_name".split(" ")
         data = {i:[] for i in args}
 
-        for i in await self.database.fetch_all("SELECT id, name, designation, emp_no, gender, branch_name FROM USER_INFO;"):
+        for i in await self.database.fetch_all("SELECT USER_LOGIN.id, EMPLOYEE_DETAILS.name, EMPLOYEE_DETAILS.designation, EMPLOYEE_DETAILS.emp_no, EMPLOYEE_DETAILS.gender, EMPLOYEE_DETAILS.branch_name FROM USER_LOGIN, EMPLOYEE_DETAILS WHERE EMPLOYEE_DETAILS.emp_no = USER_LOGIN.emp_no;"):
             i = list(i.values())
             for arg_, value in zip(args, i):
                  data[arg_].append(value)

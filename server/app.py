@@ -14,6 +14,9 @@ db_user =  'postgres' #'be6a5ab891fb44'
 db_psswrd = '3112003' #heroku-psswrd
 db_name = 'sih_attendance' #heroku-db
 
+ADMIN_USERNAME = 'ADMIN'
+ADMIN_PSSWRD = 'ADMIN'
+
 # db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
 # db_user =  'sxxkdscneuzrwf'
 # db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
@@ -107,25 +110,45 @@ async def check_in_out_status(
     return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.check_in_out_status, user_id)
 
 
-@app.post('/signup')
-async def signup(
+@app.post('/admin_signup')
+async def admin_signup(
     mail_id: str = Form(...),
-    user_name: str = Form(...),
-    password: str = Form(...),
     name: str = Form(...),
     designation: str = Form(...),
-    emp_no: str = Form(...),
     gender: str = Form(...),
-    office_address: str = Form(...),
+    branch_name: str = Form(...),
     contact_no: str = Form(...),
+
+):
+    data = [mail_id, name, designation, gender, branch_name, contact_no]
+
+    e = await exception_handle("SERVER ERROR WHILE UPDATING ADMIN SIGNUP IN PSQL", mydb.admin_signup, tuple(data))
+
+    if len(e)==2:
+        user_name_availablity, user_id = e
+
+    else:
+        return e
+
+    if user_id is None:
+        return "ALREADY IN USE"
+
+    return user_id
+
+
+@app.post('/signup')
+async def signup(
+    user_name: str = Form(...),
+    password: str = Form(...),
+    emp_no: str = Form(...),
     embed1 : list = Form(...),
     embed2 : list = Form(...),
     embed3 : list = Form(...),
     files: UploadFile = File(...)
 ):
-    data = [mail_id, user_name, password, name, designation, emp_no, gender, office_address, contact_no, embed1, embed2, embed3]
+    data = [user_name, password, emp_no, embed1, embed2, embed3]
 
-    e = await exception_handle("SERVER ERROR WHILE UPDATING SIGNUP IN PSQL", mydb.sign_up, tuple(data))
+    e = await exception_handle("SERVER ERROR WHILE UPDATING SIGNUP IN PSQL", mydb.signup, tuple(data))
 
     if len(e)==2:
         user_name_availablity, user_id = e
@@ -155,12 +178,17 @@ async def signup(
     return user_id
 
 
+
 @app.post('/login')
 async def login(
     user_name_or_mail_id: str = Form(...),
     type_of_login: str = Form(...),
     password: str = Form(...)
 ):
+
+    if user_name_or_mail_id == ADMIN_USERNAME and password == ADMIN_PSSWRD:
+        return "ADMIN"
+        
     data = [user_name_or_mail_id, password]
 
     return str(await exception_handle("SERVER ERROR WHILE CHECKING LOGIN DETAILS", mydb.user_login_details, data, type_of_login))
@@ -184,7 +212,7 @@ async def get_info(
     if not await mydb.check_user_id_exist(user_id):
         return "USERID DOESN'T EXIST"
 
-    data_args = 'name,designation,emp_no,gender,office_address,contact_no,check_in,check_out'.split(',')
+    data_args = 'name,designation,emp_no,gender,branch_name,contact_no,check_in,check_out'.split(',')
     e = await exception_handle("SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL", mydb.get_user_details, user_id)
     if e == "SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL":
         return e
