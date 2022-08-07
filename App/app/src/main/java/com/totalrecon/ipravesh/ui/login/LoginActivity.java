@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -33,7 +34,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
-import com.totalrecon.ipravesh.register_new_employee;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -67,8 +67,6 @@ public class LoginActivity extends AppCompatActivity {
         final EditText usernameEditText = binding.username;
         final Button loginButton = binding.login;
         final Button signupButton = binding.signup;
-
-
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -124,10 +122,20 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
-
+        final LoadingDialog loadingDialog = new LoadingDialog(LoginActivity.this);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                loadingDialog.startLoadingDialog();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        loadingDialog.dismissDialog();
+                    }
+                },5000);
 
                 String username = usernameEditText.getText().toString();
                 Log.i("USERNAME LOGIN : ",username);
@@ -144,6 +152,16 @@ public class LoginActivity extends AppCompatActivity {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                loadingDialog.startLoadingDialog();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        loadingDialog.dismissDialog();
+                    }
+                },5000);
                 String s = usernameEditText.getText().toString();
 
                 String username = usernameEditText.getText().toString();
@@ -204,7 +222,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
         myEdit.putString("user_name", username);
         myEdit.commit();
-
+        final LoadingDialog loadingDialog = new LoadingDialog(LoginActivity.this);
         String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
             @Override
@@ -262,10 +280,9 @@ public class LoginActivity extends AppCompatActivity {
                     String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                     json_rec.replaceAll("\\P{Print}","");
                     String resp = "\"NO\"";
-                    Log.i("RESPONSE" , json_rec);
                     if (resp.equals(json_rec)) {
 
-                        Intent i = new Intent(LoginActivity.this, register_new_employee.class);
+                        Intent i = new Intent(LoginActivity.this, register.class);
                         startActivity(i);
                     }
 
@@ -292,10 +309,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
-
-    }
-    @Override
-    public void onBackPressed() {
 
     }
 

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,14 +17,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.totalrecon.ipravesh.R;
-import com.totalrecon.ipravesh.cameraActivity;
 import com.totalrecon.ipravesh.check_status;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
 import com.totalrecon.ipravesh.data.model.VolleySingleton;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.totalrecon.ipravesh.geoActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -87,7 +84,7 @@ public class get_password extends AppCompatActivity{
 
                             String resp1 = "\"0\"";
                             if (json_rec.equals(resp1)) {
-                                show_message("Your password is wrong! ");
+                                show_message("Your password is wrong!");
                             }
                             else {
                                 show_message("You have been logged in!");
@@ -110,59 +107,20 @@ public class get_password extends AppCompatActivity{
                                 Log.i("USERID in obj2",obj2.user_id);
                                 json_rec.replaceAll("\"","");
 
-                                String user_id = json_rec;
-                                write_data("user_id" , json_rec);
-
-                                // get branch_name from user
-                                String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_info";
-                                VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
-                                    @Override
-                                    public void onResponse(NetworkResponse response) {
-                                        try {
-                                            String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                                            json_rec.replaceAll("\\P{Print}", "");
-                                            Map jsonObject = new Gson().fromJson(json_rec, Map.class);
-                                            String branch_name = (String) jsonObject.get("office_address");
-                                            write_data("branch_name" , branch_name);
-                                            Log.i("RESPONSE" , json_rec);
-                                            Log.i("RESPONSE" , branch_name);
-
-                                        } catch (UnsupportedEncodingException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                                        , new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        error.printStackTrace();
-                                    }
-                                }) {
-                                    @Override
-                                    protected Map<String, String> getParams() {
-                                        Map<String, String> params = new HashMap<>();
-                                        params.put("user_id", user_id);
-                                        return params;
-                                    }
-                                };
-                                VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
-
                                 if (obj2.user_id.equals(json_rec)) {
                                     // Embeds already there
                                 }
                                 else {
                                     String embeds_URL = "https://sih-smart-attendance.herokuapp.com/get_embed";
-                                    VolleyMultipartRequest multipartRequest1 = new VolleyMultipartRequest(Request.Method.POST, embeds_URL, new Response.Listener<NetworkResponse>() {
+                                    VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, embeds_URL, new Response.Listener<NetworkResponse>() {
                                         @Override
                                         public void onResponse(NetworkResponse response) {
                                             try {
                                                 // Getting embeds from server
                                                 String embeds_res = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                                                 Log.i("json",embeds_res);
-
                                                 Gson gson2 = new GsonBuilder().setPrettyPrinting().create();
                                                 gson2.toJson(embeds_res);
-
                                                 Gson gson = new Gson();
                                                 onlyEmbeds object_em = gson.fromJson(embeds_res, onlyEmbeds.class);
                                                 // Clearing any data in EmbedsSharedPref
@@ -190,11 +148,11 @@ public class get_password extends AppCompatActivity{
                                         @Override
                                         protected Map<String, String> getParams() {
                                             Map<String, String> params = new HashMap<>();
-                                            params.put("user_id", user_id);
+                                            params.put("user_id", json_rec);
                                             return params;
                                         }
                                     };
-                                    VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest1);
+                                    VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
                                 }
                                 Intent i = new Intent(get_password.this, check_status.class);
                                 startActivity(i);

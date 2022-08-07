@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,8 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.totalrecon.ipravesh.R;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
 import com.totalrecon.ipravesh.data.model.VolleySingleton;
+import com.totalrecon.ipravesh.ui.login.LoadingDialog;
+import com.totalrecon.ipravesh.ui.login.LoadingDialog1;
 import com.totalrecon.ipravesh.ui.login.LoginActivity;
 
 import com.google.gson.Gson;
@@ -97,15 +100,29 @@ public class uploadsignup extends AppCompatActivity {
     private String upload_URL = "https://sih-smart-attendance.herokuapp.com/signup";
     Bitmap headshot;
 
+    final LoadingDialog1 loadingDialog = new LoadingDialog1(uploadsignup.this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_final_upload);
-        Button button = (Button) findViewById(R.id.button3);
-        Button button1 = findViewById(R.id.button4);
+        Button button = (Button) findViewById(R.id.button2);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                loadingDialog.startLoadingDialog();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        loadingDialog.dismissDialog();
+                    }
+                },5000);
+
                 readSP();
                 SharedPreferences sh = getSharedPreferences("EmbedsSharedPref", MODE_PRIVATE);
                 String s = sh.getString("json", "");
@@ -134,7 +151,6 @@ public class uploadsignup extends AppCompatActivity {
                             clearSP();
                             Intent i = new Intent(uploadsignup.this, LoginActivity.class);
                             startActivity(i);
-                            finish();
 
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
@@ -185,13 +201,6 @@ public class uploadsignup extends AppCompatActivity {
 
             }
 
-        });
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(uploadsignup.this, threeshot.class);
-                startActivity(i);
-            }
         });
     }
 }
