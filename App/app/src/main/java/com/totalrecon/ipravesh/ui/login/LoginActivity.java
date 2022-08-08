@@ -125,6 +125,15 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loadingDialog.startLoadingDialog();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        loadingDialog.dismissDialog();
+                    }
+                },5000);
 
                 String username = usernameEditText.getText().toString();
                 Log.i("USERNAME LOGIN : ",username);
@@ -141,6 +150,17 @@ public class LoginActivity extends AppCompatActivity {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                loadingDialog.startLoadingDialog();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        loadingDialog.dismissDialog();
+                    }
+                },5000);
+
                 String s = usernameEditText.getText().toString();
 
                 String username = usernameEditText.getText().toString();

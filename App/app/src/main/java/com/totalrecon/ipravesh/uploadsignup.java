@@ -105,6 +105,18 @@ public class uploadsignup extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                loadingDialog.startLoadingDialog();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        loadingDialog.dismissDialog();
+                    }
+                },5000);
+
+
                 readSP();
                 SharedPreferences sh = getSharedPreferences("EmbedsSharedPref", MODE_PRIVATE);
                 String s = sh.getString("json", "");

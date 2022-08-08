@@ -19,6 +19,19 @@
         android:theme="@style/Theme.FaceRecognition">
         <receiver android:name=".GeofenceBroadcastReceiver"/>
 
+        activity
+        android:name="com.totalrecon.ipravesh.ui.login.SplashScreenActivity"
+        android:label="@string/app_name"
+        android:screenOrientation="portrait"
+        android:theme="@android:style/Theme.NoTitleBar"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
         <activity
             android:name="com.totalrecon.ipravesh.ui.login.LoginActivity"
             android:exported="true"
