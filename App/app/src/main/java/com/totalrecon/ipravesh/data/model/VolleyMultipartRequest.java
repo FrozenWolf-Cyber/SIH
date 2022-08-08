@@ -1,5 +1,7 @@
 package com.totalrecon.ipravesh.data.model;
 
+import android.graphics.Bitmap;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -32,21 +34,21 @@ public class VolleyMultipartRequest extends Request<NetworkResponse> {
 
     /**
      * Default constructor with predefined header and post method.
-     *
-     * @param url           request destination
+     *  @param url           request destination
      * @param headers       predefined custom header
      * @param listener      on success achieved 200 code from request
      * @param errorListener on error http or library timeout
      */
-    public VolleyMultipartRequest(String url, Map<String, String> headers,
-                                  Response.Listener<NetworkResponse> listener,
+    /*
+    public VolleyMultipartRequest(int url, String headers,
+                                  Response.Listener<Bitmap> listener,
                                   Response.ErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         this.mListener = listener;
         this.mErrorListener = errorListener;
         this.mHeaders = headers;
     }
-
+*/
     /**
      * Constructor with option method and default header configuration.
      *

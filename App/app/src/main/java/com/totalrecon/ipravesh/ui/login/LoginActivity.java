@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
+import com.totalrecon.ipravesh.register_new_employee;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -66,6 +67,8 @@ public class LoginActivity extends AppCompatActivity {
         final EditText usernameEditText = binding.username;
         final Button loginButton = binding.login;
         final Button signupButton = binding.signup;
+
+
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -259,9 +262,10 @@ public class LoginActivity extends AppCompatActivity {
                     String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                     json_rec.replaceAll("\\P{Print}","");
                     String resp = "\"NO\"";
+                    Log.i("RESPONSE" , json_rec);
                     if (resp.equals(json_rec)) {
 
-                        Intent i = new Intent(LoginActivity.this, register.class);
+                        Intent i = new Intent(LoginActivity.this, register_new_employee.class);
                         startActivity(i);
                     }
 
@@ -288,6 +292,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+
+    }
+    @Override
+    public void onBackPressed() {
 
     }
 

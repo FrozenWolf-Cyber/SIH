@@ -17,7 +17,6 @@
         android:roundIcon="@drawable/face_icon2"
         android:supportsRtl="true"
         android:theme="@style/Theme.FaceRecognition">
-        <receiver android:name=".GeofenceBroadcastReceiver"/>
 
         <activity
             android:name="com.totalrecon.ipravesh.ui.login.LoginActivity"
@@ -33,7 +32,19 @@
             android:exported="true"
             android:label="Geo Location" />
         <activity
-            android:name=".cameraActivity"
+            android:name="com.totalrecon.ipravesh.employee_dashboard"
+            android:exported="true"
+            android:label="Dashboard" />
+        <activity
+            android:name="com.totalrecon.ipravesh.cameraActivity"
+            android:exported="true"
+            android:label="Capture" />
+        <activity
+            android:name="com.totalrecon.ipravesh.register_new_employee"
+            android:exported="true"
+            android:label="Capture" />
+        <activity
+            android:name="com.totalrecon.ipravesh.register_new_employee_cred"
             android:exported="true"
             android:label="Capture" />
         <activity

@@ -85,12 +85,12 @@ public class get_password extends AppCompatActivity{
                             json_rec.replaceAll("\\P{Print}","");
                             Log.i("RESPONSE ",json_rec);
 
-                            String resp1 = "\"0\"";
+                            String resp1 = "\"INCORRECT PASSWORD\"";
                             if (json_rec.equals(resp1)) {
                                 show_message("Your password is wrong! ");
                             }
                             else {
-                                show_message("You have been logged in!");
+                                show_message("You have been logged in! ");
 
                                 // Get existing user embeds
                                 SharedPreferences sh = getSharedPreferences("EmbedsSharedPref", MODE_PRIVATE);
@@ -113,17 +113,31 @@ public class get_password extends AppCompatActivity{
                                 String user_id = json_rec;
                                 write_data("user_id" , json_rec);
 
-                                // get branch_name from user
+                                // get all details from user
                                 String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_info";
-                                VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+                                VolleyMultipartRequest _multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
                                     @Override
                                     public void onResponse(NetworkResponse response) {
                                         try {
                                             String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                                             json_rec.replaceAll("\\P{Print}", "");
                                             Map jsonObject = new Gson().fromJson(json_rec, Map.class);
+
+                                            // fetched all data of user , stored in shared pref.
+
+                                            String name = (String) jsonObject.get("name");
+                                            write_data("name" , name);
+                                            String designation = (String) jsonObject.get("designation");
+                                            write_data("designation" , designation);
                                             String branch_name = (String) jsonObject.get("office_address");
                                             write_data("branch_name" , branch_name);
+                                            String employeenumber = (String) jsonObject.get("emp_no");
+                                            write_data("employeenumber" , employeenumber);
+                                            String gender = (String) jsonObject.get("gender");
+                                            write_data("gender" , gender);
+                                            String phonenumber = (String) jsonObject.get("contact_no");
+                                            write_data("phonenumber" , phonenumber);
+
                                             Log.i("RESPONSE" , json_rec);
                                             Log.i("RESPONSE" , branch_name);
 
@@ -145,7 +159,7 @@ public class get_password extends AppCompatActivity{
                                         return params;
                                     }
                                 };
-                                VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+                                VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(_multipartRequest);
 
                                 if (obj2.user_id.equals(json_rec)) {
                                     // Embeds already there
