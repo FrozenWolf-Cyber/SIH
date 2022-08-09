@@ -13,10 +13,12 @@ def random_string_generator(str_size):
 def random_number_generator(str_size):
     return ''.join(random.choice(string.digits) for x in range(str_size))
 
+URL = "https://sih-smart-attendance.herokuapp.com"
+
 def do_analysis(nth_parallel):
     ## SIGNUP
     print(f"{nth_parallel} Testing SIGNUP......\n")
-    url = 'http://127.0.0.1:5000/admin_signup'
+    url = f'{URL}/admin_signup'
 
     mail_id = random_string_generator(6)+'@gmail.com'
     user_name = random_string_generator(7)
@@ -41,7 +43,7 @@ def do_analysis(nth_parallel):
     embed = list(map(str, embed))
 	
     # print(embed)
-    url = 'http://127.0.0.1:5000/signup'
+    url = f'{URL}/signup'
     data = {'user_name' : user_name,
             'password' : psswrd,
             'emp_no': emp_no,
@@ -55,7 +57,7 @@ def do_analysis(nth_parallel):
 
     # CHECK USERNAME
     print(f"\n{nth_parallel} Testing CHECK USERNAME......")
-    url = 'http://127.0.0.1:5000/check_username'
+    url = f'{URL}/check_username'
 
     data = {'username' : random_string_generator(7)}
     x = requests.post(url, data= data)                              # ERROR
@@ -67,7 +69,7 @@ def do_analysis(nth_parallel):
 
 	# CHECK EMPLOYEE NUMBER
     print(f"\n{nth_parallel} Testing CHECK EMPLOYEE NUMBER......")
-    url = 'http://127.0.0.1:5000/check_emp_no'
+    url = f'{URL}/check_emp_no'
 
     data = {'emp_no' : random_string_generator(7)}
     x = requests.post(url, data= data)                              # ERROR
@@ -80,7 +82,7 @@ def do_analysis(nth_parallel):
 
     ## LOGIN
     print(f"\n{nth_parallel} Testing LOGIN......")
-    url = 'http://127.0.0.1:5000/login'
+    url = f'{URL}/login'
 
     ### mail_id user_name password name age address contact_no blood_grp    # ERROR
     data = {'user_name_or_mail_id' : random_string_generator(7),
@@ -126,13 +128,13 @@ def do_analysis(nth_parallel):
 
     ## GET INFO
     print(f"\n{nth_parallel} Testing LOGIN......")
-    url = 'http://127.0.0.1:5000/get_info' # ERROR
+    url = f'{URL}/get_info' # ERROR
     data = {'emp_no' : '1'}
 
     x = requests.post(url, data= data)
     print(x.text)
 
-    url = 'http://127.0.0.1:5000/get_info' # SHOULD WORK
+    url = f'{URL}/get_info' # SHOULD WORK
     data = {'emp_no' : emp_no}
 
     x = requests.post(url, data= data)
@@ -141,7 +143,7 @@ def do_analysis(nth_parallel):
 
     # ## GET EMBEDS                                        NEED TO REPLICATE THE APP BUT WORKS
     # print(f"\n{nth_parallel} Get Embeds......")
-    # url = 'http://127.0.0.1:5000/get_embed'
+    # url = f'{URL}/get_embed'
     # data = {'emp_no' : emp_no}
 
     # x = requests.post(url, data= data)
@@ -150,7 +152,7 @@ def do_analysis(nth_parallel):
 
     ## UPDATE LOG
     print(f"\n{nth_parallel} Update Logs......")
-    url = 'http://127.0.0.1:5000/update_log'
+    url = f'{URL}/update_log'
     x = requests.post(url, data= {'emp_no' : emp_no, "check_in":"06.03.2022@10:53:56", "check_out":"blah-null"})
     print(x.text)
 
@@ -158,28 +160,28 @@ def do_analysis(nth_parallel):
     print(x.text)
 
 
-    url = 'http://127.0.0.1:5000/update_log'
+    url = f'{URL}/update_log'
     x = requests.post(url, data= {'emp_no' : emp_no, "check_in":"06.03.2022@10:53:56", "check_out":"blah-null"})
     print(x.text)
 
-    url = 'http://127.0.0.1:5000/check_in_out_status'
+    url = f'{URL}/check_in_out_status'
     x = requests.post(url, data= {'emp_no' : emp_no})
     print(x.text)
 
-    url = 'http://127.0.0.1:5000/modify_log'
+    url = f'{URL}/modify_log'
     x = requests.post(url, data= {'emp_no' : emp_no, "old_check_in":"06.03.2022@10:53:56", "old_check_out":"06.03.2022@10:53:56", "new_check_in":"9.26.2022@12:47:19", "new_check_out":"10.18.2022@17:53:56"})
     print(x.text)
 
 
     ## Branch name
     print(f"\n{nth_parallel} Get Branch nName......")
-    url = 'http://127.0.0.1:5000/get_branch_info'
+    url = f'{URL}/get_branch_info'
 
     x = requests.post(url, data= {'emp_no' : emp_no, 'branch_name':'Office1'})
     print(x.text)
 
     print(f"\n{nth_parallel} Get Image......")
-    url = 'http://127.0.0.1:5000/get_img'
+    url = f'{URL}/get_img'
 
     x = requests.post(url, data= {'emp_no' : emp_no})
     img = io.BytesIO(x.content)
@@ -190,12 +192,12 @@ def do_analysis(nth_parallel):
     print(f"\n{nth_parallel} Checking website handling......")
 
     ## Get n Log Data
-    url = 'http://127.0.0.1:5000/get_log_data'
+    url = f'{URL}/get_log_data'
     x = requests.post(url, data={'last_n_days':300})
     print(json.loads(x.text).keys())
 
     ## Get User Overview
-    url = 'http://127.0.0.1:5000/get_user_overview'
+    url = f'{URL}/get_user_overview'
     x = requests.post(url)
     print(json.loads(x.text).keys())
 

@@ -300,7 +300,7 @@ class Database:
 
         for i in await self.database.fetch_all("SELECT latitude, longitude FROM GEO_LOCATION WHERE branch_name = '%s'" % (branch_name,)):
             i = tuple(i.values())
-            coords = tuple(i[0])
+            coords = tuple(i)
 
         if len(coords) == 0:
             return "INCORRECT BRANCH NAME"
