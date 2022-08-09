@@ -104,14 +104,14 @@ public class employee_dashboard extends AppCompatActivity {
 
                     try {
 
-                        ArrayList<String> users = (ArrayList<String>) jsonObject.get("user_id");
+                        ArrayList<String> users = (ArrayList<String>) jsonObject.get("emp_no");
                         ArrayList<String> checkin = (ArrayList<String>) jsonObject.get("check_in");
                         ArrayList<String> checkout = (ArrayList<String>) jsonObject.get("check_out");
                         String log_data_detail = "from \t\t\t\t to\n";
-                        String user_id = read_data("user_id");
+                        String emp_no = read_data("emp_no");
                         float present = 0;
                         for (int i = 0; i < users.size(); i++) {
-                            if (("\""+users.get(i)+"\"").equals(user_id)) {
+                            if (("\""+users.get(i)+"\"").equals(emp_no)) {
                                 present += 1;
                                 log_data_detail += checkin.get(i)+"---"+checkout.get(i)+"\n";
                             }
@@ -152,7 +152,7 @@ public class employee_dashboard extends AppCompatActivity {
     }
     public void setimage()
     {
-        String user_id = read_data("user_id");
+        String emp_no = read_data("emp_no");
         // get image of the user
         String url = "https://sih-smart-attendance.herokuapp.com/get_img";
         VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST , url,
@@ -183,7 +183,7 @@ public class employee_dashboard extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("user_id", user_id);
+                params.put("emp_no", emp_no);
                 return params;
             }
         };

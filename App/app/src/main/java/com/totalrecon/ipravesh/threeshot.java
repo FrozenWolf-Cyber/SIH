@@ -38,7 +38,7 @@ public class threeshot extends AppCompatActivity {
 
     // Class for storing embeds with user_id
     public class idWithEmbeds {
-        public String user_id = "dummy";
+        public String emp_no = "dummy";
         public float[] embed1 = {};
         public float[] embed2 = {};
         public float[] embed3 = {};
@@ -56,7 +56,6 @@ public class threeshot extends AppCompatActivity {
 
     idWithEmbeds user_embeds = new idWithEmbeds();
     public model my_model;
-    private String upload_URL = "https://sih-smart-attendance.herokuapp.com/signup";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

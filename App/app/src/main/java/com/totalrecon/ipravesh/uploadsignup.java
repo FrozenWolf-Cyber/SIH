@@ -35,19 +35,19 @@ import java.util.Map;
 
 public class uploadsignup extends AppCompatActivity {
     public class idWithArray {
-        public String mail_id;
+//        public String mail_id;
         public String user_name;
         public String password;
-        public String name;
-        public String designation;
+//        public String name;
+//        public String designation;
         public String emp_no;
-        public String gender;
-        public String office_address;
-        public String contact_no;
+//        public String gender;
+//        public String office_address;
+//        public String contact_no;
     }
 
     public class idWithEmbeds {
-        public String user_id;
+        public String emp_no;
         public float[] embed1;
         public float[] embed2;
         public float[] embed3;
@@ -63,15 +63,15 @@ public class uploadsignup extends AppCompatActivity {
     }
 
     public void readSP() {
-        obj.mail_id = read_data("email");
+//        obj.mail_id = read_data("email");
         obj.user_name = read_data("user_name");
-        obj.password = read_data("pass");
-        obj.name = read_data("name");
-        obj.designation = read_data("desig");
+        obj.password = read_data("password");
+//        obj.name = read_data("name");
+//        obj.designation = read_data("desig");
         obj.emp_no = read_data("emplno");
-        obj.gender = read_data("gender");
-        obj.office_address = read_data("office_add");
-        obj.contact_no = read_data("phone");
+//        obj.gender = read_data("gender");
+//        obj.office_address = read_data("office_add");
+//        obj.contact_no = read_data("phone");
     }
 
     public void saveEmbedsToSP(idWithEmbeds obj) {
@@ -114,7 +114,7 @@ public class uploadsignup extends AppCompatActivity {
                 user_embeds.embed1 = obj2.embed1;
                 user_embeds.embed2 = obj2.embed2;
                 user_embeds.embed3 = obj2.embed3;
-
+//                Log.i("obj", obj.emp_no);
                 // Retrieve the image stored in the fileOutputStream
                 try {
                     headshot = BitmapFactory.decodeStream(openFileInput("myImage_1"));
@@ -128,7 +128,7 @@ public class uploadsignup extends AppCompatActivity {
                     public void onResponse(NetworkResponse response) {
                         try {
                             String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                            user_embeds.user_id = json_rec;
+                            user_embeds.emp_no = json_rec;
                             Log.i("Return from server: ", json_rec);
                             saveEmbedsToSP(user_embeds);
                             clearSP();
@@ -150,18 +150,19 @@ public class uploadsignup extends AppCompatActivity {
                     @Override
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<>();
-                        params.put("mail_id", obj.mail_id);
+//                        params.put("mail_id", obj.mail_id);
                         params.put("user_name", obj.user_name);
                         params.put("password", obj.password);
-                        params.put("name", obj.name);
-                        params.put("designation", obj.designation);
-                        params.put("emp_no", obj.emp_no);
-                        params.put("gender", obj.gender);
-                        params.put("office_address", obj.office_address);
-                        params.put("contact_no", obj.contact_no);
+//                        params.put("name", obj.name);
+//                        params.put("designation", obj.designation);
+                        params.put("emp_no", "\""+obj.emp_no+"\"");
+//                        params.put("gender", obj.gender);
+//                        params.put("office_address", obj.office_address);
+//                        params.put("contact_no", obj.contact_no);
                         params.put("embed1", Arrays.toString(user_embeds.embed1));
                         params.put("embed2", Arrays.toString(user_embeds.embed2));
                         params.put("embed3", Arrays.toString(user_embeds.embed3));
+                        Log.i("params", params.toString());
                         return params;
                     }
 

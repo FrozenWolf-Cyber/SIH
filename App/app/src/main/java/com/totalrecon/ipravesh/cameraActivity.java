@@ -53,13 +53,13 @@ public class cameraActivity extends AppCompatActivity {
     Gson gson = new Gson();
 
     public class idWithEmbeds {
-        public String user_id;
+        public String emp_no;
         public float[] embed1;
         public float[] embed2;
         public float[] embed3;
     }
     public class logDetails {
-        public String user_id;
+        public String emp_no;
         public String check_in;
         public String check_out;
     }
@@ -152,7 +152,7 @@ public class cameraActivity extends AppCompatActivity {
             log_obj.check_in = "blah-null";
         }
 
-        Log.i("USER ID ", log_obj.user_id);
+        Log.i("EMP NO ", log_obj.emp_no);
         Log.i(log_obj.check_in, log_obj.check_out);
 
         String upload_URL = "https://sih-smart-attendance.herokuapp.com/update_log";
@@ -191,7 +191,7 @@ public class cameraActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("user_id", log_obj.user_id);
+                params.put("emp_no", log_obj.emp_no);
                 params.put("check_in", log_obj.check_in);
                 params.put("check_out", log_obj.check_out);
                 return params;
@@ -220,7 +220,7 @@ public class cameraActivity extends AppCompatActivity {
         String s = sh.getString("json", "");
         idWithEmbeds obj = gson.fromJson(s, idWithEmbeds.class);
 
-        log_obj.user_id = obj.user_id;
+        log_obj.emp_no = obj.emp_no;
         try {
             embeds_n = obj.embed1;
             distance = my_model.findDistance(embeds_n, user_embeds);

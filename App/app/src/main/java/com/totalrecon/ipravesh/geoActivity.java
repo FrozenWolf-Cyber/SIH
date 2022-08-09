@@ -124,7 +124,8 @@ public class geoActivity extends AppCompatActivity {
 
                                 double latitude = locationResult.getLocations().get(index).getLatitude();
                                 double longitude = locationResult.getLocations().get(index).getLongitude();
-
+                                Log.i("Latitude", ""+Double.toString(latitude));
+                                Log.i("Longitude", ""+Double.toString(longitude));
                                 check_distance(latitude , longitude);
 
                             }
@@ -210,9 +211,9 @@ public class geoActivity extends AppCompatActivity {
     }
 
     public void display_distance_error(double dis) {
-        // person not in campus , automatically exit ....
+        // person not in campus, automatically exit ....
 
-        show_message("Sorry , You are not in the specific location !");
+        show_message("Sorry, you are not in your assigned office!");
 
         // go to checkin/checkout page when out of location
 
@@ -246,8 +247,7 @@ public class geoActivity extends AppCompatActivity {
 
         double [] coord = new double[2];
 
-        String user_id = read_data("user_id");
-
+        String emp_no = read_data("emp_no");
         String branch_name = read_data("branch_name");
 
         // post request for fetching office address
@@ -261,7 +261,6 @@ public class geoActivity extends AppCompatActivity {
                     String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                     json_rec.replaceAll("\\P{Print}", "");
                     Log.i("RESPONSE ", json_rec);
-
 
                     if(json_rec.equals("\"INCORRECT BRANCH NAME\""))
                     {
@@ -284,7 +283,7 @@ public class geoActivity extends AppCompatActivity {
                         // calculate distance
 
                         double dis = distance(coord[0], coord[1], latitude, longitude);
-
+                        Log.i("Office",coord[0]+" "+coord[1]);
                         Log.i("RESPONSE",dis+"\n"+latitude+"\n"+longitude);
 
                         // dis is in km
@@ -320,8 +319,9 @@ public class geoActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("user_id", user_id);
+                params.put("emp_no", emp_no);
                 params.put("branch_name", finalBranch_name);
+                Log.i("params", "" + params.toString());
                 return params;
             }
         };

@@ -37,7 +37,7 @@ public class get_password extends AppCompatActivity{
     private EditText editText1;
 
     public class idWithEmbeds {
-        public String user_id;
+        public String emp_no;
         public float[] embed1;
         public float[] embed2;
         public float[] embed3;
@@ -98,7 +98,7 @@ public class get_password extends AppCompatActivity{
                                 Log.i("json", s);
 
                                 if (s.equals("")) {
-                                    obj2.user_id = "";
+                                    obj2.emp_no = "";
                                 }
                                 else {
                                     Gson gson = new Gson();
@@ -107,11 +107,11 @@ public class get_password extends AppCompatActivity{
 //
 //                                obj2.user_id = checkNull(obj2.user_id);
 
-                                Log.i("USERID in obj2",obj2.user_id);
+//                                Log.i("USERID in obj2",obj2.user_id);
                                 json_rec.replaceAll("\"","");
 
-                                String user_id = json_rec;
-                                write_data("user_id" , json_rec);
+                                String emp_no = json_rec;
+                                write_data("emp_no" , json_rec);
 
                                 // get all details from user
                                 String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_info";
@@ -129,7 +129,7 @@ public class get_password extends AppCompatActivity{
                                             write_data("name" , name);
                                             String designation = (String) jsonObject.get("designation");
                                             write_data("designation" , designation);
-                                            String branch_name = (String) jsonObject.get("office_address");
+                                            String branch_name = (String) jsonObject.get("branch_name");
                                             write_data("branch_name" , branch_name);
                                             String employeenumber = (String) jsonObject.get("emp_no");
                                             write_data("employeenumber" , employeenumber);
@@ -138,8 +138,8 @@ public class get_password extends AppCompatActivity{
                                             String phonenumber = (String) jsonObject.get("contact_no");
                                             write_data("phonenumber" , phonenumber);
 
-                                            Log.i("RESPONSE" , json_rec);
-                                            Log.i("RESPONSE" , branch_name);
+                                            Log.i("RESPONSE" , "" +json_rec);
+                                            Log.i("RESPONSE" , "" + branch_name);
 
                                         } catch (UnsupportedEncodingException e) {
                                             e.printStackTrace();
@@ -155,13 +155,13 @@ public class get_password extends AppCompatActivity{
                                     @Override
                                     protected Map<String, String> getParams() {
                                         Map<String, String> params = new HashMap<>();
-                                        params.put("user_id", user_id);
+                                        params.put("emp_no", emp_no);
                                         return params;
                                     }
                                 };
                                 VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(_multipartRequest);
 
-                                if (obj2.user_id.equals(json_rec)) {
+                                if (obj2.emp_no.equals(json_rec)) {
                                     // Embeds already there
                                 }
                                 else {
@@ -184,7 +184,7 @@ public class get_password extends AppCompatActivity{
                                                 sharedPreferences.edit().clear().commit();
                                                 // Save new user's embeds in EmbedsSharedPref
                                                 idWithEmbeds theembeds = new idWithEmbeds();
-                                                theembeds.user_id = json_rec;
+                                                theembeds.emp_no = json_rec;
                                                 theembeds.embed1 = object_em.embed1;
                                                 theembeds.embed2 = object_em.embed2;
                                                 theembeds.embed3 = object_em.embed3;
@@ -204,7 +204,7 @@ public class get_password extends AppCompatActivity{
                                         @Override
                                         protected Map<String, String> getParams() {
                                             Map<String, String> params = new HashMap<>();
-                                            params.put("user_id", user_id);
+                                            params.put("emp_no", emp_no);
                                             return params;
                                         }
                                     };
