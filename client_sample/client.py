@@ -31,6 +31,8 @@ def do_analysis(nth_parallel):
             'contact_no' : contact_no,
             }
 
+    files = [('files', ("img", open("sp/sp_left.png", "rb"), 'image/png'))]
+
     x = requests.post(url, data= data)
     emp_no = x.text
     print(x.text)
@@ -48,7 +50,6 @@ def do_analysis(nth_parallel):
             'embed3' : embed,
             }
 
-    files = [('files', ("img", open("sp/sp_left.png", "rb"), 'image/png'))]
     x = requests.post(url, data= data, files=files)
     print(x.text)
 
