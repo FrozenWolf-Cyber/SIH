@@ -8,8 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>i-Pravesh</title>
     <link rel="stylesheet" href="/css/home.css">
-    <script src="https://kit.fontawesome.com/62ef345795.js" crossorigin="anonymous"></script>
 </head>
+
+
+
+
+
+
 <body>
     <h1> Admin Dashboard - overview </h1>
     <div id = 'davis'>
@@ -18,9 +23,62 @@
     </div>
     <div id = 'emp-list'>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js"></script>
+    <div id="container1" style="width: 360px; height:360px;"></div>
+
+
+
+
+
+
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src = '/js/home.js'></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+        Highcharts.chart('container1', {
+      chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+      },
+      title: {
+        text: 'Gender Data'
+      },
+      tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      accessibility: {
+        point: {
+          valueSuffix: '%'
+        }
+      },
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+          }
+        }
+      },
+      series: [{
+        name: 'Brands',
+        colorByPoint: true,
+        data: [{
+          name: 'Male',
+          y: 61.41,
+          sliced: true,
+          selected: true
+        },{
+          name:'Female',
+          y:(100-61.41)
+        }]
+      }]
+    });
+
+    </script>
     <script src="/js/home_davis.js"></script>
 </body>
 </html>

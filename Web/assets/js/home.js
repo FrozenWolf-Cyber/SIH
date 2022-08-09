@@ -23,7 +23,7 @@ const waitForData = async () => {
     {
         await sleep(60);
     }
-    
+    console.log('emp_list',emp_list);
     startWork();
 }
 
@@ -31,10 +31,9 @@ waitForData();
 function sqlToNosql(){
     var emp_list1 = [];
     
-    for(let i = 0;i < emp_list.id.length;i++)
+    for(let i = 0;i < (emp_list.emp_no.length)/2;i++)
     {
         emp_list1[i] = {
-            id:emp_list.id[i],
             name:emp_list.name[i],
             gender:emp_list.gender[i],
             emp_no:emp_list.emp_no[i],
