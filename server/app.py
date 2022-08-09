@@ -198,12 +198,24 @@ async def login(
 
     return str(await exception_handle("SERVER ERROR WHILE CHECKING LOGIN DETAILS", mydb.user_login_details, data, type_of_login))
 
+
 @app.post('/check_username')
 async def check_username(
     username: str = Form(...),
 ):
 
     if await mydb.check_username(username):
+        return "YES"
+
+    return "NO"
+
+
+@app.post('/check_emp_no')
+async def check_emp_no(
+    emp_no: str = Form(...),
+):
+    emp_no = emp_no[1:-1]
+    if await mydb.check_emp_no_exist_master(emp_no):
         return "YES"
 
     return "NO"
