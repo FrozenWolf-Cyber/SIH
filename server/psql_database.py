@@ -22,7 +22,8 @@ class Database:
         self.loc_database = [{'branch_name':'Office1','latitude': '10.83049819448061', 'longitude': '78.68589874213778'},
                            {'branch_name':'Office2', 'latitude':'19.0760', 'longitude':'72.8777'},
                            {'branch_name':'Office3', 'latitude':'28.7041', 'longitude':'77.1025'},
-                           {'branch_name':'Office4 ','latitude': '22.5726','longitude': '88.3639'}
+                           {'branch_name':'Office4', 'latitude': '22.5726','longitude': '88.3639'},
+                           {'branch_name':'Office5', 'latitude': '13.0463', 'longitude': '80.1981'}
                           ]
 
     
