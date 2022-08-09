@@ -311,7 +311,7 @@ class Database:
     async def get_log_data(self, last_n_days):
         data = {'emp_no':[], 'check_in':[], 'check_out':[]}
 
-        for i in await self.database.fetch_all("SELECT emp_no, check_in, check_out  FROM USER_LOG WHERE DATE_PART('day', CURRENT_TIMESTAMP- check_in) <= %s;" % (last_n_days,)):
+        for i in await self.database.fetch_all("SELECT emp_no, check_in, check_out FROM USER_LOG WHERE DATE_PART('day', CURRENT_TIMESTAMP- check_in) <= %s;" % (last_n_days,)):
             i = tuple(i.values())
             data['emp_no'].append(i[0])
             data['check_in'].append(i[1])
@@ -321,10 +321,10 @@ class Database:
 
 
     async def get_user_overview(self):
-        args = "emp_no name designation emp_no gender branch_name".split(" ")
+        args = "emp_no name designation gender branch_name".split(" ")
         data = {i:[] for i in args}
 
-        for i in await self.database.fetch_all("SELECT emp_no, name, designation, emp_no, gender, branch_name FROM EMPLOYEE_DETAILS"):
+        for i in await self.database.fetch_all("SELECT emp_no, name, designation, gender, branch_name FROM EMPLOYEE_DETAILS"):
             i = list(i.values())
             for arg_, value in zip(args, i):
                  data[arg_].append(value)
