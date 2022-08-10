@@ -1,16 +1,13 @@
 
 
-const url2 = 'https://sih-smart-attendance.herokuapp.com/get_user_overview'
-
-
+console.log('Anand');
 var emp_list;
-$.ajax(url2, {
-    type: 'POST',  // http method
+$.ajax('https://sih-smart-attendance.herokuapp.com/get_user_overview', {
+    type: 'POST',  
     success: function (data, status, xhr) {
         emp_list = JSON.parse(JSON.stringify(data));
     }
 });
-
 
 function sleep(ms) 
 {
@@ -21,17 +18,17 @@ function sleep(ms)
 const waitForData = async () => {
     while(!(emp_list))
     {
+        console.log('fetching data ...');
         await sleep(60);
     }
     console.log('emp_list',emp_list);
     startWork();
 }
-
 waitForData();
 function sqlToNosql(){
     var emp_list1 = [];
     
-    for(let i = 0;i < (emp_list.emp_no.length)/2;i++)
+    for(let i = 0;i < (emp_list.emp_no.length);i++)
     {
         emp_list1[i] = {
             name:emp_list.name[i],
@@ -46,7 +43,6 @@ function sqlToNosql(){
     return emp_list1;
 }
 function createEmpElement(emp){
-    console.log(emp)
    let emp_details = JSON.stringify(emp)
     return `
         <a class = 'emp' href='/emp-info?emp_details=${emp_details}'>
@@ -69,4 +65,3 @@ function startWork()
         emp_list_container.innerHTML += emp_element;
     }
 }
-

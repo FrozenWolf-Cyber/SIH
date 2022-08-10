@@ -1,0 +1,85 @@
+main {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 60px 0px 1fr;
+  justify-items: center;
+}
+
+main h1 {
+  border: 2px solid;
+  width: 100%;
+  font-size: 3rem;
+  box-sizing: border-box;
+}
+
+main #emp-list {
+  width: 600px;
+  overflow-y: scroll;
+}
+
+main #emp-list .emp {
+  margin: 0;
+  overflow-y: scroll;
+  height: 60px;
+  border: 2px solid;
+  width: 100%;
+  border: 2px solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
+  text-decoration: none;
+  margin-top: 12px;
+}
+
+main #emp-list .emp i {
+  font-size: 1rem;
+  display: inline-block;
+  border: 0px solid;
+  border-radius: 50%;
+  padding: 15px;
+  font-size: 1rem;
+  background-color: #d8d6d6;
+}
+
+main #emp-list .emp > div {
+  height: fit-content;
+  width: fit-content;
+}
+
+main #emp-list .emp > div .avatar {
+  height: 45px;
+  width: 45px;
+  border: 0px solid;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+main #emp-list .emp > div .emp_name {
+  display: inline-block;
+  font-size: 2.1rem;
+}
+
+main #emp-list .emp > div .Male {
+  background-image: url("https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png");
+  background-size: contain;
+  background-position: center;
+}
+
+main #emp-list .emp > div .M {
+  background-image: url("https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png");
+  background-size: contain;
+  background-position: center;
+}
+
+main #emp-list .emp > div .m {
+  background-image: url("https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png");
+  background-size: contain;
+  background-position: center;
+}
+
+main #emp-list .emp > div .F {
+  background-image: url("https://cdn3.iconfinder.com/data/icons/avatar-set/512/Avatar12-512.png");
+  background-size: contain;
+  background-position: center;
+}

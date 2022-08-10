@@ -2,6 +2,7 @@
 
 const express = require('express');
 const sassMiddleware = require('node-sass-middleware');
+const layout = require('express-ejs-layouts');
 const path = require('path');
 const app = express();
 const port = 9996;
@@ -17,6 +18,9 @@ app.use(sassMiddleware({
 app.use(express.static('./assets'));
 app.set('views',path.join(__dirname,'/views'));
 app.set('view engine','ejs');
+app.use(layout);
+app.set("layout extractScripts", true);
+app.set('layout extractStyles',true);
 
 app.use('/',require('./router'));
 app.listen(port,() => {

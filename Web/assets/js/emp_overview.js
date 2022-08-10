@@ -1,44 +1,147 @@
 
 
-async function waitForEmpList()
+var emp_list;
+$.ajax('https://sih-smart-attendance.herokuapp.com/get_user_overview', {
+    type: 'POST',  
+    success: function (data, status, xhr) {
+        emp_list = JSON.parse(JSON.stringify(data));
+    }
+});
+
+function sleep(ms) 
 {
-    while(!emp_list1)
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+const waitForData = async () => {
+    while(!(emp_list))
     {
+        console.log('fetching data ...');
         await sleep(60);
     }
-
-    renderDavis();
+    console.log('emp_list',emp_list);
+    startWork();
 }
-function DavisData()
-{
-
-    let num_of_men = 0,num_of_women = 0;
-    for(emp of emp_list1)
+waitForData();
+function sqlToNosql(){
+    var emp_list1 = [];
+    
+    for(let i = 0;i < (emp_list.emp_no.length);i++)
     {
-        if(emp.gender == 'Male' || emp.gender == 'M')
-        {
-            num_of_men++;
-        }
-        else
-        {
-            num_of_women++;
-        }
-    }
-
-    let data = {
-        gender_data:{
-            men:num_of_men,
-            women:num_of_women
+        emp_list1[i] = {
+            name:emp_list.name[i],
+            gender:emp_list.gender[i],
+            emp_no:emp_list.emp_no[i],
+            designation:emp_list.designation[i],
+            branch_name:emp_list.branch_name[i]
         }
     }
 
-    return data;
+    console.log(emp_list1)
+    return emp_list1;
 }
 
-function renderDavis()
+function process_data(data)
 {
+   
+}
+function davis()
+{
+  Highcharts.chart('container1', {
+    chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie'
+    },
+    title: {
+      text: 'Gender Data'
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+      point: {
+        valueSuffix: '%'
+      }
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+        }
+      }
+    },
+    series: [{
+      name: 'Brands',
+      colorByPoint: true,
+      data: [{
+        name: 'Male',
+        y: 61.41,
+        sliced: true,
+        selected: true
+      },{
+        name:'Female',
+        y:(100-61.41)
+      }]
+    }]
+  });
+}
 
-    const data = DavisData();
+
+var emp_list1;
+function startWork()
+{
+    emp_list1 = sqlToNosql();
+    const davis_data = process_data();
+    davis(davis_data);
+}
+ 
+  
+
+// async function waitForEmpList()
+// {
+//     while(!emp_list1)
+//     {
+//         await sleep(60);
+//     }
+
+//     renderDavis();
+// }
+// function DavisData()
+// {
+
+//     let num_of_men = 0,num_of_women = 0;
+//     for(emp of emp_list1)
+//     {
+//         if(emp.gender == 'Male' || emp.gender == 'M')
+//         {
+//             num_of_men++;
+//         }
+//         else
+//         {
+//             num_of_women++;
+//         }
+//     }
+
+//     let data = {
+//         gender_data:{
+//             men:num_of_men,
+//             women:num_of_women
+//         }
+//     }
+
+//     return data;
+// }
+
+// function renderDavis()
+// {
+
+//     const data = DavisData();
     // Highcharts.chart('container', {
     //   chart: {
     //     plotBackgroundColor: null,
@@ -100,7 +203,7 @@ function renderDavis()
   //   width:240,
   //   height:240
   // });   
-}
+// }
 
 // function DonutChart(data, {
 //     name = ([x]) => x,  // given d in data, returns the (ordinal) label

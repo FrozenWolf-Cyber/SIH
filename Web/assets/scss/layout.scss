@@ -1,0 +1,49 @@
+
+
+body{
+  margin:0;
+  width:100vw;
+  height:100vh;
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  overflow-y: hidden;
+
+
+  #side-nav{
+    font-size: 1.8rem;
+    height:100vh;
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3e3e40;
+    color:rgb(149, 149, 149);
+    nav{
+      display: flex;
+      height:150px;
+      width: 100%;
+      box-sizing: border-box;
+      align-items: center;
+      justify-content: space-around;
+      flex-direction: column;
+      a{
+        text-align: center;
+        width: 100%;
+        color:rgb(149, 149, 149);
+        text-decoration: none;
+      }
+      a:hover{
+        color: white;
+        border-left: 6px solid white;
+      }
+      .current{
+
+      }
+    }
+    img{
+      height:45px;
+      width:100%;
+    }
+  }
+}

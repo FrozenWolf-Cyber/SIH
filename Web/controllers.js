@@ -1,10 +1,19 @@
 
 
-module.exports.employe_overview = (req,res) => {
-    console.log('Anand in home');
-    return res.render('home');
+console.log('Anand in all controllers');
+
+
+module.exports.emp_list = (req,res) => {
+    return res.render('emp_list');
 }
-module.exports.employe_info = (req,res) => {
+module.exports.employe_overview = (req,res) => {
+    return res.render('emp_overview');
+}
+module.exports.create_emp = (req,res) => {
+    return res.render('create_emp');
+}
+module.exports.employe_overview
+ module.exports.employe_info = (req,res) => {
     console.log('Anand in emp_info');
     console.log(req.query.emp_details);
     const emp_details = JSON.parse(req.query.emp_details);
