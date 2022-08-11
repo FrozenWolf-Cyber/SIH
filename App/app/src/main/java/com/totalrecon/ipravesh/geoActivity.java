@@ -46,7 +46,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
 import com.totalrecon.ipravesh.data.model.VolleySingleton;
-import com.totalrecon.ipravesh.ui.login.get_password;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;

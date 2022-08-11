@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
 
     <application
@@ -19,7 +18,7 @@
         android:theme="@style/Theme.FaceRecognition">
 
         <activity
-            android:name="com.totalrecon.ipravesh.ui.login.LoginActivity"
+            android:name="com.totalrecon.ipravesh.ui.login.StartPage"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -29,6 +28,10 @@
         </activity>
         <activity
             android:name="com.totalrecon.ipravesh.geoActivity"
+            android:exported="true"
+            android:label="Geo Location" />
+        <activity
+            android:name="com.totalrecon.ipravesh.ui.login.LoginActivity"
             android:exported="true"
             android:label="Geo Location" />
         <activity
@@ -59,10 +62,6 @@
             android:name="com.totalrecon.ipravesh.threeshot"
             android:exported="true"
             android:label="Photo Capture" />
-        <activity
-            android:name="com.totalrecon.ipravesh.ui.login.get_password"
-            android:exported="true"
-            android:label="PASSWORD" />
         <activity
             android:name="com.totalrecon.ipravesh.register"
             android:exported="true"

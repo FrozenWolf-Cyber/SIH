@@ -1,172 +1,298 @@
 package com.totalrecon.ipravesh.ui.login;
+import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import com.totalrecon.ipravesh.R;
-import com.totalrecon.ipravesh.data.model.VolleySingleton;
-import com.totalrecon.ipravesh.databinding.ActivityLoginBinding;
-import com.totalrecon.ipravesh.register;
-
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.totalrecon.ipravesh.R;
+import com.totalrecon.ipravesh.cameraActivity;
+import com.totalrecon.ipravesh.check_status;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
-import com.totalrecon.ipravesh.register_new_employee;
+import com.totalrecon.ipravesh.data.model.VolleySingleton;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.totalrecon.ipravesh.geoActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.util.Log;
+public class LoginActivity extends AppCompatActivity{
+    private Button button;
+    private TextView textView;
+    private EditText password , username;
 
-public class LoginActivity extends AppCompatActivity {
-
-    private LoginViewModel loginViewModel;
-    private ActivityLoginBinding binding;
-
-    public class idWithArray {
-        public String user_name;
-        public String password;
-        public String name;
+    public class idWithEmbeds {
+        public String emp_no;
+        public float[] embed1;
+        public float[] embed2;
+        public float[] embed3;
     }
 
-    idWithArray obj = new idWithArray();
+    public class onlyEmbeds {
+        public float[] embed1;
+        public float[] embed2;
+        public float[] embed3;
+    }
+
+    public void saveEmbedsToSP(idWithEmbeds obj) {
+        SharedPreferences sharedPreferences = getSharedPreferences("EmbedsSharedPref", MODE_PRIVATE);
+        SharedPreferences.Editor myEdit = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json_string = gson.toJson(obj);
+        myEdit.putString("json", json_string);
+        myEdit.commit();
+    }
+
+    public String checkNull(String s) {
+        return s == null ? "" : s;
+    }
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        //clear_data();
-        //show_message(show_data());
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.existing_user_login);
 
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        button = (Button) findViewById(R.id.login);
 
-        final EditText usernameEditText = binding.username;
-        final Button loginButton = binding.login;
-        final Button signupButton = binding.signup;
+        password = (EditText) findViewById(R.id.password);
+        username = (EditText) findViewById(R.id.username);
 
+        textView = (TextView) findViewById(R.id.textView);
+        textView.setText("EXISTING USER");
 
-
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
-                    return;
-                }
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    //passwordEditText.setError(getString(loginFormState.getPasswordError()));
-                }
-            }
-        });
+            public void onClick(View view) {
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                }
-                setResult(Activity.RESULT_OK);
+                String pass = password.getText().toString();
+                String user = username.getText().toString();
 
-                //Complete and destroy login activity once successful
-                //finish();
-            }
-        });
+                SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+                SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                myEdit.putString("user_name", user);
+                myEdit.commit();
 
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
+                // check_username
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
+                String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
+                VolleyMultipartRequest multipartRequest1 = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
+                        try {
 
-                loginButton.setEnabled(true);
-                signupButton.setEnabled(true);
-            }
+                            String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                            json_rec.replaceAll("\\P{Print}", "");
+                            Log.i("RESPONSE ", json_rec);
+                            String resp = "\"YES\"";
+                            if (json_rec.equals(resp)) {
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                                // username_exist , do login
 
-            }
-        };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
+                                String upload_URL = "https://sih-smart-attendance.herokuapp.com/login";
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                                VolleyMultipartRequest multipartRequest2 = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+                                    @Override
+                                    public void onResponse(NetworkResponse response) {
+                                        try {
+                                            idWithEmbeds obj2 = new idWithEmbeds();
+                                            String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                                            json_rec.replaceAll("\\P{Print}", "");
+                                            Log.i("RESPONSE ", json_rec);
 
-                String username = usernameEditText.getText().toString();
-                Log.i("USERNAME LOGIN : ",username);
-                if (username == ""){
-                    show_message("Enter a username!");
-                }else{
-                    obj.user_name = username;
-                    login(username);
-                }
+                                            String resp1 = "\"INCORRECT PASSWORD\"";
+                                            if (json_rec.equals(resp1)) {
+                                                show_message("Your password is wrong! ");
+                                            } else {
+                                                show_message("You have been logged in! ");
 
+                                                // Get existing user embeds
+                                                SharedPreferences sh = getSharedPreferences("EmbedsSharedPref", MODE_PRIVATE);
+                                                String s = sh.getString("json", "");
+                                                Log.i("json", s);
 
-            }
-        });
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String s = usernameEditText.getText().toString();
+                                                if (s.equals("")) {
+                                                    obj2.emp_no = "";
+                                                } else {
+                                                    Gson gson = new Gson();
+                                                    obj2 = gson.fromJson(s, idWithEmbeds.class);
+                                                }
+                                                json_rec.replaceAll("\"", "");
+                                                String emp_no = json_rec;
+                                                write_data("emp_no", json_rec);
 
-                String username = usernameEditText.getText().toString();
-                if (username == ""){
-                    show_message("Enter a username!");
-                }else{
-                    obj.user_name = username;
-                    signup(username);
-                }
+                                                // get all details from user with emp_no
+                                                String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_info";
+                                                VolleyMultipartRequest multipartRequest3 = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+                                                    @Override
+                                                    public void onResponse(NetworkResponse response) {
+                                                        try {
+                                                            String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                                                            json_rec.replaceAll("\\P{Print}", "");
+                                                            Map jsonObject = new Gson().fromJson(json_rec, Map.class);
 
+                                                            // fetched all data of user , stored in shared pref.
+
+                                                            String name = (String) jsonObject.get("name");
+                                                            write_data("name", name);
+                                                            String designation = (String) jsonObject.get("designation");
+                                                            write_data("designation", designation);
+                                                            String branch_name = (String) jsonObject.get("branch_name");
+                                                            write_data("branch_name", branch_name);
+                                                            String employeenumber = (String) jsonObject.get("emp_no");
+                                                            write_data("employeenumber", employeenumber);
+                                                            String gender = (String) jsonObject.get("gender");
+                                                            write_data("gender", gender);
+                                                            String phonenumber = (String) jsonObject.get("contact_no");
+                                                            write_data("phonenumber", phonenumber);
+
+                                                            Log.i("RESPONSE", "" + json_rec);
+                                                            Log.i("RESPONSE", "" + branch_name);
+
+                                                        } catch (UnsupportedEncodingException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }
+                                                        , new Response.ErrorListener() {
+                                                    @Override
+                                                    public void onErrorResponse(VolleyError error) {
+                                                        error.printStackTrace();
+                                                    }
+                                                }) {
+                                                    @Override
+                                                    protected Map<String, String> getParams() {
+                                                        Map<String, String> params = new HashMap<>();
+                                                        params.put("emp_no", emp_no);
+                                                        return params;
+                                                    }
+                                                };
+                                                VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest3);
+
+                                                if (obj2.emp_no.equals(json_rec)) {
+                                                    // Embeds already there
+                                                } else {
+                                                    // get embeddings
+
+                                                    String embeds_URL = "https://sih-smart-attendance.herokuapp.com/get_embed";
+                                                    VolleyMultipartRequest multipartRequest4 = new VolleyMultipartRequest(Request.Method.POST, embeds_URL, new Response.Listener<NetworkResponse>() {
+                                                        @Override
+                                                        public void onResponse(NetworkResponse response) {
+                                                            try {
+                                                                // Getting embeds from server
+                                                                String embeds_res = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                                                                Log.i("json", embeds_res);
+
+                                                                Gson gson2 = new GsonBuilder().setPrettyPrinting().create();
+                                                                gson2.toJson(embeds_res);
+
+                                                                Gson gson = new Gson();
+                                                                onlyEmbeds object_em = gson.fromJson(embeds_res, onlyEmbeds.class);
+                                                                // Clearing any data in EmbedsSharedPref
+                                                                SharedPreferences sharedPreferences = getSharedPreferences("EmbedsSharedPref", MODE_PRIVATE);
+                                                                sharedPreferences.edit().clear().commit();
+                                                                // Save new user's embeds in EmbedsSharedPref
+                                                                idWithEmbeds theembeds = new idWithEmbeds();
+                                                                theembeds.emp_no = json_rec;
+                                                                theembeds.embed1 = object_em.embed1;
+                                                                theembeds.embed2 = object_em.embed2;
+                                                                theembeds.embed3 = object_em.embed3;
+                                                                saveEmbedsToSP(theembeds);
+
+                                                            } catch (UnsupportedEncodingException e) {
+                                                                e.printStackTrace();
+                                                            }
+
+                                                        }
+                                                    }, new Response.ErrorListener() {
+                                                        @Override
+                                                        public void onErrorResponse(VolleyError error) {
+                                                            error.printStackTrace();
+                                                        }
+                                                    }) {
+                                                        @Override
+                                                        protected Map<String, String> getParams() {
+                                                            Map<String, String> params = new HashMap<>();
+                                                            params.put("emp_no", emp_no);
+                                                            return params;
+                                                        }
+                                                    };
+                                                    VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest4);
+                                                }
+                                                // go to next page check_status
+
+                                                Intent i = new Intent(LoginActivity.this, check_status.class);
+                                                startActivity(i);
+                                            }
+
+                                        } catch (UnsupportedEncodingException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        error.printStackTrace();
+                                    }
+                                }) {
+                                    @Override
+                                    protected Map<String, String> getParams() {
+                                        Map<String, String> params = new HashMap<>();
+                                        params.put("user_name_or_mail_id", user);
+                                        params.put("type_of_login", "username");
+                                        params.put("password", pass);
+                                        return params;
+                                    }
+                                };
+                                VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest2);
+
+                            } else {
+//                        Log.i("Hey","I'm inside here");
+                                Toast.makeText(getApplicationContext(), "Username does not exist!", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("username", user);
+                        return params;
+                    }
+                };
+                VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest1);
             }
         });
     }
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
-    }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-    }
 
+    public void show_message(String s)
+    {
+        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
+    }
     public String read_data(String filename)
     {
         SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
@@ -179,124 +305,6 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
         myEdit.putString(filename, data);
         myEdit.commit();
-    }
-    public boolean search(String s1 , String s2){
-        return s2.contains(s1);
-    }
-
-    public void show_error(String s) {
-
-        // error due to file writing and other operations
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage(s);
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
-    public void show_message(String s)
-    {
-        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
-    }
-
-    public void login(String username) {
-        // save user_name
-        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
-        SharedPreferences.Editor myEdit = sharedPreferences.edit();
-        myEdit.putString("user_name", username);
-        myEdit.commit();
-
-        String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
-        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
-            @Override
-            public void onResponse(NetworkResponse response) {
-                try {
-                    String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                    json_rec.replaceAll("\\P{Print}","");
-                    Log.i("RESPONSE ",json_rec);
-                    String resp = "\"YES\"";
-                    if (json_rec.equals(resp)) {
-//                        Log.i("Hey","I'm inside");
-                        Intent i = new Intent(LoginActivity.this, get_password.class);
-                        startActivity(i);
-                    }
-
-                    else {
-//                        Log.i("Hey","I'm inside here");
-                        Toast.makeText(getApplicationContext(), "Username does not exist!", Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", obj.user_name);
-                return params;
-            }
-        };
-        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
-
-    }
-
-    public void signup(String username) {
-        // save user_name
-        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
-        SharedPreferences.Editor myEdit = sharedPreferences.edit();
-        myEdit.putString("user_name", username);
-        myEdit.commit();
-
-        String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
-        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
-            @Override
-            public void onResponse(NetworkResponse response) {
-                try {
-                    String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                    json_rec.replaceAll("\\P{Print}","");
-                    String resp = "\"NO\"";
-                    Log.i("RESPONSE" , json_rec);
-                    if (resp.equals(json_rec)) {
-
-                        Intent i = new Intent(LoginActivity.this, register_new_employee.class);
-                        startActivity(i);
-                    }
-
-                    else {
-                        Toast.makeText(getApplicationContext(), "Username already taken!", Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", obj.user_name);
-                return params;
-            }
-        };
-        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
-
-    }
-    @Override
-    public void onBackPressed() {
-
     }
 
 }

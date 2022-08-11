@@ -45,6 +45,7 @@ public class register_new_employee extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 // operation when the button is clicked...
+
                 String emplno;
                 emplno = editText1.getText().toString();
                 // verify details
