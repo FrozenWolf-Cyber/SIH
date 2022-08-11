@@ -183,7 +183,7 @@ public class LoginActivity extends AppCompatActivity{
                                                 };
                                                 VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest3);
 
-                                                if (obj2.emp_no.equals(json_rec)) {
+                                                if (json_rec.equals(obj2.emp_no)) {
                                                     // Embeds already there
                                                 } else {
                                                     // get embeddings
