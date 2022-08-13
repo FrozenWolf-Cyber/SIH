@@ -92,7 +92,18 @@ public class LoginActivity extends AppCompatActivity{
                 myEdit.putString("user_name", user);
                 myEdit.commit();
 
-                // check_username
+                /*
+
+                    4 post requests here :
+
+                   1. check_username
+                   2. login
+                   3. get_info
+                   4. get_embed
+
+                 */
+
+    // check_username
 
                 String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
                 VolleyMultipartRequest multipartRequest1 = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
@@ -107,7 +118,7 @@ public class LoginActivity extends AppCompatActivity{
                             if (json_rec.equals(resp)) {
 
                                 // username_exist , do login
-
+    // login
                                 String upload_URL = "https://sih-smart-attendance.herokuapp.com/login";
 
                                 VolleyMultipartRequest multipartRequest2 = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
@@ -138,8 +149,10 @@ public class LoginActivity extends AppCompatActivity{
                                                 }
                                                 json_rec.replaceAll("\"", "");
                                                 String emp_no = json_rec;
-                                                write_data("emp_no", json_rec);
 
+                                                // store employee number for further use
+                                                write_data("emp_no", json_rec);
+    // get_info
                                                 // get all details from user with emp_no
                                                 String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_info";
                                                 VolleyMultipartRequest multipartRequest3 = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
@@ -192,7 +205,7 @@ public class LoginActivity extends AppCompatActivity{
                                                     // Embeds already there
                                                 } else {
                                                     // get embeddings
-
+    // get_embed
                                                     String embeds_URL = "https://sih-smart-attendance.herokuapp.com/get_embed";
                                                     VolleyMultipartRequest multipartRequest4 = new VolleyMultipartRequest(Request.Method.POST, embeds_URL, new Response.Listener<NetworkResponse>() {
                                                         @Override
@@ -238,6 +251,8 @@ public class LoginActivity extends AppCompatActivity{
                                                     };
                                                     VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest4);
                                                 }
+
+                                                // login verification complete
                                                 // go to next page check_status
 
                                                 Intent i = new Intent(LoginActivity.this, check_status.class);

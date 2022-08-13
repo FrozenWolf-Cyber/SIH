@@ -59,6 +59,7 @@ public class register_new_employee extends AppCompatActivity{
                 if(flag == 0){
                     // Post request for verification
                     String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_emp_no";
+
                     VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
                         @Override
                         public void onResponse(NetworkResponse response) {
@@ -68,7 +69,7 @@ public class register_new_employee extends AppCompatActivity{
                                 String resp = "\"YES\"";
                                 Log.i("RESPONSE" , json_rec);
                                 if (resp.equals(json_rec)) {
-                                    write_data("emplno", emplno);
+                                    write_data("emplno", "\"" + emplno + "\"");
                                     Intent i = new Intent(register_new_employee.this, register_new_employee_cred.class);
                                     startActivity(i);
                                 }
@@ -90,7 +91,7 @@ public class register_new_employee extends AppCompatActivity{
                         @Override
                         protected Map<String, String> getParams() {
                             Map<String, String> params = new HashMap<>();
-                            params.put("emp_no", ""+emplno+"");
+                            params.put("emp_no", "\""+emplno+"\"");
                             return params;
                         }
                     };
