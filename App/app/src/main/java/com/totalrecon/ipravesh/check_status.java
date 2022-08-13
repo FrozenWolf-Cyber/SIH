@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.totalrecon.ipravesh.ui.login.LoginActivity;
 
 public class check_status extends AppCompatActivity{
-    private Button check_both , exit_button;
+    private Button check_both , exit_button , dashboard;
     private TextView textView;
     private EditText editText1;
 
@@ -24,6 +24,7 @@ public class check_status extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check_status_layout);
         check_both=(Button)findViewById(R.id.buttonKavi);
+        dashboard=(Button)findViewById(R.id.buttonKavi2);
         exit_button=(Button)findViewById(R.id.button2);
         
         editText1 = (EditText) findViewById(R.id.password);
@@ -50,13 +51,13 @@ public class check_status extends AppCompatActivity{
 
                         // proceed ...
                         show_message("Recording your entry attendance now!");
-                        Intent i = new Intent(check_status.this, geoActivity.class);
+                        Intent i = new Intent(check_status.this,cameraActivity.class);
                         startActivity(i);
 
                     }else{
                         // proceed ...
                         show_message("Recording your exit attendance now!");
-                        Intent i = new Intent(check_status.this, geoActivity.class);
+                        Intent i = new Intent(check_status.this, cameraActivity.class);
                         startActivity(i);
                     }
 
@@ -65,9 +66,17 @@ public class check_status extends AppCompatActivity{
         exit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                        show_message("Logged out successfully!");
-                        Intent i = new Intent(check_status.this, LoginActivity.class);
-                        startActivity(i);
+                show_message("Logged out successfully!");
+                Intent i = new Intent(check_status.this, LoginActivity.class);
+                startActivity(i);
+            }
+        });
+        dashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                show_message("Dashboard opened");
+                Intent i = new Intent(check_status.this, employee_dashboard.class);
+                startActivity(i);
             }
         });
     }

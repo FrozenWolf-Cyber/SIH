@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
 
     <application
@@ -17,10 +16,9 @@
         android:roundIcon="@drawable/face_icon2"
         android:supportsRtl="true"
         android:theme="@style/Theme.FaceRecognition">
-        <receiver android:name=".GeofenceBroadcastReceiver"/>
 
         <activity
-            android:name="com.totalrecon.ipravesh.ui.login.LoginActivity"
+            android:name="com.totalrecon.ipravesh.ui.login.StartPage"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -33,7 +31,23 @@
             android:exported="true"
             android:label="Geo Location" />
         <activity
-            android:name=".cameraActivity"
+            android:name="com.totalrecon.ipravesh.ui.login.LoginActivity"
+            android:exported="true"
+            android:label="Login" />
+        <activity
+            android:name="com.totalrecon.ipravesh.employee_dashboard"
+            android:exported="true"
+            android:label="Dashboard" />
+        <activity
+            android:name="com.totalrecon.ipravesh.cameraActivity"
+            android:exported="true"
+            android:label="Capture" />
+        <activity
+            android:name="com.totalrecon.ipravesh.register_new_employee"
+            android:exported="true"
+            android:label="Capture" />
+        <activity
+            android:name="com.totalrecon.ipravesh.register_new_employee_cred"
             android:exported="true"
             android:label="Capture" />
         <activity
@@ -48,10 +62,6 @@
             android:name="com.totalrecon.ipravesh.threeshot"
             android:exported="true"
             android:label="Photo Capture" />
-        <activity
-            android:name="com.totalrecon.ipravesh.ui.login.get_password"
-            android:exported="true"
-            android:label="PASSWORD" />
         <activity
             android:name="com.totalrecon.ipravesh.register"
             android:exported="true"

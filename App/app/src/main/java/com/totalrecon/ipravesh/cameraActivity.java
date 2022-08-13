@@ -52,19 +52,20 @@ public class cameraActivity extends AppCompatActivity {
     public float current_emebeds[] = new float[]{1,2,3};
     Gson gson = new Gson();
 
-    public class idWithEmbeds {
-        public String user_id;
-        public float[] embed1;
-        public float[] embed2;
-        public float[] embed3;
-    }
     public class logDetails {
-        public String user_id;
+        public String emp_no;
         public String check_in;
         public String check_out;
     }
 
     public logDetails log_obj = new logDetails();
+
+    public class idWithEmbeds {
+        public String emp_no;
+        public float[] embed1;
+        public float[] embed2;
+        public float[] embed3;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,24 +74,36 @@ public class cameraActivity extends AppCompatActivity {
         Button buttonFirst = (Button)findViewById(R.id.button_first);
 
         my_model = new model("mobile_face_net.tflite", cameraActivity.this);
+
+        // default camera functionality start
+        start_camera();
+
+        // also open camera when button is clicked ...
+
         buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // CAMERA FUNCTIONALITY HERE :
-                try {
-                    FileOutputStream fOut = openFileOutput("cur_image",MODE_PRIVATE);
-                    OutputStreamWriter osw = new OutputStreamWriter(fOut);
-                    osw.write("verify_img");
-                    osw.flush(); osw.close();
-                } catch (IOException e) {
-//                    show_error("error1 "+e);
-                    e.printStackTrace();
-                }
-                Intent camera_intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(camera_intent, pic_id);
+                start_camera();
             }
         });
     }
+
+    public void start_camera()
+    {
+        // CAMERA FUNCTIONALITY HERE :
+        try {
+            FileOutputStream fOut = openFileOutput("cur_image",MODE_PRIVATE);
+            OutputStreamWriter osw = new OutputStreamWriter(fOut);
+            osw.write("verify_img");
+            osw.flush(); osw.close();
+        } catch (IOException e) {
+//                    show_error("error1 "+e);
+            e.printStackTrace();
+        }
+        Intent camera_intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(camera_intent, pic_id);
+    }
+
     public void onActivityResult(int requestCode,
                                  int resultCode,
                                  Intent data) {
@@ -116,7 +129,9 @@ public class cameraActivity extends AppCompatActivity {
                     Log.i("VERFICATION ","YAAY VERFIED!!");
                     // verification
 //                    show_alert("Verified!");
-                    send_log();
+                    Intent i = new Intent(cameraActivity.this, geoActivity.class);
+                    startActivity(i);
+
 //                    Toast.makeText(getApplicationContext(), "VERIFIED !!", Toast.LENGTH_SHORT).show();
 //                    inverse_check_in_out();
                 }
@@ -133,84 +148,6 @@ public class cameraActivity extends AppCompatActivity {
 
     }
 
-    public void send_log(){
-        Date date = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy@hh:mm:ss");
-        String strDate = dateFormat.format(date);
-//        String strDate = "debug time test";
-
-//        log_obj.check_in = "";
-//        log_obj.check_out = "";
-
-        String cur_status = read_data("check_status");
-        if (cur_status.equals("checkout")){
-            log_obj.check_in = strDate;
-            log_obj.check_out = "blah-null";
-        }
-        else {
-            log_obj.check_out = strDate;
-            log_obj.check_in = "blah-null";
-        }
-
-        Log.i("USER ID ", log_obj.user_id);
-        Log.i(log_obj.check_in, log_obj.check_out);
-
-        String upload_URL = "https://sih-smart-attendance.herokuapp.com/update_log";
-        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
-            @Override
-            public void onResponse(NetworkResponse response) {
-                try {
-                    String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                    inverse_check_in_out();
-//                    show_alert("Your attendance has been recorded!");
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(cameraActivity.this);
-                    alertDialogBuilder.setMessage("Your attendance is recorded!")
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent i = new Intent(cameraActivity.this, check_status.class);
-                            startActivity(i);
-                        }
-                    });
-                    AlertDialog alert = alertDialogBuilder.create();
-                    alert.setCanceledOnTouchOutside(false);
-                    alert.show();
-//                    Toast.makeText(getApplicationContext(), "Your attendance has been recorded!", Toast.LENGTH_SHORT);
-
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("user_id", log_obj.user_id);
-                params.put("check_in", log_obj.check_in);
-                params.put("check_out", log_obj.check_out);
-                return params;
-            }
-        };
-        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
-
-// Send logs
-    }
-
-    public void inverse_check_in_out(){
-        String cur_status = read_data("check_status");
-        if (cur_status.equals("checkin")){
-            write_data("check_status", "checkout");
-        }
-        else {
-            write_data("check_status", "checkin");
-        }
-    }
 
     public String verified(float[] user_embeds){
         float[] embeds_n;
@@ -220,7 +157,8 @@ public class cameraActivity extends AppCompatActivity {
         String s = sh.getString("json", "");
         idWithEmbeds obj = gson.fromJson(s, idWithEmbeds.class);
 
-        log_obj.user_id = obj.user_id;
+        log_obj.emp_no = obj.emp_no;
+
         try {
             embeds_n = obj.embed1;
             distance = my_model.findDistance(embeds_n, user_embeds);

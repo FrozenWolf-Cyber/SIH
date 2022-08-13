@@ -11,6 +11,7 @@ import android.content.Context;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -46,15 +47,26 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
 import com.totalrecon.ipravesh.data.model.VolleySingleton;
-import com.totalrecon.ipravesh.ui.login.get_password;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class geoActivity extends AppCompatActivity {
 
     private LocationRequest locationRequest;
+
+    public class logDetails {
+        public String emp_no;
+        public String check_in;
+        public String check_out;
+    }
+
+    public logDetails log_obj = new logDetails();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,8 +136,9 @@ public class geoActivity extends AppCompatActivity {
 
                                 double latitude = locationResult.getLocations().get(index).getLatitude();
                                 double longitude = locationResult.getLocations().get(index).getLongitude();
-
-                                check_distance(latitude , longitude);
+                                Log.i("Latitude", "" + Double.toString(latitude));
+                                Log.i("Longitude", "" + Double.toString(longitude));
+                                check_distance(latitude, longitude);
 
                             }
                         }
@@ -196,23 +209,23 @@ public class geoActivity extends AppCompatActivity {
     }
 
     public void debug(String s) {
-        Log.i("debug message","Message :" + s);
+        Log.i("debug message", "Message :" + s);
     }
 
 
-    public void show_coordinates(String s,double a,double b) {
+    public void show_coordinates(String s, double a, double b) {
 
-        Toast.makeText(getApplicationContext(),s + "\nGreat, you are inside your office!",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), s + "\nGreat, you are inside your office!", Toast.LENGTH_SHORT).show();
 
         // write the gps stored for further use ....
         String fileName = "myGps";
-        write_data(fileName , a+" "+b);
+        write_data(fileName, a + " " + b);
     }
 
-    public void display_distance_error(double dis) {
-        // person not in campus , automatically exit ....
+    public void display_distance_error() {
+        // person not in campus, automatically exit ....
 
-        show_message("Sorry , You are not in the specific location !");
+        show_message("Sorry, you are not in your assigned office!");
 
         // go to checkin/checkout page when out of location
 
@@ -234,20 +247,16 @@ public class geoActivity extends AppCompatActivity {
             alertDialogBuilder.setMessage(s);
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
-        }
-        catch(Exception e)
-        {
-            Log.e("AlertBoxError" , e+"");
+        } catch (Exception e) {
+            Log.e("AlertBoxError", e + "");
         }
     }
 
-    public void check_distance(double latitude , double longitude)
-    {
+    public void check_distance(double latitude, double longitude) {
 
-        double [] coord = new double[2];
+        double[] coord = new double[2];
 
-        String user_id = read_data("user_id");
-
+        String emp_no = read_data("emp_no");
         String branch_name = read_data("branch_name");
 
         // post request for fetching office address
@@ -262,10 +271,8 @@ public class geoActivity extends AppCompatActivity {
                     json_rec.replaceAll("\\P{Print}", "");
                     Log.i("RESPONSE ", json_rec);
 
-
-                    if(json_rec.equals("\"INCORRECT BRANCH NAME\""))
-                    {
-                        show_message("Incorrect branch name of employee\n"+"branch_name : "+ finalBranch_name);
+                    if (json_rec.equals("\"INCORRECT BRANCH NAME\"")) {
+                        show_message("Incorrect branch name of employee\n" + "branch_name : " + finalBranch_name);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -275,34 +282,23 @@ public class geoActivity extends AppCompatActivity {
                             }
                         }, 2000);
 
-                    }
-                    else{
+                    } else {
                         Map jsonObject = new Gson().fromJson(json_rec, Map.class);
 
-                        coord[0] = Double.parseDouble(""+jsonObject.get("latitude"));
-                        coord[1] = Double.parseDouble(""+jsonObject.get("longitude"));
+                        coord[0] = Double.parseDouble("" + jsonObject.get("latitude"));
+                        coord[1] = Double.parseDouble("" + jsonObject.get("longitude"));
                         // calculate distance
 
                         double dis = distance(coord[0], coord[1], latitude, longitude);
-
-                        Log.i("RESPONSE",dis+"\n"+latitude+"\n"+longitude);
+                        Log.i("Office", coord[0] + " " + coord[1]);
+                        Log.i("RESPONSE", dis + "\n" + latitude + "\n" + longitude);
 
                         // dis is in km
-                        double zero_error = 10 *(0.001);
+                        double zero_error = 10 * (0.001);
                         if (dis < 0.1 + zero_error) {
-
-                            show_message("Geolocation verified successfully!");
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent i = new Intent(geoActivity.this, cameraActivity.class);
-                                    startActivity(i);
-                                    finish();
-                                }
-                            }, 2000);
-
+                            send_log(); // send the log status to server
                         } else {
-                            display_distance_error(dis);
+                            display_distance_error();
                         }
                     }
 
@@ -311,7 +307,7 @@ public class geoActivity extends AppCompatActivity {
                 }
             }
         }
-        , new Response.ErrorListener() {
+                , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
@@ -320,16 +316,17 @@ public class geoActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("user_id", user_id);
+                params.put("emp_no", emp_no);
                 params.put("branch_name", finalBranch_name);
+                Log.i("params", "" + params.toString());
                 return params;
             }
         };
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
 
     }
-    public double distance(double lat1, double lon1,double lat2,double lon2)
-    {
+
+    public double distance(double lat1, double lon1, double lat2, double lon2) {
 
         lon1 = Math.toRadians(lon1);
         lon2 = Math.toRadians(lon2);
@@ -341,23 +338,103 @@ public class geoActivity extends AppCompatActivity {
         double dlat = lat2 - lat1;
         double a = Math.pow(Math.sin(dlat / 2), 2)
                 + Math.cos(lat1) * Math.cos(lat2)
-                * Math.pow(Math.sin(dlon / 2),2);
+                * Math.pow(Math.sin(dlon / 2), 2);
         double c = 2 * Math.asin(Math.sqrt(a));
         double r = 6371;        // radius of earth
-        return(c * r);          // in km
+        return (c * r);          // in km
 
     }
-    public String read_data(String filename)
-    {
+
+    public String read_data(String filename) {
         SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         String s1 = sh.getString(filename, "");
         return s1;
     }
-    public void write_data(String filename,String data)
-    {
-        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+
+    public void write_data(String filename, String data) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
         myEdit.putString(filename, data);
         myEdit.commit();
     }
+
+    public void send_log() {
+
+        Date date = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy@hh:mm:ss");
+        String strDate = dateFormat.format(date);
+//        String strDate = "debug time test";
+
+//        log_obj.check_in = "";
+//        log_obj.check_out = "";
+
+        String cur_status = read_data("check_status");
+        if (cur_status.equals("checkout")) {
+            log_obj.check_in = strDate;
+            log_obj.check_out = "blah-null";
+        } else {
+            log_obj.check_out = strDate;
+            log_obj.check_in = "blah-null";
+        }
+        log_obj.emp_no = read_data("emp_no");
+
+        Log.i("EMP NO ", log_obj.emp_no);
+        Log.i(log_obj.check_in, log_obj.check_out);
+
+        String upload_URL = "https://sih-smart-attendance.herokuapp.com/update_log";
+        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
+                try {
+                    String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                    inverse_check_in_out();
+//                    show_alert("Your attendance has been recorded!");
+                    androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(geoActivity.this);
+                    alertDialogBuilder.setMessage("Your attendance is recorded!")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent i = new Intent(geoActivity.this, check_status.class);
+                                    startActivity(i);
+                                }
+                            });
+                    androidx.appcompat.app.AlertDialog alert = alertDialogBuilder.create();
+                    alert.setCanceledOnTouchOutside(false);
+                    alert.show();
+//                    Toast.makeText(getApplicationContext(), "Your attendance has been recorded!", Toast.LENGTH_SHORT);
+
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("emp_no", log_obj.emp_no);
+                params.put("check_in", log_obj.check_in);
+                params.put("check_out", log_obj.check_out);
+                return params;
+            }
+        };
+        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+    }
+
+    public void inverse_check_in_out(){
+        String cur_status = read_data("check_status");
+        if (cur_status.equals("checkin")){
+            write_data("check_status", "checkout");
+        }
+        else {
+            write_data("check_status", "checkin");
+        }
+    }
 }
+
+

@@ -10,46 +10,35 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.totalrecon.ipravesh.ui.login.LoginActivity">
+    tools:context="com.totalrecon.ipravesh.activity_signup_newemployee_cred">
 
     <EditText
-        android:id="@+id/username"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="376dp"
-        android:hint="User Name"
-        android:inputType="text"
+        android:id="@+id/employee_number"
+        android:layout_width="282dp"
+        android:layout_height="60dp"
+        android:hint="Employee Number"
+        android:inputType="number"
         android:selectAllOnFocus="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.457"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.479" />
 
     <Button
-        android:id="@+id/login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/next"
+        android:layout_width="148dp"
+        android:layout_height="49dp"
         android:layout_gravity="start"
-        android:layout_marginBottom="64dp"
-        android:enabled="false"
-        android:text="login"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/signup"
-        app:layout_constraintHorizontal_bias="0.287"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/signup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginBottom="64dp"
-        android:enabled="false"
-        android:text="sign up"
+        android:enabled="true"
+        android:text="VERIFY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.839"
-        app:layout_constraintStart_toStartOf="parent" />
-
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.749" />
 
     <TextView
         android:id="@+id/textView"
@@ -65,15 +54,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="253dp"
-        android:layout_height="158dp"
-        app:layout_constraintBottom_toTopOf="@+id/username"
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="288dp"
+        android:layout_height="47dp"
+        android:text="EMPLOYEE NUMBER:"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.471"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.603"
-        app:srcCompat="@drawable/gail" />
+        app:layout_constraintVertical_bias="0.343"
+        tools:ignore="MissingConstraints" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

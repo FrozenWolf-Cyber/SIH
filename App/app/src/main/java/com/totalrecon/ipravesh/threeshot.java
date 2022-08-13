@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.content.SharedPreferences;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ public class threeshot extends AppCompatActivity {
 
     // Class for storing embeds with user_id
     public class idWithEmbeds {
-        public String user_id = "dummy";
+        public String emp_no = "dummy";
         public float[] embed1 = {};
         public float[] embed2 = {};
         public float[] embed3 = {};
@@ -55,7 +56,6 @@ public class threeshot extends AppCompatActivity {
 
     idWithEmbeds user_embeds = new idWithEmbeds();
     public model my_model;
-    private String upload_URL = "https://sih-smart-attendance.herokuapp.com/signup";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +65,8 @@ public class threeshot extends AppCompatActivity {
         imageView5 = (ImageView)findViewById(R.id.imageView5);
         imageView6 = (ImageView)findViewById(R.id.imageView6);
         imageView7 = (ImageView)findViewById(R.id.imageView7);
+        Button button = findViewById(R.id.button5);
+        Button button1 = findViewById(R.id.button6);
         imageView5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,6 +115,23 @@ public class threeshot extends AppCompatActivity {
                 startActivityForResult(camera_intent, pic_id3);
             }
         });
+        button.setOnClickListener(new View.OnClickListener() {
+            // upload all details to server - uploadsignup.java
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(threeshot.this, uploadsignup.class);
+                startActivity(i);
+
+            }
+        });
+        button1.setOnClickListener(new View.OnClickListener() {
+            // back button
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(threeshot.this, register_new_employee_cred.class);
+                startActivity(i);
+            }
+        });
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -159,9 +178,7 @@ public class threeshot extends AppCompatActivity {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Intent i = new Intent(threeshot.this, uploadsignup.class);
-                            startActivity(i);
-                            finish();
+
                         }
                     }, 2000);
                 }
@@ -209,9 +226,7 @@ public class threeshot extends AppCompatActivity {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Intent i = new Intent(threeshot.this, uploadsignup.class);
-                            startActivity(i);
-                            finish();
+
                         }
                     }, 2000);
                 }
@@ -259,9 +274,7 @@ public class threeshot extends AppCompatActivity {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Intent i = new Intent(threeshot.this, uploadsignup.class);
-                            startActivity(i);
-                            finish();
+
                         }
                     }, 2000);
                 }
