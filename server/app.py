@@ -8,11 +8,15 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse
 
+# db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
+# db_user =  'postgres' #'be6a5ab891fb44'
+# db_psswrd = 'aadarsh2003' #heroku-psswrd
+# db_name = 'sih_attendance' #heroku-db
 
-db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
-db_user =  'postgres' #'be6a5ab891fb44'
-db_psswrd = '3112003' #heroku-psswrd
-db_name = 'sih_attendance' #heroku-db
+db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
+db_user =  'sxxkdscneuzrwf'
+db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
+db_name = 'd3rhldildqlaje'
 
 ADMIN_USERNAME = 'ADMIN'
 ADMIN_PSSWRD = 'ADMIN'
@@ -198,7 +202,6 @@ async def login(
 
     return str(await exception_handle("SERVER ERROR WHILE CHECKING LOGIN DETAILS", mydb.user_login_details, data, type_of_login))
 
-
 @app.post('/check_username')
 async def check_username(
     username: str = Form(...),
@@ -219,8 +222,8 @@ async def check_emp_no(
         return "YES"
 
     return "NO"
-
-
+    
+    
 @app.post('/get_info')
 async def get_info(
     emp_no: str = Form(...)
@@ -262,7 +265,8 @@ async def get_embed(
     print(len(data), data, data[0], sep="\n\n\n", flush=True)
     form = {}
     for i, j in zip(data_args, data):
-        j = list(map(float,j[0]))
+        # print ('j', j, j[0])
+        j = eval(','.join(j))
         form[i] = j
         
     return form
