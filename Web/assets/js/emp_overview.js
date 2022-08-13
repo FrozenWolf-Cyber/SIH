@@ -42,7 +42,7 @@ function sqlToNosql(){
     return emp_list1;
 }
 
-function process_data(data)
+function process_data()
 {
    
 }

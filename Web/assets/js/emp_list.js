@@ -13,7 +13,8 @@ function sleep(ms)
 {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
+document.body.style.pointerEvents = 'none';
+document.body.style.opacity = '0.6';
 
 const waitForData = async () => {
     while(!(emp_list))
@@ -22,6 +23,8 @@ const waitForData = async () => {
         await sleep(60);
     }
     console.log('emp_list',emp_list);
+    document.body.style.pointerEvents = 'inherit';
+    document.body.style.opacity = 'inherit';
     startWork();
 }
 waitForData();
@@ -54,14 +57,15 @@ function createEmpElement(emp){
         </div>
     `;   
 }
+const emp_list_container = document.querySelector('#emp-list');
 var emp_list1;
 function startWork()
 {
     emp_list1 = sqlToNosql();
-    const emp_list_container = document.querySelector('#emp-list');
     for(emp of emp_list1)
     {
         let emp_element = createEmpElement(emp);
         emp_list_container.innerHTML += emp_element;
     }
+    fill_search_options();
 }

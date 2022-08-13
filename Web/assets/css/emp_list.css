@@ -1,7 +1,7 @@
 main {
   height: 100vh;
   display: grid;
-  grid-template-rows: 60px 0px 1fr;
+  grid-template-rows: 60px 150px 1fr;
   justify-items: center;
 }
 
@@ -10,6 +10,42 @@ main h1 {
   width: 100%;
   font-size: 3rem;
   box-sizing: border-box;
+}
+
+main #search #search-bar-container {
+  height: fit-content;
+  width: fit-content;
+  border: 0px solid;
+  border-radius: 2rem;
+  box-shadow: #d6d8d9 3px 3px 6px 0px inset, #ede8ea -3px -3px 6px 1px inset;
+  box-shadow: 0 0 2px 1px #90a3f6;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 3px 12px 3px 9px;
+  margin: 30px 0px 21px 0px;
+}
+
+main #search #search-bar-container #search-bar {
+  display: inline-block;
+  height: 36px;
+  width: 600px !important;
+  background-color: #f6f4f6;
+  font-size: larger;
+  border: 0px solid;
+}
+
+main #search #search-bar-container span {
+  display: inline-block;
+  height: fit-content;
+  width: fit-content;
+}
+
+main #search #adv-search {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 main #emp-list {
