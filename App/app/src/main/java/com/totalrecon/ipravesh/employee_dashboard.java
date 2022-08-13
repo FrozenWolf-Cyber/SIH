@@ -119,9 +119,13 @@ public class employee_dashboard extends AppCompatActivity {
                         }
 
                         present = (present / 30) * 100;
+
                         Log.i("RESPONSE", "percentage : " + present + " %");
-                        percent.setText("" + present + "%");      // percentage present in total
+                        percent.setText("" + String.format("%.2f" , present) + "%");
+                        // percentage present in total
+
                         logdetails.setText(log_data_detail+"");
+
                         set_pie_chart(present, 100 - present);
 
                     }

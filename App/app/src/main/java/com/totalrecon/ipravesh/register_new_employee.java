@@ -90,7 +90,7 @@ public class register_new_employee extends AppCompatActivity{
                         @Override
                         protected Map<String, String> getParams() {
                             Map<String, String> params = new HashMap<>();
-                            params.put("emp_no", "\""+emplno+"\"");
+                            params.put("emp_no", ""+emplno+"");
                             return params;
                         }
                     };

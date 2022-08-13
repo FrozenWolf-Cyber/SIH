@@ -293,7 +293,7 @@ public class geoActivity extends AppCompatActivity {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent i = new Intent(geoActivity.this, cameraActivity.class);
+                                    Intent i = new Intent(geoActivity.this, check_status.class);
                                     startActivity(i);
                                     finish();
                                 }

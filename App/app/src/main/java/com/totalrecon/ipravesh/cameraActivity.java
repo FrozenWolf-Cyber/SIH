@@ -73,24 +73,36 @@ public class cameraActivity extends AppCompatActivity {
         Button buttonFirst = (Button)findViewById(R.id.button_first);
 
         my_model = new model("mobile_face_net.tflite", cameraActivity.this);
+
+        // default camera functionality start
+        start_camera();
+
+        // also open camera when button is clicked ...
+
         buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // CAMERA FUNCTIONALITY HERE :
-                try {
-                    FileOutputStream fOut = openFileOutput("cur_image",MODE_PRIVATE);
-                    OutputStreamWriter osw = new OutputStreamWriter(fOut);
-                    osw.write("verify_img");
-                    osw.flush(); osw.close();
-                } catch (IOException e) {
-//                    show_error("error1 "+e);
-                    e.printStackTrace();
-                }
-                Intent camera_intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(camera_intent, pic_id);
+                start_camera();
             }
         });
     }
+
+    public void start_camera()
+    {
+        // CAMERA FUNCTIONALITY HERE :
+        try {
+            FileOutputStream fOut = openFileOutput("cur_image",MODE_PRIVATE);
+            OutputStreamWriter osw = new OutputStreamWriter(fOut);
+            osw.write("verify_img");
+            osw.flush(); osw.close();
+        } catch (IOException e) {
+//                    show_error("error1 "+e);
+            e.printStackTrace();
+        }
+        Intent camera_intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(camera_intent, pic_id);
+    }
+
     public void onActivityResult(int requestCode,
                                  int resultCode,
                                  Intent data) {
@@ -167,7 +179,7 @@ public class cameraActivity extends AppCompatActivity {
                     alertDialogBuilder.setMessage("Your attendance is recorded!")
                             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            Intent i = new Intent(cameraActivity.this, check_status.class);
+                            Intent i = new Intent(cameraActivity.this, geoActivity.class);
                             startActivity(i);
                         }
                     });

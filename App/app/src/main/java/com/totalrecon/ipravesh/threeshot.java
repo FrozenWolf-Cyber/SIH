@@ -116,6 +116,7 @@ public class threeshot extends AppCompatActivity {
             }
         });
         button.setOnClickListener(new View.OnClickListener() {
+            // upload all details to server - uploadsignup.java
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(threeshot.this, uploadsignup.class);
@@ -124,6 +125,7 @@ public class threeshot extends AppCompatActivity {
             }
         });
         button1.setOnClickListener(new View.OnClickListener() {
+            // back button
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(threeshot.this, register_new_employee_cred.class);

@@ -51,13 +51,13 @@ public class check_status extends AppCompatActivity{
 
                         // proceed ...
                         show_message("Recording your entry attendance now!");
-                        Intent i = new Intent(check_status.this, geoActivity.class);
+                        Intent i = new Intent(check_status.this,cameraActivity.class);
                         startActivity(i);
 
                     }else{
                         // proceed ...
                         show_message("Recording your exit attendance now!");
-                        Intent i = new Intent(check_status.this, geoActivity.class);
+                        Intent i = new Intent(check_status.this, cameraActivity.class);
                         startActivity(i);
                     }
 

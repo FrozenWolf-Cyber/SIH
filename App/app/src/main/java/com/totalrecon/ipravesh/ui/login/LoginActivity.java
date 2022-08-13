@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,21 +17,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.totalrecon.ipravesh.R;
-import com.totalrecon.ipravesh.cameraActivity;
 import com.totalrecon.ipravesh.check_status;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
 import com.totalrecon.ipravesh.data.model.VolleySingleton;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.totalrecon.ipravesh.geoActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity{
-    private Button button;
+    private Button login_button , back_button;
     private TextView textView;
     private EditText password , username;
 
@@ -67,7 +64,8 @@ public class LoginActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.existing_user_login);
 
-        button = (Button) findViewById(R.id.login);
+        login_button = (Button) findViewById(R.id.login);
+        back_button = (Button) findViewById(R.id.backbutton);
 
         password = (EditText) findViewById(R.id.password);
         username = (EditText) findViewById(R.id.username);
@@ -75,7 +73,14 @@ public class LoginActivity extends AppCompatActivity{
         textView = (TextView) findViewById(R.id.textView);
         textView.setText("EXISTING USER");
 
-        button.setOnClickListener(new View.OnClickListener() {
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(LoginActivity.this, StartPage.class);
+                startActivity(i);
+            }
+        });
+        login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

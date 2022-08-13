@@ -64,7 +64,7 @@ public class uploadsignup extends AppCompatActivity {
 
     public void readSP() {
 //        obj.mail_id = read_data("email");
-        obj.user_name = read_data("user_name");
+        obj.user_name = read_data("username");
         obj.password = read_data("password");
 //        obj.name = read_data("name");
 //        obj.designation = read_data("desig");
@@ -150,15 +150,10 @@ public class uploadsignup extends AppCompatActivity {
                     @Override
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<>();
-//                        params.put("mail_id", obj.mail_id);
+
                         params.put("user_name", obj.user_name);
                         params.put("password", obj.password);
-//                        params.put("name", obj.name);
-//                        params.put("designation", obj.designation);
-                        params.put("emp_no", "\""+obj.emp_no+"\"");
-//                        params.put("gender", obj.gender);
-//                        params.put("office_address", obj.office_address);
-//                        params.put("contact_no", obj.contact_no);
+                        params.put("emp_no", obj.emp_no);
                         params.put("embed1", Arrays.toString(user_embeds.embed1));
                         params.put("embed2", Arrays.toString(user_embeds.embed2));
                         params.put("embed3", Arrays.toString(user_embeds.embed3));

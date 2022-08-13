@@ -33,7 +33,7 @@
         <activity
             android:name="com.totalrecon.ipravesh.ui.login.LoginActivity"
             android:exported="true"
-            android:label="Geo Location" />
+            android:label="Login" />
         <activity
             android:name="com.totalrecon.ipravesh.employee_dashboard"
             android:exported="true"

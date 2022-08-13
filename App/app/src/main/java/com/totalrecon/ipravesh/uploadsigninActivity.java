@@ -41,7 +41,7 @@ public class uploadsigninActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                String username = read_data("cur_user_login");
+                String username = read_data("user_name");
                 String gps = read_data("myGps");
                 String cur_state = read_data("check_status");
                 Date currentTime = Calendar.getInstance().getTime();
