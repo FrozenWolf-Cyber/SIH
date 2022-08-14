@@ -66,7 +66,9 @@ async def exception_handle(msg, func, *args):
 async def update_log(
     emp_no : str = Form(...),
     check_in: str = Form(...),
-    check_out: str = Form(...)
+    check_out: str = Form(...),
+    latitude: str= Form(...),
+    longitude: str= Form(...)
 ):
     emp_no = emp_no[1:-1]
 
@@ -79,7 +81,7 @@ async def update_log(
     if check_out == "blah-null":
         check_out = None
 
-    return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.update_log, emp_no, check_in, check_out)
+    return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.update_log, emp_no, check_in, check_out, latitude, longitude)
 
 
 @app.post('/modify_log')
@@ -228,7 +230,7 @@ async def get_info(
     if not await mydb.check_emp_no_signed(emp_no):
         return "EMPLOYEE NUMBER DOESN'T EXIST"
 
-    data_args = 'name,designation,emp_no,gender,branch_name,contact_no,check_in,check_out'.split(',')
+    data_args = 'name,designation,emp_no,gender,branch_name,contact_no,check_in,check_out,in_latitude,in_longitude,out_latitude,out_longitude'.split(',')
     e = await exception_handle("SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL", mydb.get_user_details, emp_no)
     if e == "SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL":
         return e
