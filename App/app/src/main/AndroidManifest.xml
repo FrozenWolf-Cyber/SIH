@@ -18,7 +18,7 @@
         android:theme="@style/Theme.FaceRecognition">
 
         <activity
-            android:name="com.totalrecon.ipravesh.ui.login.StartPage"
+            android:name="com.totalrecon.ipravesh.ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -31,10 +31,6 @@
             android:exported="true"
             android:label="Geo Location" />
         <activity
-            android:name="com.totalrecon.ipravesh.ui.login.LoginActivity"
-            android:exported="true"
-            android:label="Login" />
-        <activity
             android:name="com.totalrecon.ipravesh.employee_dashboard"
             android:exported="true"
             android:label="Dashboard" />
@@ -43,13 +39,9 @@
             android:exported="true"
             android:label="Capture" />
         <activity
-            android:name="com.totalrecon.ipravesh.register_new_employee"
-            android:exported="true"
-            android:label="Capture" />
-        <activity
             android:name="com.totalrecon.ipravesh.register_new_employee_cred"
             android:exported="true"
-            android:label="Capture" />
+            android:label="Register" />
         <activity
             android:name="com.totalrecon.ipravesh.uploadsigninActivity"
             android:exported="true"

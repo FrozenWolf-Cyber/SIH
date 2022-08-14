@@ -21,6 +21,7 @@ public class check_status extends AppCompatActivity{
     String cur_status;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check_status_layout);
         check_both=(Button)findViewById(R.id.buttonKavi);
@@ -69,6 +70,7 @@ public class check_status extends AppCompatActivity{
                 show_message("Logged out successfully!");
                 Intent i = new Intent(check_status.this, LoginActivity.class);
                 startActivity(i);
+                finish();
             }
         });
         dashboard.setOnClickListener(new View.OnClickListener() {

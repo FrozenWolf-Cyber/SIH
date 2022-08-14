@@ -296,7 +296,8 @@ public class geoActivity extends AppCompatActivity {
                         // dis is in km
                         double zero_error = 10 * (0.001);
                         if (dis < 0.1 + zero_error) {
-                            send_log(); // send the log status to server
+                            send_log("\""+coord[0]+"\"" , "\""+coord[1]+"\"");
+                            // send the log status with location to server
                         } else {
                             display_distance_error();
                         }
@@ -359,7 +360,7 @@ public class geoActivity extends AppCompatActivity {
     }
 
 
-    public void send_log() {
+    public void send_log(String latitude , String longitude) {
 
         Date date = Calendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy@hh:mm:ss");
@@ -421,6 +422,8 @@ public class geoActivity extends AppCompatActivity {
                 params.put("emp_no", log_obj.emp_no);
                 params.put("check_in", log_obj.check_in);
                 params.put("check_out", log_obj.check_out);
+                params.put("latitude", latitude);
+                params.put("longitude",longitude);
                 return params;
             }
         };
