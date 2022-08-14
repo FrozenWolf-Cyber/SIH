@@ -12,6 +12,16 @@
     tools:context="com.totalrecon.ipravesh.ui.login.LoginActivity">
 
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="232dp"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ipraveshicon" />
+
     <EditText
         android:id="@+id/password"
         android:layout_width="0dp"
@@ -25,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.73" />
+        app:layout_constraintVertical_bias="0.782" />
 
     <EditText
         android:id="@+id/username"
@@ -52,10 +62,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.093"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.956" />
+        app:layout_constraintVertical_bias="0.968" />
 
     <TextView
         android:id="@+id/textView16"
@@ -65,10 +75,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.093"
+        app:layout_constraintHorizontal_bias="0.103"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.656" />
+        app:layout_constraintVertical_bias="0.701" />
 
     <Button
         android:id="@+id/signupbutton"
@@ -108,24 +118,10 @@
         android:id="@+id/imageView2"
         android:layout_width="253dp"
         android:layout_height="158dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="124dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/gail" />
-
-    <TextView
-        android:id="@+id/textView18"
-        android:layout_width="221dp"
-        android:layout_height="82dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/dancingscript_bold"
-        android:text="  i-Pravesh"
-        android:textColor="#1831BF"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:srcCompat="@drawable/gaillogo_login" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
