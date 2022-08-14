@@ -58,7 +58,11 @@ class Database:
         await self.database.execute('''CREATE TABLE IF NOT EXISTS USER_LOG ( 
                           emp_no VARCHAR(100)  ,
                           check_in TIMESTAMP,
-                          check_out TIMESTAMP);
+                          check_out TIMESTAMP,
+                          in_latitude VARCHAR(100),
+                          in_longitude VARCHAR(100),
+                          out_latitude VARCHAR(100),
+                          out_longitude VARCHAR(100));
         ''')
 
         await self.database.execute('''CREATE TABLE IF NOT EXISTS GEO_LOCATION ( 
@@ -241,17 +245,25 @@ class Database:
             details = i
 
         details = list(details)
+        log_data = [[], [], [], [], [], []]
         
-        for i in await self.database.fetch_all("SELECT check_in, check_out FROM USER_LOG WHERE emp_no = '%s'" % (emp_no,)):
+        for i in await self.database.fetch_all("SELECT check_in, check_out, in_latitude, in_longitude, out_latitude, out_longitude FROM USER_LOG WHERE emp_no = '%s'" % (emp_no,)):
             i = tuple(i.values())
-            details.append(i)
+            log_data[0].append(i[0])
+            log_data[1].append(i[1])
+            log_data[2].append(i[2])
+            log_data[3].append(i[3])
+            log_data[4].append(i[4])
+            log_data[5].append(i[5])
         
-        return details      
+        return details+log_data
 
 
-    async def update_log(self, emp_no, check_in, check_out):
+    async def update_log(self, emp_no, check_in, check_out, latitude, longitude):
         # Input format : Date-Month-Year@Hour:Minute:Seconds
         # Required format : Year-Month-Date@Hour:Minute:Seconds
+        # Location format : latitude@longitude
+
 
         if check_in is not None:
             temp = check_in.split('@')
@@ -259,7 +271,7 @@ class Database:
                 return "GIVEN CHECKIN TIME IS IN WRONG FORMAT"
 
             check_in = '-'.join(temp[0].split('-')[::-1]) + '@' + temp[1]
-            await self.database.execute("INSERT INTO USER_LOG (emp_no, check_in) VALUES ('%s', '%s')" % (emp_no,check_in))
+            await self.database.execute("INSERT INTO USER_LOG (emp_no, check_in, in_latitude, in_longitude) VALUES ('%s', '%s', '%s', '%s')" % (emp_no, check_in,latitude, longitude))
 
         else :
             temp = check_out.split('@')
@@ -267,7 +279,7 @@ class Database:
                 return "GIVEN CHECKOUT TIME IS IN WRONG FORMAT"
 
             check_out = '-'.join(temp[0].split('-')[::-1]) + '@' + temp[1]
-            await self.database.execute("UPDATE USER_LOG set check_out = '%s' WHERE emp_no = '%s' AND check_out IS NULL" % (check_out, emp_no))
+            await self.database.execute("UPDATE USER_LOG set check_out = '%s', out_latitude = '%s', out_longitude = '%s' WHERE emp_no = '%s' AND check_out IS NULL" % (check_out, latitude, longitude, emp_no))
             
         return "LOG UPDATED"
 
@@ -309,13 +321,18 @@ class Database:
 
 
     async def get_log_data(self, last_n_days):
-        data = {'emp_no':[], 'check_in':[], 'check_out':[]}
+        args = "emp_no check_in check_out in_latitude in_longitude out_latitude out_longitude".split(" ")
+        data = {i:[] for i in args}
 
-        for i in await self.database.fetch_all("SELECT emp_no, check_in, check_out FROM USER_LOG WHERE DATE_PART('day', CURRENT_TIMESTAMP- check_in) <= %s;" % (last_n_days,)):
+        for i in await self.database.fetch_all("SELECT emp_no, check_in, check_out, in_latitude, in_longitude, out_latitude, out_longitude FROM USER_LOG WHERE DATE_PART('day', CURRENT_TIMESTAMP- check_in) <= %s;" % (last_n_days,)):
             i = tuple(i.values())
             data['emp_no'].append(i[0])
             data['check_in'].append(i[1])
             data['check_out'].append(i[2])
+            data['in_latitude'].append(i[3])
+            data['in_longitude'].append(i[4])
+            data['out_latitude'].append(i[5])
+            data['out_longitude'].append(i[6])
 
         return data
 

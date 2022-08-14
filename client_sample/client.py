@@ -139,15 +139,15 @@ def do_analysis(nth_parallel):
     ## UPDATE LOG
     print(f"\n{nth_parallel} Update Logs......")
     url = f'{URL}/update_log'
-    x = requests.post(url, data= {'emp_no' : emp_no, "check_in":"06.03.2022@10:53:56", "check_out":"blah-null"})
+    x = requests.post(url, data= {'emp_no' : emp_no, "check_in":"06.03.2022@10:53:56", "check_out":"blah-null", "latitude":"123.1232", "longitude":"321.64533"})
     print(x.text)
 
-    x = requests.post(url, data= {'emp_no' : emp_no, "check_in":"blah-null","check_out":"06.03.2022@10:53:56"})
+    x = requests.post(url, data= {'emp_no' : emp_no, "check_in":"blah-null","check_out":"06.03.2022@10:53:56", "latitude":"123.1232", "longitude":"321.64533"})
     print(x.text)
 
 
     url = f'{URL}/update_log'
-    x = requests.post(url, data= {'emp_no' : emp_no, "check_in":"06.03.2022@10:53:56", "check_out":"blah-null"})
+    x = requests.post(url, data= {'emp_no' : emp_no, "check_in":"06.03.2022@10:53:56", "check_out":"blah-null", "latitude":"123.1232", "longitude":"321.64533"})
     print(x.text)
 
     url = f'{URL}/check_in_out_status'
