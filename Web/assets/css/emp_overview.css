@@ -1,0 +1,10 @@
+main {
+  display: flex;
+  align-items: center  !important;
+  justify-content: space-around;
+  width: 100%;
+}
+
+main .vis {
+  border: 2px solid grey;
+}

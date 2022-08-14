@@ -50,17 +50,19 @@ function process_data()
         men:0
       },
       designation:{
-
+           x:[],
+           y:[]
       }
    };
    emp_list1.forEach(emp => {
-      if(data.designation[emp.designation] != null)
+      if(data.designation.x.includes(emp.designation))
       {
-        data.designation[emp.designation] += 1; 
+        data.designation.y[data.designation.x.indexOf(emp.designation)]++; 
       }
       else
       {
-        data.designation[emp.designation] = 0;
+        data.designation.x.push(emp.designation);
+        data.designation.y.push(1);
       }
       
       data.emp_num.total += 1;
@@ -119,35 +121,65 @@ function davis(data)
   });
   
   //designation
-  let x_data = [];
-  let y_data = [];
-  console.log(data.designation);
-  data.designation.map(desig => {
-    x_data.push(desig);
-    y_data.push(data.designation[desig]);
-  })
-
-  console.log(x_data,y_data);
-    Highcharts.chart('container2', {
-        chart: {
-            type: 'bar'
-        },
+  let desig_data = [];
+  for(let i = 0;i < data.designation.x.length;i++)
+  {
+    let desig = {
+      name:data.designation.x[i],
+      y:(data.designation.y[i]/data.emp_num.total)*100
+    };
+    desig_data.push(desig);
+  }
+  console.log(desig_data);
+  Highcharts.chart('container3', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        align: 'center',
+        text: 'Designation vs Employee number'
+    },
+    accessibility: {
+        announceNewData: {
+            enabled: true
+        }
+    },
+    xAxis: {
+        type: 'category'
+    },
+    yAxis: {
         title: {
-            text: 'Fruit Consumption'
-        },
-        xAxis: {
-            categories: ['Apples', 'Bananas', 'Oranges']
-        },
-        yAxis: {
-            title: {
-                text: 'Fruit eaten'
+            text: 'Number of Employee'
+        }
+
+    },
+    legend: {
+        enabled: false
+    },
+    plotOptions: {
+        series: {
+            borderWidth: 3,
+            dataLabels: {
+                enabled: true,
+                format: '{point.y:.2f}%'
             }
-        },
-        series: [{
-            name: 'Jane',
-            data: [1, 0, 4]
-        }]
-    });
+        }
+    },
+
+    tooltip: {
+        headerFormat: '<span style="font-size:12px">{series.name}</span><br>',
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>',
+        
+    }, 
+    series:[
+      {
+        name: "Num of Emp",
+        colorByPoint: true,
+        data:desig_data
+      }
+    ]
+});
+
 
   const adv= document.querySelectorAll('.highcharts-credits');
   for(i of adv)
