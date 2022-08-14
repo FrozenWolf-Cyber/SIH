@@ -114,7 +114,7 @@ public class employee_dashboard extends AppCompatActivity {
                         for (int i = 0; i < users.size(); i++) {
                             if (("\""+users.get(i)+"\"").equals(emp_no)) {
                                 present += 1;
-                                log_data_detail += "check in: "+checkin.get(i)+"\ncheck out: "+checkout.get(i)+"\n\n";
+                                log_data_detail += "Entry: "+checkin.get(i)+"\nExit: "+checkout.get(i)+"\n\n";
                             }
                             Log.i("RESPONSE", users.get(i));
                         }

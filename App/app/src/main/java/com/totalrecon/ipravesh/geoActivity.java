@@ -222,7 +222,7 @@ public class geoActivity extends AppCompatActivity {
         write_data(fileName, a + " " + b);
     }
 
-    public void display_distance_error(double dis) {
+    public void display_distance_error() {
         // person not in campus, automatically exit ....
 
         show_message("Sorry, you are not in your assigned office!");
@@ -296,17 +296,7 @@ public class geoActivity extends AppCompatActivity {
                         // dis is in km
                         double zero_error = 10 * (0.001);
                         if (dis < 0.1 + zero_error) {
-
-                            show_message("Geolocation verified successfully!");
                             send_log(); // send the log status to server
-
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    finish();
-                                }
-                            }, 2000);
-
                         } else {
                             display_distance_error();
                         }

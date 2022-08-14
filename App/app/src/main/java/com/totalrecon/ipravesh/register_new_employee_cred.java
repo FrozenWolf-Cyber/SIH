@@ -113,6 +113,7 @@ public class register_new_employee_cred extends AppCompatActivity{
                                                 json_rec.replaceAll("\\P{Print}", "");
                                                 String resp = "\"NO\"";
                                                 Log.i("RESPONSE", json_rec);
+                                                Log.i("resp", resp);
                                                 if (resp.equals(json_rec)) {
                                                     write_data("username", user_name);
                                                     write_data("password", pass_word);
@@ -137,7 +138,7 @@ public class register_new_employee_cred extends AppCompatActivity{
                                         @Override
                                         protected Map<String, String> getParams() {
                                             Map<String, String> params = new HashMap<>();
-                                            params.put("username", "\"" + user_name + "\"");
+                                            params.put("username", user_name);
                                             return params;
                                         }
                                     };
