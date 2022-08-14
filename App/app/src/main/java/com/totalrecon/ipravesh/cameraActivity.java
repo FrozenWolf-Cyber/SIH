@@ -101,6 +101,7 @@ public class cameraActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         Intent camera_intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        camera_intent.putExtra("android.intent.extras.CAMERA_FACING", 1); // Open front camera first
         startActivityForResult(camera_intent, pic_id);
     }
 

@@ -296,7 +296,7 @@ public class geoActivity extends AppCompatActivity {
                         // dis is in km
                         double zero_error = 10 * (0.001);
                         if (dis < 0.1 + zero_error) {
-                            send_log("\""+coord[0]+"\"" , "\""+coord[1]+"\"");
+                            send_log(Double.toString(latitude), Double.toString(longitude));
                             // send the log status with location to server
                         } else {
                             display_distance_error();
