@@ -21,7 +21,7 @@ body{
     color:rgb(149, 149, 149);
     nav{
       display: flex;
-      height:150px;
+      height:180px;
       width: 100%;
       box-sizing: border-box;
       align-items: center;
@@ -42,8 +42,16 @@ body{
       }
     }
     img{
-      height:45px;
+      height:51px;
       width:100%;
     }
+  }
+}
+
+.nav-highlight{
+  color: white;
+  border-left: 6px solid white;
+  i{
+    color:white;
   }
 }

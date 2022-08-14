@@ -1,0 +1,33 @@
+
+<!-- 
+  url = 'http://127.0.0.1:5000/admin_signup'
+
+
+  input data = {'mail_id' : mail_id, # Datatype same as in signup upload
+          'name' : name,
+          'designation' : designation,
+          'gender' : 'M/F',
+          'branch_name' : branch_name,
+          'contact_no' : contact_no,
+          }
+
+  output response data : employee no. (str) -->
+<main>
+
+    <form action="http://127.0.0.1:5000/admin_signup" method="post">
+       <input type="email" name="mail_id" placeholder="Email">
+       <input type="text" name="name" placeholder="Employee name">
+       <input type="text" name="designation" placeholder="Designation">
+       <div id="gender">
+          <label for="male">Male</label>
+          <input type="radio" id="male" value="M" name="gender">
+          <label for="female">Female</label>
+          <input type="radio" id="female" value="F" name="gender"> 
+       </div>
+       <input type="text" name="branch_name" placeholder="Branch Name">
+       <input type="number" name="contact_no" placeholder="Phone number">
+       <button type="submit">Register</button>
+    </form>
+</main>
+
+<script src="/js/create_emp.js"></script>

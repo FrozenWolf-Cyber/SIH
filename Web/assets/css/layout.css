@@ -21,7 +21,7 @@ body #side-nav {
 
 body #side-nav nav {
   display: flex;
-  height: 150px;
+  height: 180px;
   width: 100%;
   box-sizing: border-box;
   align-items: center;
@@ -42,6 +42,15 @@ body #side-nav nav a:hover {
 }
 
 body #side-nav img {
-  height: 45px;
+  height: 51px;
   width: 100%;
+}
+
+.nav-highlight {
+  color: white;
+  border-left: 6px solid white;
+}
+
+.nav-highlight i {
+  color: white;
 }

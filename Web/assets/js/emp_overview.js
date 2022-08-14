@@ -44,10 +44,37 @@ function sqlToNosql(){
 
 function process_data()
 {
-   
+   let data = {
+      emp_num:{
+        total:0,
+        men:0
+      },
+      designation:{
+
+      }
+   };
+   emp_list1.forEach(emp => {
+      if(data.designation[emp.designation] != null)
+      {
+        data.designation[emp.designation] += 1; 
+      }
+      else
+      {
+        data.designation[emp.designation] = 0;
+      }
+      
+      data.emp_num.total += 1;
+      if(emp.gender == 'Male' || emp.gender == 'M')
+      {
+        data.emp_num.men += 1;
+      }
+   });
+   return data;
 }
-function davis()
+
+function davis(data)
 {
+  //gender
   Highcharts.chart('container1', {
     chart: {
       plotBackgroundColor: null,
@@ -77,19 +104,56 @@ function davis()
       }
     },
     series: [{
-      name: 'Brands',
+      name: 'Gender',
       colorByPoint: true,
       data: [{
         name: 'Male',
-        y: 61.41,
+        y: (data.emp_num.men/data.emp_num.total)*100,
         sliced: true,
         selected: true
       },{
         name:'Female',
-        y:(100-61.41)
+        y:((data.emp_num.total - data.emp_num.men)/(data.emp_num.total))*100
       }]
     }]
   });
+  
+  //designation
+  let x_data = [];
+  let y_data = [];
+  console.log(data.designation);
+  data.designation.map(desig => {
+    x_data.push(desig);
+    y_data.push(data.designation[desig]);
+  })
+
+  console.log(x_data,y_data);
+    Highcharts.chart('container2', {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Fruit Consumption'
+        },
+        xAxis: {
+            categories: ['Apples', 'Bananas', 'Oranges']
+        },
+        yAxis: {
+            title: {
+                text: 'Fruit eaten'
+            }
+        },
+        series: [{
+            name: 'Jane',
+            data: [1, 0, 4]
+        }]
+    });
+
+  const adv= document.querySelectorAll('.highcharts-credits');
+  for(i of adv)
+  {
+    i.remove();
+  }
 }
 
 
