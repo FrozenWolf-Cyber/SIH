@@ -244,7 +244,7 @@ class Database:
         
         for i in await self.database.fetch_all("SELECT check_in, check_out FROM USER_LOG WHERE emp_no = '%s'" % (emp_no,)):
             i = tuple(i.values())
-            details.append(i[0])
+            details.append(i)
         
         return details      
 

@@ -13,7 +13,8 @@ def random_string_generator(str_size):
 def random_number_generator(str_size):
     return ''.join(random.choice(string.digits) for x in range(str_size))
 
-URL = "https://sih-smart-attendance.herokuapp.com"
+# URL = "https://sih-smart-attendance.herokuapp.com"
+URL = "http://127.0.0.1:5000"
 
 def do_analysis(nth_parallel):
     ## SIGNUP
@@ -126,21 +127,6 @@ def do_analysis(nth_parallel):
     print(x.text)
 
 
-    ## GET INFO
-    print(f"\n{nth_parallel} Testing LOGIN......")
-    url = f'{URL}/get_info' # ERROR
-    data = {'emp_no' : '1'}
-
-    x = requests.post(url, data= data)
-    print(x.text)
-
-    url = f'{URL}/get_info' # SHOULD WORK
-    data = {'emp_no' : emp_no}
-
-    x = requests.post(url, data= data)
-    print(x.text)
-
-
     # ## GET EMBEDS                                        NEED TO REPLICATE THE APP BUT WORKS
     # print(f"\n{nth_parallel} Get Embeds......")
     # url = f'{URL}/get_embed'
@@ -170,6 +156,21 @@ def do_analysis(nth_parallel):
 
     url = f'{URL}/modify_log'
     x = requests.post(url, data= {'emp_no' : emp_no, "old_check_in":"06.03.2022@10:53:56", "old_check_out":"06.03.2022@10:53:56", "new_check_in":"9.26.2022@12:47:19", "new_check_out":"10.18.2022@17:53:56"})
+    print(x.text)
+
+
+    ## GET INFO
+    print(f"\n{nth_parallel} Testing USER INFO......")
+    url = f'{URL}/get_info' # ERROR
+    data = {'emp_no' : '1'}
+
+    x = requests.post(url, data= data)
+    print(x.text)
+
+    url = f'{URL}/get_info' # SHOULD WORK
+    data = {'emp_no' : emp_no}
+
+    x = requests.post(url, data= data)
     print(x.text)
 
 
