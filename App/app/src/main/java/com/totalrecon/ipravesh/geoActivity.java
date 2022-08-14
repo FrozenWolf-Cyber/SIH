@@ -358,6 +358,7 @@ public class geoActivity extends AppCompatActivity {
         myEdit.commit();
     }
 
+
     public void send_log() {
 
         Date date = Calendar.getInstance().getTime();

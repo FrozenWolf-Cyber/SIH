@@ -41,7 +41,7 @@ import org.eazegraph.lib.models.PieModel;
 public class employee_dashboard extends AppCompatActivity {
     PieChart pieChart;
     ImageView image;
-    TextView name , emplno , desig , gender , officeaddress , phonenumber , percent , logdetails;
+    TextView name , emplno , desig , gender , officeaddress , phonenumber , logdetails;
     Button back;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,6 @@ public class employee_dashboard extends AppCompatActivity {
         gender = findViewById(R.id.gender);
         officeaddress = findViewById(R.id.officeaddress);
         phonenumber = findViewById(R.id.phonenumber);
-        percent = findViewById(R.id.presentpercentage);
         logdetails = findViewById(R.id.logdetails);
         // image view
         image = findViewById(R.id.photo);
@@ -103,17 +102,19 @@ public class employee_dashboard extends AppCompatActivity {
                     Map jsonObject = new Gson().fromJson(json_rec, Map.class);
 
                     try {
-
+                        // receive datas of all employee
                         ArrayList<String> users = (ArrayList<String>) jsonObject.get("emp_no");
                         ArrayList<String> checkin = (ArrayList<String>) jsonObject.get("check_in");
                         ArrayList<String> checkout = (ArrayList<String>) jsonObject.get("check_out");
-                        String log_data_detail = "from \t\t\t\t to\n";
+                        String log_data_detail = "";
                         String emp_no = read_data("emp_no");
+
+                        // calculate percentage
                         float present = 0;
                         for (int i = 0; i < users.size(); i++) {
                             if (("\""+users.get(i)+"\"").equals(emp_no)) {
                                 present += 1;
-                                log_data_detail += checkin.get(i)+"---"+checkout.get(i)+"\n";
+                                log_data_detail += "Entry: "+checkin.get(i)+"\nExit: "+checkout.get(i)+"\n\n";
                             }
                             Log.i("RESPONSE", users.get(i));
                         }
@@ -121,11 +122,11 @@ public class employee_dashboard extends AppCompatActivity {
                         present = (present / 30) * 100;
 
                         Log.i("RESPONSE", "percentage : " + present + " %");
-                        percent.setText("" + String.format("%.2f" , present) + "%");
+
                         // percentage present in total
 
                         logdetails.setText(log_data_detail+"");
-
+                        // set pie chart after percentage calculated
                         set_pie_chart(present, 100 - present);
 
                     }
@@ -147,6 +148,7 @@ public class employee_dashboard extends AppCompatActivity {
             @Override
             public Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
+                // calculate attendance perentage for last month (30 days)
                 params.put("last_n_days", "30");
                 return params;
             }

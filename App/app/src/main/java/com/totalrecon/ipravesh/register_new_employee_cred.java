@@ -34,7 +34,7 @@ import java.util.Map;
 public class register_new_employee_cred extends AppCompatActivity{
 
     private Button button;
-    private EditText username , password , confirmpassword;
+    private EditText username , password , confirmpassword , empl_no;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,22 +45,37 @@ public class register_new_employee_cred extends AppCompatActivity{
         button=findViewById(R.id.next);
         username=findViewById(R.id.username);
         password=findViewById(R.id.password);
+        empl_no=findViewById(R.id.employee_number);
         confirmpassword=findViewById(R.id.confirmpassword);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 // operation when the button is clicked...
-                String user_name, pass_word, confirm_password;
+                String user_name, pass_word, confirm_password, emplno;
                 user_name = username.getText().toString();
                 pass_word = password.getText().toString();
                 confirm_password = confirmpassword.getText().toString();
-                // verify details
+                emplno = empl_no.getText().toString();
+
+                /*
+                    post requests
+                    1. check_emp_no
+                    2. check_username
+                    all datas : emp_no , username ,password stored in SP for later use.
+                    all datas verified : goto threeshot.java
+                */
+
 
                 int flag = 0;
 
                 // some validation , input should never be empty
 
+                if (emplno.replace(" ", "").equals("")) {
+                    show_error("Please fill up the employee number !");
+                    flag = 1;
+                }
                 if (user_name.replace(" ", "").equals("") ||
                         pass_word.replace(" ", "").equals("")) {
                     show_error("Please fill up appropriate username and password");
@@ -69,30 +84,71 @@ public class register_new_employee_cred extends AppCompatActivity{
                     show_error("Confirm password does not match with the given password");
                     flag = 1;
                 }
-
+                // non-empty inputs given for emp_no , username , password
+                // proceed for post request
                 if (flag == 0) {
-                    String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
+                    // check_emp_no
+                    // Post request for verification
+                    String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_emp_no";
+
                     VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
                         @Override
                         public void onResponse(NetworkResponse response) {
                             try {
                                 String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                                 json_rec.replaceAll("\\P{Print}", "");
-                                String resp = "\"NO\"";
+                                String resp = "\"YES\"";
                                 Log.i("RESPONSE", json_rec);
                                 if (resp.equals(json_rec)) {
-                                    write_data("username", user_name);
-                                    write_data("password", pass_word);
-                                    Intent i = new Intent(register_new_employee_cred.this, threeshot.class);
-                                    startActivity(i);
-                                } else {
-                                    show_error("Sorry, your username already exists!");
-                                }
+                                    write_data("emplno", "\"" + emplno + "\"");
+                                    // emp_no is valid
+                                    // check username , password
 
+                                    String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
+                                    VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+                                        @Override
+                                        public void onResponse(NetworkResponse response) {
+                                            try {
+                                                String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                                                json_rec.replaceAll("\\P{Print}", "");
+                                                String resp = "\"NO\"";
+                                                Log.i("RESPONSE", json_rec);
+                                                Log.i("resp", resp);
+                                                if (resp.equals(json_rec)) {
+                                                    write_data("username", user_name);
+                                                    write_data("password", pass_word);
+                                                    // all details verified successfully
+                                                    Intent i = new Intent(register_new_employee_cred.this, threeshot.class);
+                                                    startActivity(i);
+                                                } else {
+                                                    show_error("Sorry, your username already exists!");
+                                                }
+
+                                            } catch (UnsupportedEncodingException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+                                    }, new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+                                            error.printStackTrace();
+                                        }
+                                    }) {
+                                        @Override
+                                        protected Map<String, String> getParams() {
+                                            Map<String, String> params = new HashMap<>();
+                                            params.put("username", user_name);
+                                            return params;
+                                        }
+                                    };
+                                    VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+                                } else {
+                                    show_error("Sorry, your Employee Number is invalid!");
+                                }
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
                             }
-
                         }
                     }, new Response.ErrorListener() {
                         @Override
@@ -103,7 +159,7 @@ public class register_new_employee_cred extends AppCompatActivity{
                         @Override
                         protected Map<String, String> getParams() {
                             Map<String, String> params = new HashMap<>();
-                            params.put("username", "\"" + user_name + "\"");
+                            params.put("emp_no", "\"" + emplno + "\"");
                             return params;
                         }
                     };
@@ -111,18 +167,6 @@ public class register_new_employee_cred extends AppCompatActivity{
                 }
             }
         });
-    }
-    public void write_data_local(String filename , String val){
-        try {
-            FileOutputStream fOut = openFileOutput(filename,MODE_PRIVATE);
-            OutputStreamWriter osw = new OutputStreamWriter(fOut);
-            osw.write(val);
-            osw.flush();
-            osw.close();
-        } catch (IOException e) {
-            show_error("error1 "+e);
-            e.printStackTrace();
-        }
     }
     public void show_error(String s) {
 

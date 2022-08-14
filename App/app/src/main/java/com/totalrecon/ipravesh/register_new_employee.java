@@ -40,63 +40,10 @@ public class register_new_employee extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_newemployee);
         button=findViewById(R.id.next);
-        editText1=findViewById(R.id.employee_number);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // operation when the button is clicked...
-
-                String emplno;
-                emplno = editText1.getText().toString();
-                // verify details
-
-                int flag = 0;
-
-                if(emplno.replace(" ","").equals("")) {
-                    show_error("Please fill up the employee number !");
-                    flag = 1;
-                }
-                if(flag == 0){
-                    // Post request for verification
-                    String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_emp_no";
-
-                    VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
-                        @Override
-                        public void onResponse(NetworkResponse response) {
-                            try {
-                                String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                                json_rec.replaceAll("\\P{Print}","");
-                                String resp = "\"YES\"";
-                                Log.i("RESPONSE" , json_rec);
-                                if (resp.equals(json_rec)) {
-                                    write_data("emplno", "\"" + emplno + "\"");
-                                    Intent i = new Intent(register_new_employee.this, register_new_employee_cred.class);
-                                    startActivity(i);
-                                }
-                                else {
-                                    show_error("Sorry, your Employee Number is invalid!");
-                                }
-
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() {
-                            Map<String, String> params = new HashMap<>();
-                            params.put("emp_no", "\""+emplno+"\"");
-                            return params;
-                        }
-                    };
-                    VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
-                }
 
             }
         });
