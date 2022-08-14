@@ -15,6 +15,7 @@ import com.totalrecon.ipravesh.R;
 
 
 import com.totalrecon.ipravesh.register_new_employee;
+import com.totalrecon.ipravesh.register_new_employee_cred;
 
 public class StartPage extends AppCompatActivity {
 
@@ -46,7 +47,7 @@ public class StartPage extends AppCompatActivity {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(StartPage.this, register_new_employee.class);
+                Intent i = new Intent(StartPage.this, register_new_employee_cred.class);
                 startActivity(i);
 
             }

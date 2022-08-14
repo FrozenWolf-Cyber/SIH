@@ -12,20 +12,6 @@
     android:orientation="vertical"
     tools:context="com.totalrecon.ipravesh.activity_signup_newemployee_cred">
 
-    <EditText
-        android:id="@+id/employee_number"
-        android:layout_width="282dp"
-        android:layout_height="60dp"
-        android:hint="Employee Number"
-        android:inputType="number"
-        android:selectAllOnFocus="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.457"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.479" />
-
     <Button
         android:id="@+id/next"
         android:layout_width="148dp"
@@ -53,20 +39,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="288dp"
-        android:layout_height="47dp"
-        android:text="EMPLOYEE NUMBER:"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.471"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.343"
-        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
