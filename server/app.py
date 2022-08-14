@@ -215,11 +215,22 @@ async def check_username(
 async def check_emp_no(
     emp_no: str = Form(...),
 ):
+
+    result = []
     emp_no = emp_no[1:-1]
     if await mydb.check_emp_no_exist_master(emp_no):
-        return "YES"
+        result.append("YES")
 
-    return "NO"
+    else:
+        result.append("NO")
+
+    if await mydb.check_emp_no_signed(emp_no):
+            result.append("YES")
+
+    else:
+        result.append("NO")   
+
+    return result
     
     
 @app.post('/get_info')
