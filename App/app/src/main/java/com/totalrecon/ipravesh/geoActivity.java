@@ -308,7 +308,7 @@ public class geoActivity extends AppCompatActivity {
                             }, 2000);
 
                         } else {
-                            display_distance_error(dis);
+                            display_distance_error();
                         }
                     }
 

@@ -8,7 +8,6 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse
 
-
 db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
 db_user =  'postgres' #'be6a5ab891fb44'
 db_psswrd = '3112003' #heroku-psswrd
@@ -18,6 +17,10 @@ db_name = 'sih_attendance' #heroku-db
 # db_user =  'sxxkdscneuzrwf'
 # db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
 # db_name = 'd3rhldildqlaje'
+
+ADMIN_USERNAME = 'ADMIN'
+ADMIN_PSSWRD = 'ADMIN'
+
 
 mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
 
@@ -32,16 +35,16 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-async def clear_local_data(user_id):
-    for img in os.listdir(f"img_db/{user_id}"):
-        os.remove(f"img_db/{user_id}/{img}")
+async def clear_local_data(emp_no):
+    for img in os.listdir(f"img_db/{emp_no}"):
+        os.remove(f"img_db/{emp_no}/{img}")
 
-    os.rmdir(f"img_db/{user_id}")
+    os.rmdir(f"img_db/{emp_no}")
 
 
-async def write_img_data(user_id, each_image):
+async def write_img_data(emp_no, each_image):
     img = each_image.filename
-    file_location = f"img_db/{user_id}/{img}.jpg"
+    file_location = f"img_db/{emp_no}/{img}.jpg"
 
     with open(file_location, "wb+") as buffer:
         shutil.copyfileobj(each_image.file, buffer)
@@ -61,13 +64,13 @@ async def exception_handle(msg, func, *args):
 
 @app.post('/update_log')
 async def update_log(
-    user_id : str = Form(...),
+    emp_no : str = Form(...),
     check_in: str = Form(...),
     check_out: str = Form(...)
 ):
-    user_id = user_id[1:-1]
+    emp_no = emp_no[1:-1]
 
-    if not await mydb.check_user_id_exist(user_id):
+    if not await mydb.check_emp_no_signed(emp_no):
         return "NOPE"
 
     if check_in == "blah-null":
@@ -76,83 +79,109 @@ async def update_log(
     if check_out == "blah-null":
         check_out = None
 
-    return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.update_log, user_id, check_in, check_out)
+    return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.update_log, emp_no, check_in, check_out)
 
 
 @app.post('/modify_log')
 async def modify_log(
-    user_id : str = Form(...),
+    emp_no : str = Form(...),
     old_check_in: str = Form(...),
     old_check_out: str = Form(...),
     new_check_in: str = Form(...),
     new_check_out: str = Form(...)
 ):
-    user_id = user_id[1:-1]
+    emp_no = emp_no[1:-1]
 
-    if not await mydb.check_user_id_exist(user_id):
+    if not await mydb.check_emp_no_signed(emp_no):
         return "NOPE"
 
-    return await exception_handle("SERVER ERROR WHILE MODIFYING LOG", mydb.modify_log, user_id, old_check_in, old_check_out, new_check_in, new_check_out)
+    return await exception_handle("SERVER ERROR WHILE MODIFYING LOG", mydb.modify_log, emp_no, old_check_in, old_check_out, new_check_in, new_check_out)
 
 
 @app.post('/check_in_out_status')
 async def check_in_out_status(
-    user_id : str = Form(...),
+    emp_no : str = Form(...),
 ):
-    user_id = user_id[1:-1]
+    emp_no = emp_no[1:-1]
 
-    if not await mydb.check_user_id_exist(user_id):
+    if not await mydb.check_emp_no_signed(emp_no):
         return "NOPE"
     
-    return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.check_in_out_status, user_id)
+    return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.check_in_out_status, emp_no)
+
+
+@app.post('/admin_signup')
+async def admin_signup(
+    mail_id: str = Form(...),
+    name: str = Form(...),
+    designation: str = Form(...),
+    gender: str = Form(...),
+    branch_name: str = Form(...),
+    contact_no: str = Form(...),
+
+):
+    data = [mail_id, name, designation, gender, branch_name, contact_no]
+
+    e = await exception_handle("SERVER ERROR WHILE UPDATING ADMIN SIGNUP IN PSQL", mydb.admin_signup, tuple(data))
+
+    if len(e)==2:
+        user_name_availablity, emp_no = e
+
+    else:
+        return e
+
+    if emp_no is None:
+        return "ALREADY IN USE"
+
+    return emp_no
 
 
 @app.post('/signup')
 async def signup(
-    mail_id: str = Form(...),
     user_name: str = Form(...),
     password: str = Form(...),
-    name: str = Form(...),
-    designation: str = Form(...),
     emp_no: str = Form(...),
-    gender: str = Form(...),
-    office_address: str = Form(...),
-    contact_no: str = Form(...),
     embed1 : list = Form(...),
     embed2 : list = Form(...),
     embed3 : list = Form(...),
     files: UploadFile = File(...)
 ):
-    data = [mail_id, user_name, password, name, designation, emp_no, gender, office_address, contact_no, embed1, embed2, embed3]
 
-    e = await exception_handle("SERVER ERROR WHILE UPDATING SIGNUP IN PSQL", mydb.sign_up, tuple(data))
+    emp_no = emp_no[1:-1]
+    data = [user_name, password, emp_no, embed1, embed2, embed3]
+
+    if not await mydb.check_emp_no_exist_master(emp_no):
+        return "EMPLOYEE NUMBER DOESN'T EXIST IN MASTER"
+
+    e = await exception_handle("SERVER ERROR WHILE UPDATING SIGNUP IN PSQL", mydb.signup, tuple(data))
 
     if len(e)==2:
-        user_name_availablity, user_id = e
+        user_name_availablity, emp_no = e
 
     else:
         return e
 
-    if user_id is None:
+    if emp_no is None:
         return "ALREADY IN USE"
 
-    os.mkdir(f"img_db/{user_id}")
+    os.mkdir(f"img_db/{emp_no}")
     
     each_image = files
 
-    e = await exception_handle("SERVER ERROR WHILE PROCESSING IMAGE DATA", write_img_data, user_id, each_image)
+    e = await exception_handle("SERVER ERROR WHILE PROCESSING IMAGE DATA", write_img_data, emp_no, each_image)
 
     if e is not None:
-        await clear_local_data(user_id)
+        await clear_local_data(emp_no)
         return e
 
-    e = await exception_handle("SERVER ERROR WHILE UPLOADING IMAGE DATA TO PSQL", mydb.upload_img, user_id, base64.b64encode(open(f"img_db/{user_id}/{each_image.filename}.jpg",'rb').read()))
+    e = await exception_handle("SERVER ERROR WHILE UPLOADING IMAGE DATA TO PSQL", mydb.upload_img, emp_no, base64.b64encode(open(f"img_db/{emp_no}/{each_image.filename}.jpg",'rb').read()))
 
     if e is not None:
         return e
 
-    await clear_local_data(user_id)
-    return user_id
+    await clear_local_data(emp_no)
+    return emp_no
+
 
 
 @app.post('/login')
@@ -161,6 +190,10 @@ async def login(
     type_of_login: str = Form(...),
     password: str = Form(...)
 ):
+
+    if user_name_or_mail_id == ADMIN_USERNAME and password == ADMIN_PSSWRD:
+        return "ADMIN"
+        
     data = [user_name_or_mail_id, password]
 
     return str(await exception_handle("SERVER ERROR WHILE CHECKING LOGIN DETAILS", mydb.user_login_details, data, type_of_login))
@@ -176,16 +209,27 @@ async def check_username(
     return "NO"
 
 
+@app.post('/check_emp_no')
+async def check_emp_no(
+    emp_no: str = Form(...),
+):
+    emp_no = emp_no[1:-1]
+    if await mydb.check_emp_no_exist_master(emp_no):
+        return "YES"
+
+    return "NO"
+    
+    
 @app.post('/get_info')
 async def get_info(
-    user_id: str = Form(...)
+    emp_no: str = Form(...)
 ):
-    user_id = user_id[1:-1]
-    if not await mydb.check_user_id_exist(user_id):
-        return "USERID DOESN'T EXIST"
+    emp_no = emp_no[1:-1]
+    if not await mydb.check_emp_no_signed(emp_no):
+        return "EMPLOYEE NUMBER DOESN'T EXIST"
 
-    data_args = 'name,designation,emp_no,gender,office_address,contact_no,check_in,check_out'.split(',')
-    e = await exception_handle("SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL", mydb.get_user_details, user_id)
+    data_args = 'name,designation,emp_no,gender,branch_name,contact_no,check_in,check_out'.split(',')
+    e = await exception_handle("SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL", mydb.get_user_details, emp_no)
     if e == "SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL":
         return e
     else:
@@ -199,24 +243,26 @@ async def get_info(
 
 @app.post('/get_embed')
 async def get_embed(
-    user_id: str = Form(...)
+    emp_no: str = Form(...)
 ):
-    user_id = user_id[1:-1]
-    if not await mydb.check_user_id_exist(user_id):
-        return "USERID DOESN'T EXIST"
+    emp_no = emp_no[1:-1]
+    if not await mydb.check_emp_no_signed(emp_no):
+        return "EMPLOYEE NUMBER DOESN'T EXIST"
 
     data_args = 'embed1,embed2,embed3'.split(',')
     
-    e = await exception_handle("SERVER ERROR WHILE RETRIEVING EMBEDDINGS FROM PSQL", mydb.get_embeds, user_id)
+    e = await exception_handle("SERVER ERROR WHILE RETRIEVING EMBEDDINGS FROM PSQL", mydb.get_embeds, emp_no)
     if e == "SERVER ERROR WHILE RETRIEVING EMBEDDINGS FROM PSQL":
         return e
     else:
         data = e
 
     # print(len(data), flush=True)
+    print(len(data), data, data[0], sep="\n\n\n", flush=True)
     form = {}
     for i, j in zip(data_args, data):
-        j = list(map(float,j[0]))
+        # print ('j', j, j[0])
+        j = eval(','.join(j))
         form[i] = j
         
     return form
@@ -224,24 +270,24 @@ async def get_embed(
 
 @app.post('/get_branch_info')
 async def get_branch_info(
-    user_id: str = Form(...),
+    emp_no: str = Form(...),
     branch_name: str = Form(...)
 ):
-    user_id = user_id[1:-1]
-    if not await mydb.check_user_id_exist(user_id):
-        return "USERID DOESN'T EXIST"
+    emp_no = emp_no[1:-1]
+    if not await mydb.check_emp_no_signed(emp_no):
+        return "EMPLOYEE NUMBER DOESN'T EXIST"
 
     return await exception_handle("SERVER ERROR WHILE GETTING OFFICE ADDRESS FROM PSQL", mydb.get_branch_info, branch_name)
 
 @app.post('/get_img')
 async def get_img(
-    user_id: str = Form(...),
+    emp_no: str = Form(...),
 ):
-    user_id = user_id[1:-1]
-    if not await mydb.check_user_id_exist(user_id):
-        return "USERID DOESN'T EXIST"
+    emp_no = emp_no[1:-1]
+    if not await mydb.check_emp_no_signed(emp_no):
+        return "EMPLOYEE NUMBER DOESN'T EXIST"
 
-    e = await exception_handle("SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER", mydb.get_img, user_id)
+    e = await exception_handle("SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER", mydb.get_img, emp_no)
     if e == "SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER":
         return e
 
