@@ -1,0 +1,81 @@
+#main-container1 {
+  width: 100%;
+  height: 540px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 21px 0px 21px 0px;
+  overflow-y: scroll;
+  pointer-events: none;
+}
+
+#main-container1 #profile-pic-container {
+  width: 360px;
+  height: fit-content;
+  padding: 30px;
+  position: relative;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  border: 0px solid;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  padding: 12px;
+  box-shadow: #e4e3e4 0px 1px 3px 0px, #d5d4d5 0px 0px 0px 1px;
+}
+
+#main-container1 #profile-pic-container #profile-pic {
+  height: 72px;
+  width: 72px;
+  border: 1px solid;
+  border-radius: 50%;
+}
+
+#main-container1 #profile-pic-container input {
+  background-color: transparent !important;
+  border: none !important;
+  font-size: 1rem;
+  text-align: center;
+}
+
+#main-container1 #other-details {
+  width: 420px;
+  height: fit-content;
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  padding-top: 21px;
+  padding-bottom: 21px;
+}
+
+#main-container1 #other-details > div {
+  box-shadow: #e4e3e4 0px 1px 3px 0px, #d5d4d5 0px 0px 0px 1px;
+  height: 45px;
+  width: 360px;
+  border: 0px solid;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px !important;
+  background-image: none !important;
+}
+
+#main-container1 #other-details > div .name {
+  font-size: 0.81rem;
+  color: #696868;
+}
+
+#main-container1 #other-details > div form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#main-container1 #other-details > div form input {
+  background-color: transparent;
+  border: none !important;
+  font-size: 1rem;
+}

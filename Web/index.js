@@ -6,7 +6,7 @@ const layout = require('express-ejs-layouts');
 const path = require('path');
 const app = express();
 const port = 9996;
-
+const bodyParser = require('body-parser');
 //setting up static files view_engine and sass middleaware
 app.use(sassMiddleware({
     src:path.join(__dirname,'/assets/scss'),
@@ -21,7 +21,7 @@ app.set('view engine','ejs');
 app.use(layout);
 app.set("layout extractScripts", true);
 app.set('layout extractStyles',true);
-
+app.use(bodyParser.urlencoded());
 app.use('/',require('./router'));
 app.listen(port,() => {
     console.log('app :: listening on port',port);

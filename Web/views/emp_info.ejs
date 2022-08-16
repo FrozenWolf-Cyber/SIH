@@ -1,80 +1,21 @@
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>i-Pravesh</title>
-    <link rel="stylesheet" href="/css/emp_info.css">
-    <script src="https://kit.fontawesome.com/62ef345795.js" crossorigin="anonymous"></script>
-</head>
-<body>
-    <h1> Admin Dashboard - Employee Info</h1>
-    <div id = 'davis'>
-        <svg id="pie-chart">  
-        </svg>  
-        <div id="emp-details">
-            <%if(locals.emp_details.gender == 'Male'){%>
-                <div id="emp-image" style="background-image: url('https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png');"></div>            
-            <%}else{%>
-                <div id="emp-image"></div>            
-            <%}%>
-            <div>
-                <span>Name</span>
-                <div><%=locals.emp_details.name %></div>
-            </div>
-            <div>
-                <span>Designation</span>
-                <div><%= locals.emp_details.designation %></div>
-            </div>
-            <div>
-                <span>Branch Name</span>
-                <div><%= locals.emp_details.branch_name %></div>
-            </div>
-        </div> 
-    </div>
-    <div id="month-year"></div>
-    <div id="calender-container">
-        <div id="left-cal-nav" class="calender-nav"><img src="/images/left-arrow.png" alt=""></div>
-        <div id="calender">
-            <div class="day">sun</div>
-            <div class="day">mon</div>
-            <div class="day">tues</div>
-            <div class="day">wed</div>
-            <div class="day">thu</div>
-            <div class="day">fri</div>
-            <div class="day">sat</div>
+<link rel="stylesheet" href="/css/emp_info1.css">
+<main>
+    <h1 id = 'heading'>Employee Info</h1>
 
-            <%for(let i = 1;i <= 37;i++){%>
-                <div class="dates" id="<%= 'd'+i %>"></div>
-            <%}%>    
-        </div>
-        <div id="right-cal-nav" class="calender-nav"><img src="/images/left-arrow.png" alt=""></div>
-    </div>
-    <form action="">
-        <div>
-            <label for="check-in">Check in</label>
-            <input type="text" id="check-in">
-            <button class="edit">edit</button>
-        </div>
-        
-        <div>
-            <label for="check-out">Check out</label>
-            <input type="text" id="check-out">
-            <button class="edit">edit</button>
-        </div>
-        
-    </form>
 
-    <input type="text" name="emp_id" value="<%= locals.emp_details.id %>">
-    <input type="text" name="emp_name" value = "<%= locals.emp_details.name %>">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js"></script> -->
-    <script src = '/js/emp_info.js'></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/svg.min.js" integrity="sha512-I+rKw3hArzZIHzrkdELbKqrXfkSvw/h0lW/GgB8FThaBVz2e5ZUlSW8kY8v3q6wq37eybIwyufkEZxe4qSlGcg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
-    <script src="/js/emp_info_davis.js"></script>
-</body>
-</html>
+    <div id="section-nav">
+        <div id="section1"><i class="fa-solid fa-user"></i></div>    
+        <div id="section3"><i class="fa-solid fa-calendar-days"></i></div>
+        <div id="section2"><i class="fa-solid fa-chart-pie"></i></div>
+    </div>
+    <div id="main-container">
+       <%- include('./partials/_emp_profile') %>
+       <%- include('./partials/_emp_info_davis') %>
+    </div>
+</main>
+
+<input type="text" id="emp_no" value="<%= locals.emp_no %>">
+<script src="/js/emp_info.js"></script>
+<script src="emp_info_nav.js"></script>

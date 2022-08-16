@@ -48,7 +48,7 @@ function sqlToNosql(){
 function createEmpElement(emp){
    let emp_details = JSON.stringify(emp)
     return `
-        <a class = 'emp' href='/emp-info?emp_details=${emp_details}'>
+        <a class = 'emp' href='/emp-info?emp_no=${emp.emp_no}'>
             <div>
                 <div class="${ 'avatar' + " " + emp.gender}"></div>
                 <div class="emp_name">${emp.name}</div>

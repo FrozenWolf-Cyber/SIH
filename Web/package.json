@@ -9,6 +9,7 @@
   "author": "anandavenkatesh-a",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.0",
     "d3": "^7.6.1",
     "ejs": "^3.1.8",
     "express": "^4.18.1",

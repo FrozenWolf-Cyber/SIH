@@ -5,6 +5,7 @@ body {
   display: grid;
   grid-template-columns: 60px 1fr;
   overflow-y: hidden;
+  background-color: #f1eff1;
 }
 
 body #side-nav {
