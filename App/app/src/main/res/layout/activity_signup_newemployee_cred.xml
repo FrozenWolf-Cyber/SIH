@@ -40,34 +40,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.225" />
 
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="217dp"
-        android:layout_height="33dp"
-        android:text="EMPLOYEE NUMBER"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.206"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.167"
-        tools:ignore="MissingConstraints" />
-
-    <EditText
-        android:id="@+id/employee_number"
-        android:layout_width="330dp"
-        android:layout_height="60dp"
-        android:hint="Employee Number"
-        android:inputType="number"
-        android:selectAllOnFocus="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.37"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.225" />
-
     <EditText
         android:id="@+id/username"
         android:layout_width="330dp"

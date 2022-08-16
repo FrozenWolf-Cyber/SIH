@@ -3,6 +3,7 @@ package com.totalrecon.ipravesh;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,6 +24,10 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.totalrecon.ipravesh.R;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
 import com.totalrecon.ipravesh.data.model.VolleySingleton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -97,56 +102,64 @@ public class register_new_employee_cred extends AppCompatActivity{
                             try {
                                 String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                                 json_rec.replaceAll("\\P{Print}", "");
-                                String resp = "\"YES\"";
+                                JSONArray jArray = new JSONArray(json_rec);
+                                String existInMaster = jArray.getString(0);
+                                String existInLogin = jArray.getString(1);
+                                String resp1 = "YES";
+                                String resp2 = "NO";
                                 Log.i("RESPONSE", json_rec);
-                                if (resp.equals(json_rec)) {
-                                    write_data("emplno", "\"" + emplno + "\"");
-                                    // emp_no is valid
-                                    // check username , password
+                                if (resp1.equals(existInMaster)) {
+                                    if (resp2.equals(existInLogin)) {
+                                        write_data("emplno", "\"" + emplno + "\"");
+                                        // emp_no is valid
+                                        // check username , password
 
-                                    String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
-                                    VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
-                                        @Override
-                                        public void onResponse(NetworkResponse response) {
-                                            try {
-                                                String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                                                json_rec.replaceAll("\\P{Print}", "");
-                                                String resp = "\"NO\"";
-                                                Log.i("RESPONSE", json_rec);
-                                                Log.i("resp", resp);
-                                                if (resp.equals(json_rec)) {
-                                                    write_data("username", user_name);
-                                                    write_data("password", pass_word);
-                                                    // all details verified successfully
-                                                    Intent i = new Intent(register_new_employee_cred.this, threeshot.class);
-                                                    startActivity(i);
-                                                } else {
-                                                    show_error("Sorry, your username already exists!");
+                                        String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
+                                        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+                                            @Override
+                                            public void onResponse(NetworkResponse response) {
+                                                try {
+                                                    String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                                                    json_rec.replaceAll("\\P{Print}", "");
+                                                    String resp = "\"NO\"";
+                                                    Log.i("RESPONSE", json_rec);
+                                                    Log.i("resp", resp);
+                                                    if (resp.equals(json_rec)) {
+                                                        write_data("username", user_name);
+                                                        write_data("password", pass_word);
+                                                        // all details verified successfully
+                                                        Intent i = new Intent(register_new_employee_cred.this, threeshot.class);
+                                                        startActivity(i);
+                                                    } else {
+                                                        show_error("This username is already taken! Enter another username");
+                                                    }
+
+                                                } catch (UnsupportedEncodingException e) {
+                                                    e.printStackTrace();
                                                 }
 
-                                            } catch (UnsupportedEncodingException e) {
-                                                e.printStackTrace();
                                             }
-
-                                        }
-                                    }, new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            error.printStackTrace();
-                                        }
-                                    }) {
-                                        @Override
-                                        protected Map<String, String> getParams() {
-                                            Map<String, String> params = new HashMap<>();
-                                            params.put("username", user_name);
-                                            return params;
-                                        }
-                                    };
-                                    VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+                                        }, new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                error.printStackTrace();
+                                            }
+                                        }) {
+                                            @Override
+                                            protected Map<String, String> getParams() {
+                                                Map<String, String> params = new HashMap<>();
+                                                params.put("username", user_name);
+                                                return params;
+                                            }
+                                        };
+                                        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+                                    } else {
+                                        show_error("You have already been signed up! Please proceed to login.");
+                                    }
                                 } else {
-                                    show_error("Sorry, your Employee Number is invalid!");
+                                    show_error("Sorry, the given employee number is invalid!");
                                 }
-                            } catch (UnsupportedEncodingException e) {
+                            } catch (UnsupportedEncodingException | JSONException e) {
                                 e.printStackTrace();
                             }
                         }
@@ -171,11 +184,16 @@ public class register_new_employee_cred extends AppCompatActivity{
     public void show_error(String s) {
 
         // error due to file writing and other operations
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage(s);
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(register_new_employee_cred.this);
+        alertDialogBuilder.setMessage(s)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Do nothing
+                    }
+                });
+        androidx.appcompat.app.AlertDialog alert = alertDialogBuilder.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
     }
 
     public String read_data(String filename)
