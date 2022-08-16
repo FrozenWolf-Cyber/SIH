@@ -341,7 +341,7 @@ class Database:
         args = "emp_no name designation gender branch_name".split(" ")
         data = {i:[] for i in args}
 
-        for i in await self.database.fetch_all("SELECT emp_no, name, designation, gender, branch_name FROM EMPLOYEE_DETAILS"):
+        for i in await self.database.fetch_all("SELECT EMPLOYEE_DETAILS.emp_no, EMPLOYEE_DETAILS.name, EMPLOYEE_DETAILS.designation, EMPLOYEE_DETAILS.gender, EMPLOYEE_DETAILS.branch_name FROM EMPLOYEE_DETAILS, USER_LOGIN where EMPLOYEE_DETAILS.emp_no = USER_LOGIN.emp_no"):
             i = list(i.values())
             for arg_, value in zip(args, i):
                  data[arg_].append(value)
