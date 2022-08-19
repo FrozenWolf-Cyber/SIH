@@ -128,8 +128,9 @@ public class threeshot extends AppCompatActivity {
             // back button
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(threeshot.this, register_new_employee_cred.class);
-                startActivity(i);
+//                Intent i = new Intent(threeshot.this, register_new_employee_cred.class);
+//                startActivity(i);
+                  threeshot.super.onBackPressed();
             }
         });
     }
@@ -314,7 +315,7 @@ public class threeshot extends AppCompatActivity {
     public void onBackPressed() {
         finish();
         super.onBackPressed();
-        Intent i = new Intent(threeshot.this, LoginActivity.class);
-        startActivity(i);
+//        Intent i = new Intent(threeshot.this, register_new_employee_cred.class);
+//        startActivity(i);
     }
 }
