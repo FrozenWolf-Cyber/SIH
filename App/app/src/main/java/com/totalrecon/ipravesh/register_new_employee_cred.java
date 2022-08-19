@@ -1,5 +1,6 @@
 package com.totalrecon.ipravesh;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -40,12 +41,14 @@ public class register_new_employee_cred extends AppCompatActivity{
 
     private Button button;
     private EditText username , password , confirmpassword , empl_no;
-
+    String user_name, pass_word, confirm_password, emplno;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_newemployee_cred);
+
+
 
         button=findViewById(R.id.next);
         username=findViewById(R.id.username);
@@ -58,7 +61,7 @@ public class register_new_employee_cred extends AppCompatActivity{
             public void onClick(View view) {
 
                 // operation when the button is clicked...
-                String user_name, pass_word, confirm_password, emplno;
+
                 user_name = username.getText().toString();
                 pass_word = password.getText().toString();
                 confirm_password = confirmpassword.getText().toString();
@@ -180,7 +183,34 @@ public class register_new_employee_cred extends AppCompatActivity{
                 }
             }
         });
+
     }
+    //    String user_name, pass_word, confirm_password, emplno;
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.i("Instance state","onsaveinstancestate");
+        outState.putString("username",user_name);
+        outState.putString("password",pass_word);
+        outState.putString("confirm",confirm_password);
+        outState.putString("empno",emplno);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.i("Instance state","restoresavedinstance");
+        user_name = savedInstanceState.getString("username");
+        pass_word = savedInstanceState.getString("password");
+        confirm_password = savedInstanceState.getString("confirm");
+        emplno = savedInstanceState.getString("empno");
+        super.onRestoreInstanceState(savedInstanceState);
+
+
+
+    }
+
     public void show_error(String s) {
 
         // error due to file writing and other operations
