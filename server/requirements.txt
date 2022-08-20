@@ -6,4 +6,4 @@ SQLAlchemy
 databases
 psycopg2
 bcrypt
-pycryptodome
+pycryptodomex
