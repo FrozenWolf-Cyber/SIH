@@ -5,6 +5,5 @@ asgiref
 SQLAlchemy
 databases
 psycopg2
-hashlib
 bcrypt
 pycryptodome
