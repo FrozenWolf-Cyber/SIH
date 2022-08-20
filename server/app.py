@@ -24,8 +24,8 @@ db_name = 'sih_attendance' #heroku-db
 ADMIN_USERNAME = 'ADMIN'
 ADMIN_PSSWRD = 'ADMIN'
 
-encryptor = encryption_algo('a', 'b')
-encryptor = pickle.load(open('encryptor.pkl', 'rb'))
+encryptor = encryption_algo('cervh0s3e2hnpaitaeitad0sn', 'eaia0dnesp3thach2tir0esnv')
+# encryptor = pickle.load(open('encryptor.pkl', 'rb'))
 
 mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
 
