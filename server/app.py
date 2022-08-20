@@ -1,8 +1,11 @@
 import os
 import shutil
 import base64
+import asyncio
 import uvicorn
 import logging
+import pickle
+from encryption import encryption_algo
 from psql_database import Database
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,10 +24,11 @@ db_name = 'sih_attendance' #heroku-db
 ADMIN_USERNAME = 'ADMIN'
 ADMIN_PSSWRD = 'ADMIN'
 
+encryptor = encryption_algo('a', 'b')
+encryptor = pickle.load(open('encryptor.pkl', 'rb'))
 
 mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
 
-# mydrive = gdrive()
 
 app = FastAPI()
 app.add_middleware(
@@ -122,9 +126,31 @@ async def admin_signup(
     contact_no: str = Form(...),
 
 ):
+
+    mail_id, name, designation, gender, contact_no = encryptor.AES_encrypt(mail_id), encryptor.AES_encrypt(name), encryptor.AES_encrypt(designation), encryptor.AES_encrypt(gender), encryptor.AES_encrypt(contact_no)
+
     data = [mail_id, name, designation, gender, branch_name, contact_no]
 
-    e = await exception_handle("SERVER ERROR WHILE UPDATING ADMIN SIGNUP IN PSQL", mydb.admin_signup, tuple(data))
+    sucess = False
+    tries = 0
+    while not sucess:
+        try:
+            e = await mydb.admin_signup(data)
+            
+        except:
+            # print("SERVER ERROR WHILE UPDATING ADMIN SIGNUP IN PSQL")
+            await asyncio.sleep(0.5)
+
+        else:
+            sucess = True
+
+        if tries>=50:
+            return "SERVER IS BUSY TRY SOMETIME LATER"
+
+        tries+=1
+
+
+
 
     if len(e)==2:
         user_name_availablity, emp_no = e
@@ -150,6 +176,11 @@ async def signup(
 ):
 
     emp_no = emp_no[1:-1]
+    
+    password = encryptor.SHA256_encrypt(password)
+    # user_name = encryptor.SHA256_encrypt(user_name)
+
+
     data = [user_name, password, emp_no, embed1, embed2, embed3]
 
     if not await mydb.check_emp_no_exist_master(emp_no):
@@ -195,6 +226,9 @@ async def login(
 
     if user_name_or_mail_id == ADMIN_USERNAME and password == ADMIN_PSSWRD:
         return "ADMIN"
+
+    password = encryptor.SHA256_encrypt(password)
+    # user_name_or_mail_id = encryptor.SHA256_encrypt(user_name_or_mail_id)
         
     data = [user_name_or_mail_id, password]
 
@@ -205,6 +239,7 @@ async def check_username(
     username: str = Form(...),
 ):
 
+    # username = encryptor.SHA256_encrypt(username)
     if await mydb.check_username(username):
         return "YES"
 
@@ -242,6 +277,7 @@ async def get_info(
         return "EMPLOYEE NUMBER DOESN'T EXIST"
 
     data_args = 'name,designation,emp_no,gender,branch_name,contact_no,check_in,check_out,in_latitude,in_longitude,out_latitude,out_longitude'.split(',')
+    decrypt_for = 'name,designation,gender,contact_no'.split(',')
     e = await exception_handle("SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL", mydb.get_user_details, emp_no)
     if e == "SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL":
         return e
@@ -250,6 +286,8 @@ async def get_info(
     
     form = {}
     for i, j in zip(data_args, data):
+        if i in decrypt_for:
+            j = encryptor.AES_decrypt(j)
         form[i] = j
         
     return form
@@ -271,7 +309,7 @@ async def get_embed(
         data = e
 
     # print(len(data), flush=True)
-    print(len(data), data, data[0], sep="\n\n\n", flush=True)
+    # print(len(data), data, data[0], sep="\n\n\n", flush=True)
     form = {}
     for i, j in zip(data_args, data):
         # print ('j', j, j[0])
@@ -320,8 +358,14 @@ async def get_log_data(
 @app.post('/get_user_overview')
 async def get_user_overview():
 
-    return await exception_handle("SERVER ERROR WHILE RETRIEVING USER OVERVIEW DATA FROM PSQL", mydb.get_user_overview)
+    data = await exception_handle("SERVER ERROR WHILE RETRIEVING USER OVERVIEW DATA FROM PSQL", mydb.get_user_overview)
 
+    for k in data.keys():
+        if k in ['name', 'designation', 'gender']:
+            for i in range(len(data[k])):
+                data[k][i] = encryptor.AES_decrypt(data[k][i])
+
+    return data
 
 @app.exception_handler(Exception)
 async def validation_exception_handler(request, err):
