@@ -216,7 +216,7 @@ def do_analysis(nth_parallel):
 
 
 threads = []
-for i in range(50):
+for i in range(1):
     timmings.append(0)
     t = threading.Thread(target=do_analysis, args=[i])
     t.start()

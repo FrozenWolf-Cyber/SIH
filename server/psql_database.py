@@ -27,7 +27,7 @@ class Database:
                           ]
 
     
-    async def create(self):
+    async def create(self, encryptor):
         await self.database.execute('''CREATE TABLE IF NOT EXISTS EMPLOYEE_DETAILS (
                           emp_no VARCHAR(100) UNIQUE ,
                           name VARCHAR(100) NOT NULL ,
@@ -89,6 +89,13 @@ class Database:
                           {'emp_no': '6', 'name': 'Venkatesh', 'mail_id': 'blackvenky21@gmail.com', 'designation': 'WEB', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9543879507'},
                           
                           ]
+
+        for i in range(len(self.team_data)):
+            a = list(self.team_data[i].keys())
+            a.remove('emp_no')
+            for j in a:
+                self.team_data[i][j] = encryptor.AES_encrypt(self.team_data[i][j])
+                
 
         await self.database.execute_many("INSERT INTO EMPLOYEE_DETAILS (emp_no, name, mail_id, designation, gender, branch_name, contact_no) SELECT * FROM (SELECT :emp_no, :name, :mail_id, :designation, :gender, :branch_name, :contact_no) AS tmp WHERE NOT EXISTS (SELECT emp_no FROM EMPLOYEE_DETAILS WHERE emp_no = :emp_no OR mail_id = :mail_id) LIMIT 1;", self.team_data)
         

@@ -376,7 +376,7 @@ async def validation_exception_handler(request, err):
 @app.on_event("startup")
 async def startup():
     await mydb.database.connect()
-    await mydb.create()
+    await mydb.create(encryptor)
 
 @app.on_event("shutdown")
 async def shutdown():
