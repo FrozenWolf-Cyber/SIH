@@ -13,11 +13,14 @@ def random_string_generator(str_size):
 def random_number_generator(str_size):
     return ''.join(random.choice(string.digits) for x in range(str_size))
 
-# URL = "https://sih-smart-attendance.herokuapp.com"
-URL = "http://127.0.0.1:5000"
+URL = "https://sih-smart-attendance.herokuapp.com"
+# URL = "http://127.0.0.1:5000"
+
+timmings = []
 
 def do_analysis(nth_parallel):
     ## SIGNUP
+    start = time.time()
     print(f"{nth_parallel} Testing SIGNUP......\n")
     url = f'{URL}/admin_signup'
 
@@ -208,13 +211,20 @@ def do_analysis(nth_parallel):
     x = requests.post(url)
     print(json.loads(x.text).keys())
 
+    timmings[nth_parallel] = time.time()-start
+
 
 
 threads = []
 for i in range(1):
+    timmings.append(0)
     t = threading.Thread(target=do_analysis, args=[i])
     t.start()
     threads.append(t)
 
 for thread in threads:
     thread.join()
+
+print(f"MAX TIME FOR AN INSTANCE: {max(timmings)}")
+print(f"MIN TIME FOR AN INSTANCE: {min(timmings)}")
+print(f"AVG TIME FOR AN INSTANCE: {sum(timmings)/len(timmings)}")

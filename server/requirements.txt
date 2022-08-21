@@ -5,3 +5,5 @@ asgiref
 SQLAlchemy
 databases
 psycopg2
+bcrypt
+pycryptodomex

@@ -27,13 +27,13 @@ class Database:
                           ]
 
     
-    async def create(self):
+    async def create(self, encryptor):
         await self.database.execute('''CREATE TABLE IF NOT EXISTS EMPLOYEE_DETAILS (
                           emp_no VARCHAR(100) UNIQUE ,
                           name VARCHAR(100) NOT NULL ,
                           mail_id VARCHAR(100) UNIQUE ,
                           designation VARCHAR(100), 
-                          gender VARCHAR(20) NOT NULL ,
+                          gender VARCHAR(100) NOT NULL ,
                           branch_name VARCHAR(100) NOT NULL ,
                           contact_no VARCHAR(100) NOT NULL ,
                           PRIMARY KEY (emp_no));
@@ -79,8 +79,25 @@ class Database:
 
         await self.database.execute_many("INSERT INTO GEO_LOCATION (branch_name , latitude , longitude) SELECT * FROM (SELECT :branch_name , :latitude , :longitude) AS tmp WHERE NOT EXISTS (SELECT branch_name FROM GEO_LOCATION WHERE branch_name = :branch_name) LIMIT 1;", self.loc_database)
         
-        sample = pickle.load(open('employee_sample.pkl','rb')) 
-        await self.database.execute_many("INSERT INTO EMPLOYEE_DETAILS (emp_no, name, mail_id, designation, gender, branch_name, contact_no) SELECT * FROM (SELECT :emp_no, :name, :mail_id, :designation, :gender, :branch_name, :contact_no) AS tmp WHERE NOT EXISTS (SELECT emp_no FROM EMPLOYEE_DETAILS WHERE emp_no = :emp_no OR mail_id = :mail_id) LIMIT 1;", sample)
+        # sample = pickle.load(open('employee_sample.pkl','rb')) 
+
+        self.team_data = [{'emp_no': '1', 'name': 'Aadarsh', 'mail_id': 'aadarsh.ram@gmail.com', 'designation': 'ML', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9488363342'},
+                          {'emp_no': '2', 'name': 'Gokul', 'mail_id': 'gokul3112003.com@gmail.com', 'designation': 'ML', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9384742775'},
+                          {'emp_no': '3', 'name': 'Selva', 'mail_id': 'snsn010212@gmail.com', 'designation': 'APP', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9003299917'},
+                          {'emp_no': '4', 'name': 'Ashwanth', 'mail_id': 'ashwanth064@gmail.com', 'designation': 'APP', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9940497154'},
+                          {'emp_no': '5', 'name': 'Kavimalar', 'mail_id': 'kavimalar2508@gmail.com', 'designation': 'APP', 'gender': 'F', 'branch_name': 'Office6', 'contact_no': '6385768683'},
+                          {'emp_no': '6', 'name': 'Venkatesh', 'mail_id': 'blackvenky21@gmail.com', 'designation': 'WEB', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9543879507'},
+                          
+                          ]
+
+        for i in range(len(self.team_data)):
+            a = list(self.team_data[i].keys())
+            a.remove('emp_no')
+            for j in a:
+                self.team_data[i][j] = encryptor.AES_encrypt(self.team_data[i][j])
+                
+
+        await self.database.execute_many("INSERT INTO EMPLOYEE_DETAILS (emp_no, name, mail_id, designation, gender, branch_name, contact_no) SELECT * FROM (SELECT :emp_no, :name, :mail_id, :designation, :gender, :branch_name, :contact_no) AS tmp WHERE NOT EXISTS (SELECT emp_no FROM EMPLOYEE_DETAILS WHERE emp_no = :emp_no OR mail_id = :mail_id) LIMIT 1;", self.team_data)
         
 
 
