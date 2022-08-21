@@ -277,7 +277,7 @@ async def get_info(
         return "EMPLOYEE NUMBER DOESN'T EXIST"
 
     data_args = 'name,designation,emp_no,gender,branch_name,contact_no,check_in,check_out,in_latitude,in_longitude,out_latitude,out_longitude'.split(',')
-    decrypt_for = 'name,designation,gender,contact_no'.split(',')
+    decrypt_for = 'name,designation,gender,branch_name,contact_no'.split(',')
     e = await exception_handle("SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL", mydb.get_user_details, emp_no)
     if e == "SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL":
         return e
