@@ -47,7 +47,7 @@ public class threeshot extends AppCompatActivity {
     private static boolean pic_taken = false;
     private ImageView imageView5 , imageView6 , imageView7;
     private CheckBox checkbox;
-
+    public boolean checkbox_checked = false;
     public boolean uploaded_state = true;
     /*
          By default: uploaded_state = true
@@ -100,6 +100,7 @@ public class threeshot extends AppCompatActivity {
 
         Button submit_button = findViewById(R.id.button5);
         Button back_button = findViewById(R.id.button6);
+        // front view
         imageView5.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -117,6 +118,7 @@ public class threeshot extends AppCompatActivity {
                 startActivityForResult(camera_intent, pic_id1);
             }
         });
+        // left view
         imageView6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,6 +135,7 @@ public class threeshot extends AppCompatActivity {
                 startActivityForResult(camera_intent, pic_id2);
             }
         });
+        // right view
         imageView7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -155,7 +158,6 @@ public class threeshot extends AppCompatActivity {
             public void onClick(View view) {
                 // if signup button clicked ,
                 upload_sign_up();
-
             }
         });
         submit_button.setEnabled(false);
@@ -171,7 +173,19 @@ public class threeshot extends AppCompatActivity {
         checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submit_button.setEnabled(true);
+                Log.i("DEBUG" , "CHECK BOX");
+                if(checkbox.isChecked())
+                {
+                    // check box checked
+                    // check if all images have been uploaded
+                    if (count_of_times[0] > 0 && count_of_times[1] > 0 && count_of_times[2] > 0) {
+                        submit_button.setEnabled(true);
+                    }
+                }
+                else {
+                    // check box not checked
+                    submit_button.setEnabled(false);
+                }
             }
         });
     }
@@ -179,17 +193,29 @@ public class threeshot extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         // Match the request 'pic id' with requestCode
+
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == pic_id1) {
+            count_of_times[0] = 0;
             Bitmap photo = (Bitmap) data.getExtras().get("data");
+
             my_model.getEmbeddings((photo));
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     user_embeds.embed1 = my_model.embeds;
                     Log.i("EMBEDS", Arrays.toString(user_embeds.embed1));
+                    // check if no faces detected
+                    if(Arrays.toString(user_embeds.embed1).equals("null")
+                    || Arrays.toString(user_embeds.embed1).equals(Arrays.toString(user_embeds.embed3))
+                    || Arrays.toString(user_embeds.embed1).equals(Arrays.toString(user_embeds.embed2))
+                    )
+                    {
+                        show_error("NO FACES DETECTED !");
+                        count_of_times[0] -= 1;
+                    }
                 }
-            }, 2000);
+            }, 1500);
 
             String fileName = "";//no .png or .jpg needed
             try {
@@ -206,6 +232,8 @@ public class threeshot extends AppCompatActivity {
                 createImageFromBitmap(photo,file_name);
                 count_of_times[0] += 1;
 
+                // check if all images have been uploaded
+
                 if (count_of_times[0] > 0 && count_of_times[1] > 0 && count_of_times[2] > 0) {
                     // All 3 photos have been taken...
                     new Handler().postDelayed(new Runnable() {
@@ -213,14 +241,7 @@ public class threeshot extends AppCompatActivity {
                         public void run() {
                             saveEmbedsToSP(user_embeds);
                             Log.i("EmbedsSPSave", "Saved to SharedPref");
-                            show_message("Great, you can proceed to next step!");
-                        }
-                    }, 2000);
-                    // Go to confirm page
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
+                            //show_message("Great, you can proceed to next step!");
                         }
                     }, 2000);
                 }
@@ -229,15 +250,27 @@ public class threeshot extends AppCompatActivity {
             }
         }
         if (requestCode == pic_id2) {
+            count_of_times[1] = 0;
             Bitmap photo = (Bitmap) data.getExtras().get("data");
+
             my_model.getEmbeddings((photo));
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     user_embeds.embed2 = my_model.embeds;
                     Log.i("EMBEDS", Arrays.toString(user_embeds.embed2));
+                    // check if no faces detected
+                    if(Arrays.toString(user_embeds.embed2).equals("null")
+                    || Arrays.toString(user_embeds.embed2).equals(Arrays.toString(user_embeds.embed3))
+                    || Arrays.toString(user_embeds.embed2).equals(Arrays.toString(user_embeds.embed1))
+                    )
+                    {
+                        show_error("NO FACES DETECTED !");
+
+                        count_of_times[1] -= 1;
+                    }
                 }
-            }, 2000);
+            }, 1500);
 
             String fileName = "";//no .png or .jpg needed
             try {
@@ -261,31 +294,36 @@ public class threeshot extends AppCompatActivity {
                         public void run() {
                             saveEmbedsToSP(user_embeds);
                             Log.i("SPSave", "Saved to SharedPref");
-                            show_message("Great, you can proceed to next step!");
+                            //show_message("Great, you can proceed to next step!");
                         }
                     }, 2000);
-                    // Go to confirm page
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
 
-                        }
-                    }, 2000);
                 }
             } catch (Exception e) {
                 show_error("error " + e);
             }
         }
         if (requestCode == pic_id3) {
+            count_of_times[2] = 0;
             Bitmap photo = (Bitmap) data.getExtras().get("data");
+
             my_model.getEmbeddings((photo));
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     user_embeds.embed3 = my_model.embeds;
                     Log.i("EMBEDS", Arrays.toString(user_embeds.embed3));
+                    // check if no faces detected
+                    if(Arrays.toString(user_embeds.embed3).equals("null")
+                      || Arrays.toString(user_embeds.embed3).equals(Arrays.toString(user_embeds.embed2))
+                      || Arrays.toString(user_embeds.embed3).equals(Arrays.toString(user_embeds.embed1))
+                    )
+                    {
+                        show_error("NO FACES DETECTED !");
+                        count_of_times[2] -= 1;
+                    }
                 }
-            }, 2000);
+            }, 1500);
 
             String fileName = "";//no .png or .jpg needed
             try {
@@ -309,14 +347,7 @@ public class threeshot extends AppCompatActivity {
                         public void run() {
                             saveEmbedsToSP(user_embeds);
                             Log.i("SPSave", "Saved to SharedPref");
-                            show_message("Great, you can proceed to next step!");
-                        }
-                    }, 2000);
-                    // Go to confirm page
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
+                            //show_message("Great, you can proceed to next step!");
                         }
                     }, 2000);
                 }
@@ -324,6 +355,8 @@ public class threeshot extends AppCompatActivity {
                 show_error("error " + e);
             }
         }
+        Log.i("PHOTOS:" , count_of_times[0] + ","+count_of_times[1] + ","+count_of_times[2]);
+
     }
 
     public void show_error(String s) {
