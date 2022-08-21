@@ -47,10 +47,6 @@
             android:exported="true"
             android:label="Upload to server" />
         <activity
-            android:name="com.totalrecon.ipravesh.uploadsignup"
-            android:exported="true"
-            android:label="Upload to server" />
-        <activity
             android:name="com.totalrecon.ipravesh.threeshot"
             android:exported="true"
             android:label="Photo Capture" />
