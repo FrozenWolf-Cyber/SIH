@@ -49,10 +49,10 @@
   padding-bottom: 21px;
 }
 
-#main-container1 #other-details > div {
+#main-container1 .info {
   box-shadow: #e4e3e4 0px 1px 3px 0px, #d5d4d5 0px 0px 0px 1px;
   height: 45px;
-  width: 360px;
+  width: 360px !important;
   border: 0px solid;
   border-radius: 0.5rem;
   background-color: #ffffff;
@@ -63,18 +63,20 @@
   background-image: none !important;
 }
 
-#main-container1 #other-details > div .name {
+#main-container1 .info .name {
   font-size: 0.81rem;
   color: #696868;
 }
 
-#main-container1 #other-details > div form {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+#main-container1 .info form {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  width: 360px;
+  border: none;
 }
 
-#main-container1 #other-details > div form input {
+#main-container1 .info form input {
   background-color: transparent;
   border: none !important;
   font-size: 1rem;

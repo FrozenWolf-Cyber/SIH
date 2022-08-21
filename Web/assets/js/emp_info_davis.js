@@ -339,7 +339,155 @@
 // }
 
 
-function davis(raw_data)
+function davis()
 {
-   
+    renderLineChart();
+    // var worked_time = 0;var work_days = [];
+    // const curr_month = `${2022}-${08}`;
+    //     console.log(curr_month);
+    //     for(let i = 0;i < raw_data.check_in.length;i++)
+    //     {
+    //         console.log(raw_data.check_in[i]);
+    //         let check_in = new Date(raw_data.check_in[i].substr(0,10)+' '+raw_data.check_in[i].substr(11));
+    //         console.log(check_in);
+    //     }
+        // for(key in emp_data)
+        // {
+        //   const obj = emp_data[key];
+        //   console.log(obj);
+        //   if( obj.check_in.substr(0,7) == curr_month)
+        //   {
+        //     // var check_in_date,check_in_time,check_out_date,check_out_time;
+        //     var check_in_date = obj.check_in.substr(8,2);
+        //     // try{check_out_date = obj.check_out.substr(8,2);}catch{};
+        //     // try{check_in_time = obj.check_in.substr(11);}catch{};
+        //     // try{check_out_time = obj.check_out.substr(11);}catch{};
+        //     if(!work_days.includes(check_in_date))
+        //     {
+        //         work_days.push(check_in_date);
+        //         console.log('work_days',work_days.length,typeof work_days.length);
+        //     }
+        //     let check_in = new Date(obj.check_in.substr(0,10)+' '+obj.check_in.substr(11));
+        //     let check_out,time_interval;
+        //     try{
+        //         check_out = new Date(obj.check_out.substr(0,10)+' '+obj.check_out.substr(11));
+        //         time_interval = (check_out - check_in);
+        //     }
+        //     catch{
+        //         time_interval = 9*1000*60*60;
+        //     }; 
+        //     console.log('in-out',check_in,check_out);
+        //     // console.log(check_in_date,check_out_date,check_in_time,check_out_time);
+        //     worked_time += time_interval;
+        //   }
+        // }
 }
+function renderLineChart()
+{
+    let line_chart_data = {
+        date:[],
+        hours:[]
+    }
+    console.log(calender);
+    console.log('calender number of days',calender.no_of_days);
+    for(let i = 0;i < calender.no_of_days;i++)
+    {
+        console.log(i);
+        line_chart_data.date.push(i+1);
+        let date = calender.year + '-' + calender.month + '-' + ''+(i+1).toLocaleString('en-US', {
+            minimumIntegerDigits: 2,
+            useGrouping: false
+                                 }); 
+        console.log('line_chart_data',date);         
+        if(calender.attendance_log[date])
+        {
+            let check_in = calender.attendance_log[date].check_in;
+            let check_out = calender.attendance_log[date].check_out;
+
+            if(check_out)
+            {
+                check_in = new Date(check_in.substr(0,10)+' '+check_in.substr(11))
+                check_out= new Date(check_out.substr(0,10)+' '+check_out.substr(11));
+                let time_interval = Math.floor((check_out - check_in)/(10000*60*60))/10;
+                console.log('time_interval',time_interval);
+                line_chart_data.hours.push(time_interval);
+            }
+            else
+            {
+                line_chart_data.hours.push(9);
+            }
+        }           
+        else
+        {
+            line_chart_data.hours.push(0);
+        }
+    }
+
+    Highcharts.chart('line-chart', {
+
+        title: {
+          text: 'Working Hours analysis'
+        },
+        yAxis: {
+          title: {
+            text: 'Number of Working Hours'
+          }
+        },
+        xAxis: {
+          accessibility: {
+            rangeDescription: `Range: 1 to ${line_chart_data.date.length}`
+          },
+          title:{
+            text:'Date'
+          }
+        },
+        legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'middle'
+        },
+    
+        series: [{
+          name:'Worked Hours',  
+          data: line_chart_data.hours
+        }],
+      
+        responsive: {
+          rules: [{
+            condition: {
+              maxWidth: 500
+            },
+            chartOptions: {
+              legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+              }
+            }
+          }]
+        }
+      
+      });
+
+      const adv= document.querySelectorAll('.highcharts-credits');
+      for(i of adv)
+      {
+        i.remove();
+      }
+}
+
+
+let interval2 = setInterval(() => {
+    if(calender)
+    {
+        // console.log('not:got the calender');
+        davis();
+        clearInterval(interval2);
+    }
+    else
+    {
+      console.log('fetching...');
+    }
+  },60);
+  
+

@@ -2,7 +2,6 @@
 
 <link rel="stylesheet" href="/css/emp_profile.css">
 <div id ='main-container1'>
-     
     <div id = 'profile-pic-container'>
       <div id="profile-pic"
           style="background-image: url('https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png');
@@ -14,9 +13,9 @@
  
     <div id ='other-details'>
  
-     <div>
+     <div class="info">
          <span class="name">Gender</span>
-         <form action="">
+         <form  action="">
              <div>
                    <label for="radio-m">Male</label><input id ='radio-m' type="radio" name="gender" value="M">
                    <label for="radio-f">Female</label><input id="radio-f" type="radio" name="gender" value="F">    
@@ -24,30 +23,30 @@
          </form>
       </div>
  
-       <div>
+       <div class="info">
            <span class ='name'>Designation</span>
-           <form action="">
+           <form  action="">
                <input type="text" value="CSE" name="designation">
            </form>
        </div>
  
-       <div>
+       <div class="info">
           <span class ='name'>Branch name</span>
-          <form action="">
+          <form  action="">
              <input type="text" value="3" name="branch_name">
          </form>
       </div>
  
-      <div>
+      <div class="info">
          <span class ='name'>Emp no</span>
-         <form action="">
+         <form  action="">
           <input type="number" value="<%= locals.emp_no %>" name="emp_no">
          </form>
       </div>
  
-      <div>
+      <div class="info">
          <span class ='name'>Contact</span>
-         <form action="">
+         <form  action="">
           <input type="number" value="369213" name="contact_no">
       </form>
       </div>

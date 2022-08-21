@@ -4,7 +4,6 @@
 <main>
     <h1 id = 'heading'>Employee Info</h1>
 
-
     <div id="section-nav">
         <div id="section1"><i class="fa-solid fa-user"></i></div>    
         <div id="section3"><i class="fa-solid fa-calendar-days"></i></div>
@@ -12,10 +11,10 @@
     </div>
     <div id="main-container">
        <%- include('./partials/_emp_profile') %>
+       <%- include('./partials/_emp_attendance') %>
        <%- include('./partials/_emp_info_davis') %>
     </div>
 </main>
-
 <input type="text" id="emp_no" value="<%= locals.emp_no %>">
 <script src="/js/emp_info.js"></script>
-<script src="emp_info_nav.js"></script>
+<script src="/js/emp_info_nav.js"></script>

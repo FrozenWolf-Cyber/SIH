@@ -46,7 +46,7 @@ main #section-nav #section3 {
 }
 
 main #section-nav div :hover {
-  color: #fd03e4;
+  color: blue;
 }
 
 main #main-container {
@@ -56,4 +56,8 @@ main #main-container {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.active-nav {
+  color: blue !important;
 }

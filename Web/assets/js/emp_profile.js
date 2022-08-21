@@ -13,22 +13,25 @@ $.ajax('http://sih-smart-attendance.herokuapp.com/get_info', {
              davis(data);          
         }
     });
-
 function empProfileRender(data){
     if(typeof data != 'string')
     {
         for(let field in data){
-            let element = document.querySelector(`input[name="${field}"]`); 
-            if( element && element.type == 'radio')
+            let elements = document.querySelectorAll(`input[name="${field}"]`); 
+            for(element of elements)
             {
-                if(element.value == data.gender)
+                if( element && element.type == 'radio')
                 {
-                    element.checked = true;
+                    console.log(element);
+                    if(element.value == data.gender)
+                    {
+                        element.checked = true;
+                    }
                 }
-            }
-            else if(element)
-            {
-                element.value = data[field];
+                else if(element)
+                {
+                    element.value = data[field];
+                }
             }
         };
 
@@ -41,6 +44,33 @@ function empProfileRender(data){
         });
     }
 };
+$.ajax('http://sih-smart-attendance.herokuapp.com/get_img', {
+        type: 'POST',  
+        data:{emp_no:'a'+emp_no+'a'},
+        success: function (data, status, xhr) {
+             console.log('get_image',data);    
+             // strip off the data: url prefix to get just the base64-encoded bytes
+            //  $.ajax('/profile_img',{
+            //     type:'POST',
+            //     data,
+            //     success:function (data,status,xhr){
+            //         console.log(data);
+            //     }
+            //  });
+             
+        }
+});
+
+
+
+// url = 'http://127.0.0.1:5000/get_img'
+
+//     input data = requests.post(url, data= {'emp_no' : emp_no})
+//     img = io.BytesIO(x.content)
+//     a = Image.open(img)
+//     print(a.size)
+
+
 // const intervalId = setInterval(() => {
     
 //     if(emp_data){

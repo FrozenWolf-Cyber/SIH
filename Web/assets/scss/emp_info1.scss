@@ -39,7 +39,7 @@ main{
             padding:6px;
         }
         div :hover{
-            color:#fd03e4;
+            color:blue;
         }
     }
     #main-container{
@@ -50,4 +50,7 @@ main{
         justify-content: center;
         align-items: center;
     }
+}
+.active-nav{
+    color:blue !important;
 }
