@@ -35,7 +35,7 @@
         android:layout_width="107dp"
         android:layout_height="45dp"
         android:layout_gravity="start"
-        android:layout_marginTop="154dp"
+        android:layout_marginBottom="61dp"
         android:backgroundTint="#ffffff"
         android:enabled="true"
         android:fontFamily="@font/mulishbold"
@@ -45,10 +45,8 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.868"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/employee_number"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintHorizontal_bias="0.861"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/next"
@@ -79,16 +77,16 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintHorizontal_bias="0.134"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.233" />
+        app:layout_constraintVertical_bias="0.247" />
 
     <EditText
         android:id="@+id/confirmpassword"
-        android:layout_width="310dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="12dp"
+        android:layout_width="308dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="8dp"
         android:background="@null"
         android:fontFamily="@font/mulishregular"
         android:hint="Confirm password"
@@ -97,7 +95,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView9"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.477" />
+        app:layout_constraintVertical_bias="0.522" />
 
     <TextView
         android:id="@+id/textView23"
@@ -108,10 +106,10 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintHorizontal_bias="0.134"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.557" />
+        app:layout_constraintVertical_bias="0.595" />
 
     <ImageView
         android:id="@+id/imageView9"
@@ -122,14 +120,14 @@
         app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.478"
+        app:layout_constraintVertical_bias="0.522"
         app:srcCompat="@drawable/lock_ic" />
 
     <EditText
         android:id="@+id/employee_number"
-        android:layout_width="310dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="15dp"
+        android:layout_width="311dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="10dp"
         android:background="@null"
         android:fontFamily="@font/mulishregular"
         android:hint="Enter employee number"
@@ -138,7 +136,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView10"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.612" />
+        app:layout_constraintVertical_bias="0.656" />
 
     <TextView
         android:id="@+id/textView21"
@@ -152,13 +150,14 @@
         app:layout_constraintHorizontal_bias="0.123"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.352" />
+        app:layout_constraintVertical_bias="0.371" />
 
     <EditText
         android:id="@+id/username"
-        android:layout_width="319dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="14dp"
+        android:layout_width="315dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="4dp"
         android:background="@null"
         android:fontFamily="@font/mulishregular"
         android:hint="Enter username"
@@ -169,13 +168,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView18"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.286" />
+        app:layout_constraintVertical_bias="0.299" />
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="310dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="12dp"
+        android:layout_width="308dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="8dp"
         android:background="@null"
         android:fontFamily="@font/mulishregular"
         android:hint="Enter password"
@@ -184,7 +183,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView8"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.406" />
+        app:layout_constraintVertical_bias="0.434" />
 
     <ImageView
         android:id="@+id/imageView8"
@@ -195,17 +194,17 @@
         app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.407"
+        app:layout_constraintVertical_bias="0.435"
         app:srcCompat="@drawable/lock_ic" />
 
     <ImageView
         android:id="@+id/imageView10"
         android:layout_width="30dp"
         android:layout_height="29dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="410dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="444dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.095"
+        app:layout_constraintHorizontal_bias="0.09"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/user_circle_ic" />
@@ -214,10 +213,10 @@
         android:id="@+id/imageView18"
         android:layout_width="27dp"
         android:layout_height="27dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="196dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="204dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.091"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/user_ic" />
@@ -234,7 +233,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.217" />
+        app:layout_constraintVertical_bias="0.347" />
 
     <TextView
         android:id="@+id/textView20"
@@ -246,10 +245,10 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.518"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.11" />
+        app:layout_constraintVertical_bias="0.132" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
