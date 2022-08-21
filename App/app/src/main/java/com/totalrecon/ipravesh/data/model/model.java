@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -81,6 +82,7 @@ public class model {
                                 new OnSuccessListener<List<Face>>() {
                                     @Override
                                     public void onSuccess(List<Face> faces) {
+                                        Log.i("faces",Integer.toString(faces.size()));
                                         if(faces.size()!=0) {
                                             Face face = faces.get(0); //Get first face from detected faces
 
@@ -102,9 +104,11 @@ public class model {
 
                                             recognizeImage(scaled); //Send scaled bitmap to create face embeddings.
 
-
                                         }
-
+                                        else {
+                                            // If no face exists, clear existing embeds
+                                            clearEmbedsArray();
+                                        }
 
                                     }
                                 }).addOnCompleteListener(new OnCompleteListener<List<Face>>() {
@@ -165,36 +169,27 @@ public class model {
 
 
         embeedings = new float[1][OUTPUT_SIZE]; //output of model will be stored in this variable
-
         outputMap.put(0, embeedings);
-//
         tfLite.runForMultipleInputsOutputs(inputArray, outputMap); //Run model
-//
-//
-//
-        float distance = Float.MAX_VALUE;
-        String id = "0";
-        String label = "?";
 
-        String[][] x = new String[][] {
-                new String[] { "foo", "bar" },
-                new String[] { "bazz" }
-        };
         this.embeds =  embeedings[0];
     }
 
-         //Compare Faces by distance between face embeddings
-     public float findDistance(float[] emb1, float[] emb2 ) {
-             float distance = 0;
-             for (int i = 0; i < emb1.length; i++) {
-                 float diff = emb1[i] - emb2[i];
-                 distance += diff*diff;
-             }
-             distance = (float) Math.sqrt(distance);
+    private void clearEmbedsArray() {
+        this.embeds = null;
+    }
 
-         return distance;
+    //Compare Faces by distance between face embeddings
+    public float findDistance(float[] emb1, float[] emb2 ) {
+        float distance = 0;
+        for (int i = 0; i < emb1.length; i++) {
+            float diff = emb1[i] - emb2[i];
+            distance += diff*diff;
+        }
+        distance = (float) Math.sqrt(distance);
 
-     }
+        return distance;
+    }
 
     private Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
         int width = bm.getWidth();
@@ -221,7 +216,7 @@ public class model {
         // draw background
         Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
         paint.setColor(Color.WHITE);
-        cavas.drawRect(//from  w w  w. ja v  a  2s. c  om
+        cavas.drawRect(
                 new RectF(0, 0, cropRectF.width(), cropRectF.height()),
                 paint);
 
@@ -237,8 +232,6 @@ public class model {
         return resultBitmap;
     }
 
-
-
 //    Save Faces to Shared Preferences.Conversion of Recognition objects to json string
      public void insertToSP(HashMap<String, SimilarityClassifier.Recognition> jsonMap,boolean clear) {
          if(clear)
@@ -253,7 +246,7 @@ public class model {
          editor.apply();
      }
 //
-     //Load Faces from Shared Preferences.Json String to Recognition object
+     // Load Faces from Shared Preferences.Json String to Recognition object
      public HashMap<String, SimilarityClassifier.Recognition> readFromSP(){
          SharedPreferences sharedPreferences = this.activity.getSharedPreferences("HashMap", MODE_PRIVATE);
          String defValue = new Gson().toJson(new HashMap<String, SimilarityClassifier.Recognition>());

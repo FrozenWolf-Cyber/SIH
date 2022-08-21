@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -47,12 +48,7 @@ public class threeshot extends AppCompatActivity {
     private static boolean pic_taken = false;
     private ImageView imageView5 , imageView6 , imageView7;
     private CheckBox checkbox;
-    public boolean checkbox_checked = false;
-    public boolean uploaded_state = true;
-    /*
-         By default: uploaded_state = true
-         When "ALREADY IN USE" response is received, then uploaded_state = false
-     */
+    Button submit_button, back_button;
 
     private String upload_URL = "https://sih-smart-attendance.herokuapp.com/signup";
     Bitmap headshot;
@@ -97,9 +93,8 @@ public class threeshot extends AppCompatActivity {
         imageView6 = (ImageView)findViewById(R.id.imageView6);
         imageView7 = (ImageView)findViewById(R.id.imageView7);
         checkbox = (CheckBox) findViewById(R.id.checkBox);
-
-        Button submit_button = findViewById(R.id.button5);
-        Button back_button = findViewById(R.id.button6);
+        submit_button = findViewById(R.id.button5);
+        back_button = findViewById(R.id.button6);
         // front view
         imageView5.setOnClickListener(new View.OnClickListener() {
 
@@ -114,8 +109,9 @@ public class threeshot extends AppCompatActivity {
                     show_error("error1 "+e);
                     e.printStackTrace();
                 }
-                Intent camera_intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(camera_intent, pic_id1);
+                Intent camera_intent1= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                camera_intent1.putExtra("android.intent.extras.CAMERA_FACING", 1); // Open front camera first
+                startActivityForResult(camera_intent1, pic_id1);
             }
         });
         // left view
@@ -131,8 +127,9 @@ public class threeshot extends AppCompatActivity {
                     show_error("error1 "+e);
                     e.printStackTrace();
                 }
-                Intent camera_intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(camera_intent, pic_id2);
+                Intent camera_intent2= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                camera_intent2.putExtra("android.intent.extras.CAMERA_FACING", 1); // Open front camera first
+                startActivityForResult(camera_intent2, pic_id2);
             }
         });
         // right view
@@ -148,42 +145,39 @@ public class threeshot extends AppCompatActivity {
                     show_error("error1 "+e);
                     e.printStackTrace();
                 }
-                Intent camera_intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(camera_intent, pic_id3);
+                Intent camera_intent3= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                camera_intent3.putExtra("android.intent.extras.CAMERA_FACING", 1); // Open front camera first
+                startActivityForResult(camera_intent3, pic_id3);
             }
         });
         submit_button.setOnClickListener(new View.OnClickListener() {
-            // upload all details to server
+            // Upload all details to server
             @Override
             public void onClick(View view) {
-                // if signup button clicked ,
+                // If signup button clicked
                 upload_sign_up();
             }
         });
         submit_button.setEnabled(false);
         back_button.setOnClickListener(new View.OnClickListener() {
-            // back button
+            // Back Button
             @Override
             public void onClick(View view) {
-//                Intent i = new Intent(threeshot.this, register_new_employee_cred.class);
-//                startActivity(i);
                   threeshot.super.onBackPressed();
             }
         });
         checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("DEBUG" , "CHECK BOX");
                 if(checkbox.isChecked())
                 {
-                    // check box checked
-                    // check if all images have been uploaded
+                    // Check if all images have been uploaded
                     if (count_of_times[0] > 0 && count_of_times[1] > 0 && count_of_times[2] > 0) {
                         submit_button.setEnabled(true);
                     }
                 }
                 else {
-                    // check box not checked
+                    // Disable if not uploaded
                     submit_button.setEnabled(false);
                 }
             }
@@ -205,49 +199,50 @@ public class threeshot extends AppCompatActivity {
                 public void run() {
                     user_embeds.embed1 = my_model.embeds;
                     Log.i("EMBEDS", Arrays.toString(user_embeds.embed1));
-                    // check if no faces detected
-                    if(Arrays.toString(user_embeds.embed1).equals("null")
-                    || Arrays.toString(user_embeds.embed1).equals(Arrays.toString(user_embeds.embed3))
-                    || Arrays.toString(user_embeds.embed1).equals(Arrays.toString(user_embeds.embed2))
-                    )
-                    {
-                        show_error("NO FACES DETECTED !");
+
+                    // Check if no faces detected
+                    if(Arrays.toString(user_embeds.embed1).equals("null")) {
+                        show_error("No face detected! Please try again.");
                         count_of_times[0] -= 1;
+                    }
+
+                    else {
+                        try {
+                            FileInputStream fin = openFileInput("cur_image");
+                            int c;
+                            String file_name = "";
+                            while ((c = fin.read()) != -1) {
+                                file_name = file_name + Character.toString((char) c);
+                            }
+                            fin.close();
+
+                            // Set the image to ImageView
+                            imageView5.setBackgroundResource(0);
+                            imageView5.setImageBitmap(photo);
+                            createImageFromBitmap(photo,file_name);
+                            count_of_times[0] += 1;
+
+                            // Check if all images have been uploaded
+                            if (count_of_times[0] > 0 && count_of_times[1] > 0 && count_of_times[2] > 0) {
+                                // All 3 photos have been taken...
+                                // Enable checkbox if all 3 photos have been taken
+                                if (checkbox.isChecked()) {
+                                    submit_button.setEnabled(true);
+                                }
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        saveEmbedsToSP(user_embeds);
+                                        Log.i("EmbedsSPSave", "Saved to SharedPref");
+                                    }
+                                }, 2000);
+                            }
+                        } catch (Exception e) {
+                            show_error("error " + e);
+                        }
                     }
                 }
             }, 1500);
-
-            String fileName = "";//no .png or .jpg needed
-            try {
-                FileInputStream fin = openFileInput("cur_image");
-                int c;
-                String file_name = "";
-                while ((c = fin.read()) != -1) {
-                    file_name = file_name + Character.toString((char) c);
-                }
-                fin.close();
-
-                imageView5.setBackgroundResource(0);
-                imageView5.setImageBitmap(photo);
-                createImageFromBitmap(photo,file_name);
-                count_of_times[0] += 1;
-
-                // check if all images have been uploaded
-
-                if (count_of_times[0] > 0 && count_of_times[1] > 0 && count_of_times[2] > 0) {
-                    // All 3 photos have been taken...
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            saveEmbedsToSP(user_embeds);
-                            Log.i("EmbedsSPSave", "Saved to SharedPref");
-                            //show_message("Great, you can proceed to next step!");
-                        }
-                    }, 2000);
-                }
-            } catch (Exception e) {
-                show_error("error " + e);
-            }
         }
         if (requestCode == pic_id2) {
             count_of_times[1] = 0;
@@ -259,49 +254,48 @@ public class threeshot extends AppCompatActivity {
                 public void run() {
                     user_embeds.embed2 = my_model.embeds;
                     Log.i("EMBEDS", Arrays.toString(user_embeds.embed2));
-                    // check if no faces detected
-                    if(Arrays.toString(user_embeds.embed2).equals("null")
-                    || Arrays.toString(user_embeds.embed2).equals(Arrays.toString(user_embeds.embed3))
-                    || Arrays.toString(user_embeds.embed2).equals(Arrays.toString(user_embeds.embed1))
-                    )
-                    {
-                        show_error("NO FACES DETECTED !");
-
+                    // Check if no faces detected
+                    if(Arrays.toString(user_embeds.embed2).equals("null")) {
+                        show_error("No face detected! Please try again.");
                         count_of_times[1] -= 1;
+                    }
+                    else {
+                        try {
+                            FileInputStream fin = openFileInput("cur_image");
+                            int c;
+                            String file_name = "";
+                            while ((c = fin.read()) != -1) {
+                                file_name = file_name + Character.toString((char) c);
+                            }
+                            fin.close();
+
+                            // Set the image to ImageView
+                            imageView6.setBackgroundResource(0);
+                            imageView6.setImageBitmap(photo);
+                            createImageFromBitmap(photo,file_name);
+                            count_of_times[1] += 1;
+
+                            if (count_of_times[0] > 0 && count_of_times[1] > 0 && count_of_times[2] > 0) {
+                                // All 3 photos have been taken...
+                                // Enable checkbox if all 3 photos have been taken
+                                if (checkbox.isChecked()) {
+                                    submit_button.setEnabled(true);
+                                }
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        saveEmbedsToSP(user_embeds);
+                                        Log.i("SPSave", "Saved to SharedPref");
+                                    }
+                                }, 2000);
+
+                            }
+                        } catch (Exception e) {
+                            show_error("error " + e);
+                        }
                     }
                 }
             }, 1500);
-
-            String fileName = "";//no .png or .jpg needed
-            try {
-                FileInputStream fin = openFileInput("cur_image");
-                int c;
-                String file_name = "";
-                while ((c = fin.read()) != -1) {
-                    file_name = file_name + Character.toString((char) c);
-                }
-                fin.close();
-
-                imageView6.setBackgroundResource(0);
-                imageView6.setImageBitmap(photo);
-                createImageFromBitmap(photo,file_name);
-                count_of_times[1] += 1;
-
-                if (count_of_times[0] > 0 && count_of_times[1] > 0 && count_of_times[2] > 0) {
-                    // All 3 photos have been taken ...
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            saveEmbedsToSP(user_embeds);
-                            Log.i("SPSave", "Saved to SharedPref");
-                            //show_message("Great, you can proceed to next step!");
-                        }
-                    }, 2000);
-
-                }
-            } catch (Exception e) {
-                show_error("error " + e);
-            }
         }
         if (requestCode == pic_id3) {
             count_of_times[2] = 0;
@@ -313,56 +307,59 @@ public class threeshot extends AppCompatActivity {
                 public void run() {
                     user_embeds.embed3 = my_model.embeds;
                     Log.i("EMBEDS", Arrays.toString(user_embeds.embed3));
-                    // check if no faces detected
-                    if(Arrays.toString(user_embeds.embed3).equals("null")
-                      || Arrays.toString(user_embeds.embed3).equals(Arrays.toString(user_embeds.embed2))
-                      || Arrays.toString(user_embeds.embed3).equals(Arrays.toString(user_embeds.embed1))
-                    )
-                    {
-                        show_error("NO FACES DETECTED !");
+                    // Check if no faces detected
+                    if(Arrays.toString(user_embeds.embed3).equals("null")) {
+                        show_error("No face detected! Please try again.");
                         count_of_times[2] -= 1;
+                    }
+                    else {
+                        try {
+                            FileInputStream fin = openFileInput("cur_image");
+                            int c;
+                            String file_name = "";
+                            while ((c = fin.read()) != -1) {
+                                file_name = file_name + Character.toString((char) c);
+                            }
+                            fin.close();
+                            // Set the image to ImageView
+                            imageView7.setBackgroundResource(0);
+                            imageView7.setImageBitmap(photo);
+                            createImageFromBitmap(photo,file_name);
+                            count_of_times[2] += 1;
+
+                            if (count_of_times[0] > 0 && count_of_times[1] > 0 && count_of_times[2] > 0) {
+                                // All 3 photos have been taken...
+                                // Enable checkbox if all 3 photos have been taken
+                                if (checkbox.isChecked()) {
+                                    submit_button.setEnabled(true);
+                                }
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        saveEmbedsToSP(user_embeds);
+                                        Log.i("SPSave", "Saved to SharedPref");
+                                    }
+                                }, 2000);
+                            }
+                        } catch (Exception e) {
+                            show_error("error " + e);
+                        }
                     }
                 }
             }, 1500);
-
-            String fileName = "";//no .png or .jpg needed
-            try {
-                FileInputStream fin = openFileInput("cur_image");
-                int c;
-                String file_name = "";
-                while ((c = fin.read()) != -1) {
-                    file_name = file_name + Character.toString((char) c);
-                }
-                fin.close();
-
-                imageView7.setBackgroundResource(0);
-                imageView7.setImageBitmap(photo);
-                createImageFromBitmap(photo,file_name);
-                count_of_times[2] += 1;
-
-                if (count_of_times[0] > 0 && count_of_times[1] > 0 && count_of_times[2] > 0) {
-                    // All 3 photos have been taken ...
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            saveEmbedsToSP(user_embeds);
-                            Log.i("SPSave", "Saved to SharedPref");
-                            //show_message("Great, you can proceed to next step!");
-                        }
-                    }, 2000);
-                }
-            } catch (Exception e) {
-                show_error("error " + e);
-            }
         }
         Log.i("PHOTOS:" , count_of_times[0] + ","+count_of_times[1] + ","+count_of_times[2]);
-
     }
 
     public void show_error(String s) {
         // Error due to file writing and other operations
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage(s);
+        alertDialogBuilder.setMessage(s)
+            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // Do nothing
+                }
+        });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
@@ -385,7 +382,6 @@ public class threeshot extends AppCompatActivity {
         }
         return fileName;
     }
-
 
     public void upload_sign_up()
     {
@@ -461,18 +457,12 @@ public class threeshot extends AppCompatActivity {
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
-
-
-
-
     }
 
     public void readSP() {
-
         obj.user_name = read_data("username");
         obj.password = read_data("password");
         obj.emp_no = read_data("emplno");
-
     }
 
     public void clearSP() {
@@ -484,8 +474,6 @@ public class threeshot extends AppCompatActivity {
     public void onBackPressed() {
         finish();
         super.onBackPressed();
-//        Intent i = new Intent(threeshot.this, register_new_employee_cred.class);
-//        startActivity(i);
     }
 
     public String read_data(String filename) {
