@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:textAlignment="center"
+    tools:context="com.totalrecon.ipravesh.employee_dashboard">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            android:elevation="10dp"
+            app:cardCornerRadius="10dp">
+
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="match_parent"
+                android:layout_height="223dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/face_icon2" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/textView25"
+            android:layout_width="105dp"
+            android:layout_height="55dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="188dp"
+                android:layout_height="61dp"
+                android:layout_weight="1"
+                android:text="NAME:"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="268dp"
+                android:layout_height="61dp"
+                android:layout_weight="1"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="188dp"
+                android:layout_height="61dp"
+                android:layout_weight="1"
+                android:text="EMPLOYEE NUMBER:"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/employeenumber"
+                android:layout_width="268dp"
+                android:layout_height="61dp"
+                android:layout_weight="1"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="188dp"
+                android:layout_height="61dp"
+                android:layout_weight="1"
+                android:text="DESIGNATION:"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="268dp"
+                android:layout_height="61dp"
+                android:layout_weight="1"
+                android:id="@+id/designation"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="188dp"
+                android:layout_height="61dp"
+                android:layout_weight="1"
+                android:text="GENDER:"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="268dp"
+                android:layout_height="61dp"
+                android:layout_weight="1"
+                android:id="@+id/gender"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="188dp"
+                android:layout_height="61dp"
+                android:layout_weight="1"
+                android:text="OFFICE ADDRESS"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="268dp"
+                android:layout_height="61dp"
+                android:layout_weight="1"
+                android:id="@+id/officeaddress"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="188dp"
+                android:layout_height="61dp"
+                android:layout_weight="1"
+                android:text="PHONE NUMBER"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="268dp"
+                android:layout_height="61dp"
+                android:layout_weight="1"
+                android:id="@+id/phonenumber"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"/>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:id="@+id/textView28"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_weight="1" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewGraph"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            android:elevation="10dp"
+            app:cardCornerRadius="10dp">
+
+
+            <!--Linear layout to display pie chart-->
+            <!-- and details of pie chart-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <!--Pie chart to display the data-->
+
+                <org.eazegraph.lib.charts.PieChart
+                    android:id="@+id/piechart"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_weight="1"
+                    android:padding="6dp"
+
+                    />
+
+                <!--Creating another linear layout -->
+                <!-- to display pie chart details -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <!--Linear layout to display present-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="5dp">
+
+                        <!--View to display the green color icon-->
+                        <View
+                            android:layout_width="27dp"
+                            android:layout_height="26dp"
+                            android:background="#28fc03" />
+
+                        <!--Text view to display present text -->
+                        <TextView
+                            android:layout_width="80dp"
+                            android:layout_height="25dp"
+                            android:paddingLeft="10dp"
+                            android:text="present" />
+
+                    </LinearLayout>
+
+                    <!--Linear layout to display absent-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="5dp">
+
+                        <!--View to display the red color icon-->
+                        <View
+                            android:layout_width="27dp"
+                            android:layout_height="26dp"
+                            android:background="#fc2403"
+                            android:translationZ="10dp" />
+
+                        <!--Text view to display absent text -->
+                        <TextView
+                            android:layout_width="80dp"
+                            android:layout_height="25dp"
+                            android:paddingLeft="10dp"
+                            android:text="absent" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/textView29"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textView30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LOG DETAILS"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            tools:visibility="visible" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/logdetails"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BACK" />
+    </LinearLayout>
+</ScrollView>
