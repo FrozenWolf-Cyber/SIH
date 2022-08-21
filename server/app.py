@@ -127,7 +127,7 @@ async def admin_signup(
 
 ):
 
-    mail_id, name, designation, gender, contact_no = encryptor.AES_encrypt(mail_id), encryptor.AES_encrypt(name), encryptor.AES_encrypt(designation), encryptor.AES_encrypt(gender), encryptor.AES_encrypt(contact_no)
+    mail_id, name, designation, gender, contact_no, branch_name = encryptor.AES_encrypt(mail_id), encryptor.AES_encrypt(name), encryptor.AES_encrypt(designation), encryptor.AES_encrypt(gender), encryptor.AES_encrypt(contact_no), encryptor.AES_encrypt(branch_name)
 
     data = [mail_id, name, designation, gender, branch_name, contact_no]
 
