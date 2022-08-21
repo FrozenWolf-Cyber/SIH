@@ -361,7 +361,7 @@ async def get_user_overview():
     data = await exception_handle("SERVER ERROR WHILE RETRIEVING USER OVERVIEW DATA FROM PSQL", mydb.get_user_overview)
 
     for k in data.keys():
-        if k in ['name', 'designation', 'gender']:
+        if k in ['name', 'designation', 'gender', 'branch_name']:
             for i in range(len(data[k])):
                 data[k][i] = encryptor.AES_decrypt(data[k][i])
 
