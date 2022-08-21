@@ -2,55 +2,45 @@ package com.totalrecon.ipravesh;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.totalrecon.ipravesh.R;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
 import com.totalrecon.ipravesh.data.model.VolleySingleton;
+import com.totalrecon.ipravesh.ui.login.LoginActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class register_new_employee_cred extends AppCompatActivity{
+public class register_new_employee_cred extends AppCompatActivity {
 
     private Button button;
+    private Button button2;
     private EditText username , password , confirmpassword , empl_no;
     String user_name, pass_word, confirm_password, emplno;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup_newemployee_cred);
-
-
+        setContentView(R.layout.activity_signup_newemployee_cred_new);
 
         button=findViewById(R.id.next);
+        button2=findViewById(R.id.signin);
         username=findViewById(R.id.username);
         password=findViewById(R.id.password);
         empl_no=findViewById(R.id.employee_number);
@@ -79,17 +69,17 @@ public class register_new_employee_cred extends AppCompatActivity{
                 int flag = 0;
 
                 // some validation , input should never be empty
-
-                if (emplno.replace(" ", "").equals("")) {
-                    show_error("Please fill up the employee number !");
-                    flag = 1;
-                }
                 if (user_name.replace(" ", "").equals("") ||
                         pass_word.replace(" ", "").equals("")) {
-                    show_error("Please fill up appropriate username and password");
+                    show_error("Please enter a non-empty username and password.");
                     flag = 1;
-                } else if (!(pass_word.equals(confirm_password))) {
-                    show_error("Confirm password does not match with the given password");
+                }
+                else if (emplno.replace(" ", "").equals("")) {
+                    show_error("Please enter your employee number.");
+                    flag = 1;
+                }
+                else if (!(pass_word.equals(confirm_password))) {
+                    show_error("Confirm password does not match with new password!");
                     flag = 1;
                 }
                 // non-empty inputs given for emp_no , username , password
@@ -134,7 +124,7 @@ public class register_new_employee_cred extends AppCompatActivity{
                                                         Intent i = new Intent(register_new_employee_cred.this, threeshot.class);
                                                         startActivity(i);
                                                     } else {
-                                                        show_error("This username is already taken! Enter another username");
+                                                        show_error("This username is already taken! Please enter another username.");
                                                     }
 
                                                 } catch (UnsupportedEncodingException e) {
@@ -184,8 +174,14 @@ public class register_new_employee_cred extends AppCompatActivity{
             }
         });
 
+    button2.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent i = new Intent(register_new_employee_cred.this, LoginActivity.class);
+            startActivity(i);
+        }
+    });
     }
-    //    String user_name, pass_word, confirm_password, emplno;
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -206,9 +202,6 @@ public class register_new_employee_cred extends AppCompatActivity{
         confirm_password = savedInstanceState.getString("confirm");
         emplno = savedInstanceState.getString("empno");
         super.onRestoreInstanceState(savedInstanceState);
-
-
-
     }
 
     public void show_error(String s) {
