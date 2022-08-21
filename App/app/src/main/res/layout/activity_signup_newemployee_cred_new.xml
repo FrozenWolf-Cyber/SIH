@@ -128,6 +128,7 @@
         android:layout_width="311dp"
         android:layout_height="27dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:background="@null"
         android:fontFamily="@font/mulishregular"
         android:hint="Enter employee number"

@@ -19,6 +19,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="CustomCheckbox01" parent="@style/Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:colorControlNormal">#7a7a7a</item>
+        <item name="android:colorControlActivated">@color/blue</item>
+    </style>
 
     <style name="Theme.FaceRecognition.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

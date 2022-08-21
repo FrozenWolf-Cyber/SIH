@@ -48,7 +48,8 @@ public class threeshot extends AppCompatActivity {
     private static boolean pic_taken = false;
     private ImageView imageView5 , imageView6 , imageView7;
     private CheckBox checkbox;
-    Button submit_button, back_button;
+    Button submit_button;
+    ImageView back_button;
 
     private String upload_URL = "https://sih-smart-attendance.herokuapp.com/signup";
     Bitmap headshot;
@@ -85,16 +86,16 @@ public class threeshot extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_threeshot);
+        setContentView(R.layout.activity_threeshot_new);
         // declare all elements
 
         my_model = new model("mobile_face_net.tflite", threeshot.this);
         imageView5 = (ImageView)findViewById(R.id.imageView5);
-        imageView6 = (ImageView)findViewById(R.id.imageView6);
-        imageView7 = (ImageView)findViewById(R.id.imageView7);
+        imageView6 = (ImageView)findViewById(R.id.imageView14);
+        imageView7 = (ImageView)findViewById(R.id.imageView16);
         checkbox = (CheckBox) findViewById(R.id.checkBox);
         submit_button = findViewById(R.id.button5);
-        back_button = findViewById(R.id.button6);
+        back_button = findViewById(R.id.imageView4);
         // front view
         imageView5.setOnClickListener(new View.OnClickListener() {
 
