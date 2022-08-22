@@ -190,7 +190,7 @@ public class threeshot extends AppCompatActivity {
         // Match the request 'pic id' with requestCode
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == pic_id1) {
+        if (requestCode == pic_id1 && resultCode == RESULT_OK) {
             count_of_times[0] = 0;
             Bitmap photo = (Bitmap) data.getExtras().get("data");
 
@@ -245,7 +245,7 @@ public class threeshot extends AppCompatActivity {
                 }
             }, 1500);
         }
-        if (requestCode == pic_id2) {
+        if (requestCode == pic_id2 && resultCode == RESULT_OK) {
             count_of_times[1] = 0;
             Bitmap photo = (Bitmap) data.getExtras().get("data");
 
@@ -298,7 +298,7 @@ public class threeshot extends AppCompatActivity {
                 }
             }, 1500);
         }
-        if (requestCode == pic_id3) {
+        if (requestCode == pic_id3 && resultCode == RESULT_OK) {
             count_of_times[2] = 0;
             Bitmap photo = (Bitmap) data.getExtras().get("data");
 
@@ -348,6 +348,9 @@ public class threeshot extends AppCompatActivity {
                     }
                 }
             }, 1500);
+        }
+        else{
+
         }
         Log.i("PHOTOS:" , count_of_times[0] + ","+count_of_times[1] + ","+count_of_times[2]);
     }

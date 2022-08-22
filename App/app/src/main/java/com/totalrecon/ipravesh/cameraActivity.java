@@ -103,48 +103,50 @@ public class cameraActivity extends AppCompatActivity {
 
         // Match the request 'pic id with requestCode
         super.onActivityResult(requestCode, resultCode, data);
-        // BitMap is data structure of image file
-        // which store the image in memory
-        Bitmap photo = (Bitmap) data.getExtras().get("data");//store in fileoutputstream memory such that it can be reused by the second activity
+
+            // BitMap is data structure of image file
+            // which store the image in memory
+            Bitmap photo = (Bitmap) data.getExtras().get("data");//store in fileoutputstream memory such that it can be reused by the second activity
 //        Bitmap t = null;
 //        if (photo == t){
 //            Log.i("BITMAP","NULL");
 //        }
-        Log.i("BITMAP",photo.toString());
-        my_model.getEmbeddings((photo));
+            Log.i("BITMAP", photo.toString());
+            my_model.getEmbeddings((photo));
 
-        LoadingDialog loadingDialog = new LoadingDialog();
-        loadingDialog.activity = cameraActivity.this;
-        loadingDialog.startLoadingDialog();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                current_emebeds = my_model.embeds;
-                Log.i("EMBEDS", Arrays.toString(current_emebeds));
-                String verify = verified(current_emebeds);
-                if (verify.equals("true")){
-                    Log.i("VERFICATION ","YAAY VERFIED!!");
-                    // verification
+            LoadingDialog loadingDialog = new LoadingDialog();
+            loadingDialog.activity = cameraActivity.this;
+            loadingDialog.startLoadingDialog();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    current_emebeds = my_model.embeds;
+                    Log.i("EMBEDS", Arrays.toString(current_emebeds));
+                    String verify = verified(current_emebeds);
+                    if (verify.equals("true")) {
+                        Log.i("VERFICATION ", "YAAY VERFIED!!");
+                        // verification
 //                    show_alert("Verified!");
-                    loadingDialog.dismissDialog();
-                    Intent i = new Intent(cameraActivity.this, geoActivity.class);
-                    startActivity(i);
+                        loadingDialog.dismissDialog();
+                        Intent i = new Intent(cameraActivity.this, geoActivity.class);
+                        startActivity(i);
 
 //                    Toast.makeText(getApplicationContext(), "VERIFIED !!", Toast.LENGTH_SHORT).show();
 //                    inverse_check_in_out();
-                }
-                if (verify.equals("false")) {
-                    loadingDialog.dismissDialog();
-                    show_alert("Face doesn't match!");
-                }
-                if (verify.equals("no face")) {
-                    loadingDialog.dismissDialog();
-                    show_alert("There are no faces!");
+                    }
+                    if (verify.equals("false")) {
+                        loadingDialog.dismissDialog();
+                        show_alert("Face doesn't match!");
+                    }
+                    if (verify.equals("no face")) {
+                        loadingDialog.dismissDialog();
+                        show_alert("There are no faces!");
 //                    Toast.makeText(getApplicationContext(), "FACE DOESN'T MATCH", Toast.LENGTH_SHORT).show();
-                }
+                    }
 
-            }
-        }, 2000);
+                }
+            }, 2000);
+
 
     }
 
