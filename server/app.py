@@ -11,15 +11,15 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse
 
-db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
-db_user =  'postgres' #'be6a5ab891fb44'
-db_psswrd = '3112003' #heroku-psswrd
-db_name = 'sih_attendance' #heroku-db
+# db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
+# db_user =  'postgres' #'be6a5ab891fb44'
+# db_psswrd = '3112003' #heroku-psswrd
+# db_name = 'sih_attendance' #heroku-db
 
-# db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
-# db_user =  'sxxkdscneuzrwf'
-# db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
-# db_name = 'd3rhldildqlaje'
+db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
+db_user =  'sxxkdscneuzrwf'
+db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
+db_name = 'd3rhldildqlaje'
 
 ADMIN_USERNAME = 'ADMIN'
 ADMIN_PSSWRD = 'ADMIN'
@@ -276,8 +276,8 @@ async def get_info(
     if not await mydb.check_emp_no_signed(emp_no):
         return "EMPLOYEE NUMBER DOESN'T EXIST"
 
-    data_args = 'name,designation,emp_no,gender,branch_name,contact_no,check_in,check_out,in_latitude,in_longitude,out_latitude,out_longitude'.split(',')
-    decrypt_for = 'name,designation,gender,branch_name,contact_no'.split(',')
+    data_args = 'name,mail_id,designation,emp_no,gender,branch_name,contact_no,check_in,check_out,in_latitude,in_longitude,out_latitude,out_longitude'.split(',')
+    decrypt_for = 'name,mail_id,designation,gender,branch_name,contact_no'.split(',')
     e = await exception_handle("SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL", mydb.get_user_details, emp_no)
     if e == "SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL":
         return e
