@@ -199,6 +199,7 @@
  
 //  console.log(emp_data);
 
+var month_name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
  class Calender{
     constructor(emp_data)
@@ -218,10 +219,13 @@
        this.month = mm;
        this.year = yyyy; 
        this.DomElement = document.querySelector('#calender');
-       this.select_date;
+       this.select_date = this.DomElement.querySelector(`#d${1}`);
        this.CheckInElement = document.querySelector('#check-in');
        this.CheckOutElement = document.querySelector('#check-out');
        this.no_of_days;
+       this.monthDisplay = document.querySelector('#mmyy');
+    //    this.mmCode = Date.getMonth();
+    //    this.monthDisplay.innerHTML = month_name[this.month.substr(1)] + '-' + this.year;
        document.querySelector('#right-cal-nav').addEventListener('click',(event) => {
          this.incMonth();
          event.stopPropagation();
@@ -245,7 +249,9 @@
           {
              this.CheckInElement.value = '';
              this.CheckOutElement.value = '';
+             this.select_date.classList.remove('select');
              this.select_date = event.target;
+             event.target.classList.add('select');
              console.log('select',this.select_date);
           }
           event.stopPropagation();
@@ -253,6 +259,7 @@
     }
     renderMonth()
     {
+    //    this.monthDisplay.innerHTML = month_name[this.mmCode] + '-' + this.year;
        console.log(this.year+'-'+this.month+'-01'); 
        const first_date = new Date(this.year+'-'+this.month+'-01');
        console.log();
@@ -382,6 +389,7 @@
                                  document.querySelector('#check-in').value = '';
                                  document.querySelector('#check-out').value ='';     
                                  calender.select_date.classList.add('present');
+                                 window.location.reload();
                                  removeBlurrScreen();
                              }
                          });    

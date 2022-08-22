@@ -1,5 +1,6 @@
-#main-container3 div {
+#line-chart {
   border: 0px solid;
   border-radius: 1rem;
-  box-shadow: #4d4de8 0px 3px 8px;
+  height: 100%;
+  width: 100%;
 }

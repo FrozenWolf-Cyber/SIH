@@ -10,8 +10,9 @@
 
 
     form{
+        margin-top: 60px;
         color:#4d4de8;
-        height: 90px;
+        height: 150px;
         width: 420px;
         display: flex;
         flex-direction: column;
@@ -47,47 +48,55 @@
     }
 }
 #calender-container{
-    height: 450px;
-    width: 660px;
+    height: fit-content;
+    width: fit-content;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    // justify-content: space-around;
     align-items: center;
     box-shadow: #4d4de8 0px 3px 8px;
     border-radius: 1rem;
     border:0px solid;
-    .calender-nav{
-        height:fit-content;
-        width: fit-content;
-        img{
-            height: 64px;
-            width: 64px;
+    nav{
+        margin-bottom:12px;
+        margin-top: 12px;
+        #right-cal-nav{
+            display: inline-block; 
+            font-size: 1.2rem;
+            color:#4d4de8;       
         }
-    }
-    #right-cal-nav{
-        img{
-            transform: rotate(180deg);
+        #left-cal-nav{
+            display: inline-block; 
+            font-size: 1.2rem;       
+            color:#4d4de8;
         }
     }
     #calender{
         height:fit-content;
         width: fit-content;
         display: grid; 
-        gap: 6px;
+        // gap: 0px;
+        column-gap: 1px;
+        row-gap: 1px;
         grid-template-columns: repeat(7,60px);
+        margin-left: 12px;
         .day{
-            height: 30px;
-            width: 60px;
+            height: 24px;
+            width: 45px;
             border: 0px solid;
-            border-radius: 0.3rem;
+            border-radius: 0.21rem;
             background-color: #4d4de8;
             color:white;
             font-weight: bolder;
             text-align: center;
             box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            text-transform: capitalize;
         }
         .dates{
-            height: 60px !important;
-            width: 60px !important;
+            height: 45px !important;
+            width: 51px !important;
+            border:0px solid;
+            border-radius: 0.21rem;
             box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
         }
         .highlight{
@@ -95,6 +104,9 @@
         }
         .present{
             background-color: rgb(110, 236, 110);
+        }
+        .select{
+            border:2px solid #4d4de8;
         }
     }
 }

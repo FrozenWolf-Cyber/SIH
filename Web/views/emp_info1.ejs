@@ -1,0 +1,115 @@
+
+
+<link rel="stylesheet" href="/css/emp_info.css">
+<link rel="stylesheet" href="/css/emp_attendance.css">
+<link rel="stylesheet" href="/css/emp_info_davis.css">
+    <main>
+        <div id="line-chart"></div>
+        <div id="main">
+            <div id="profile-container">
+                <div id = 'profile-pic-container'>
+                    <div id="profile-pic"
+                        style="background-image: url('https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png');
+                        background-position: center;
+                        background-size:144%;"
+                    ></div>
+                      <input type="text" value="Anand" name="name">
+                  </div>
+               
+                  <div id ='other-details'>
+               
+                   <div class="info">
+                       <span class="name">Gender</span>
+                       <form  action="">
+                           <div>
+                                 <label for="radio-m">Male</label><input id ='radio-m' type="radio" name="gender" value="M">
+                                 <label for="radio-f">Female</label><input id="radio-f" type="radio" name="gender" value="F">    
+                           </div>
+                       </form>
+                    </div>
+               
+                     <div class="info">
+                         <span class ='name'>Designation</span>
+                         <form  action="">
+                             <input type="text" value="CSE" name="designation">
+                         </form>
+                     </div>
+               
+                     <div class="info">
+                        <span class ='name'>Branch name</span>
+                        <form  action="">
+                           <input type="text" value="3" name="branch_name">
+                       </form>
+                    </div>
+               
+                    <div class="info">
+                       <span class ='name'>Emp no</span>
+                       <form  action="">
+                        <input type="number" value="<%= locals.emp_no %>" name="emp_no">
+                       </form>
+                    </div>
+               
+                    <div class="info">
+                       <span class ='name'>Contact</span>
+                       <form  action="">
+                        <input type="number" value="369213" name="contact_no">
+                    </form>
+                    </div>
+                  </div>
+            </div>
+            <div id="graph-container">
+            </div>
+        </div>
+        <div id="calender-container">
+            <nav>
+                <i id="left-cal-nav" class="fa-solid fa-angle-left"></i>
+                <span id="mmyy">Aug-2022</span>
+                <i id="right-cal-nav" class="fa-solid fa-angle-right"></i>
+            </nav>
+            <!-- <div  class="calender-nav"><img src="/images/left-arrow.png" alt=""></div>
+            <div  class="calender-nav"><img src="/images/left-arrow.png" alt=""></div> -->
+
+            <div id="calender">
+                <div class="day">sun</div>
+                <div class="day">mon</div>
+                <div class="day">tues</div>
+                <div class="day">wed</div>
+                <div class="day">thu</div>
+                <div class="day">fri</div>
+                <div class="day">sat</div>
+    
+                <%for(let i = 1;i <= 37;i++){%>
+                    <div class="dates" id="<%= 'd'+i %>"></div>
+                <%}%>    
+            </div>
+
+            <form action="" id="update-log">
+                <div>
+                    <label for="check-in">Check in</label>
+                    <input type="text" id="check-in">
+                    <button class="edit">edit</button>
+                </div>
+                
+                <div>
+                    <label for="check-out">Check out</label>
+                    <input type="text" id="check-out">
+                    <button class="edit">edit</button>
+                </div>
+                
+            </form>
+        </div>
+        <input type="text" name="emp_no" value="<%= locals.emp_no %>" style="display: none;">
+    </main>
+
+
+<script src="/js/emp_profile.js"></script>
+<script src="/js/emp_attendance.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="/js/emp_info_davis.js"></script>
+<script>
+    const LineChart = document.querySelector('#line-chart');
+    LineChart.remove();
+    document.querySelector('#graph-container').appendChild(LineChart);
+</script>
+
+<!-- <script src="/js/emp_attendance.js"></script> -->

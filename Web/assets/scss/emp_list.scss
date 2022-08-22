@@ -1,5 +1,8 @@
 
 
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&family=EB+Garamond&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&family=EB+Garamond&family=Tajawal&display=swap');
+
 main{
     height:100vh;
     display: grid;
@@ -12,13 +15,16 @@ main{
       text-align: left !important;
       padding-left: 12px;
       color:grey;
+      font-style: 'Tajawal', sans-serif;
     }
     #search{
         box-shadow: #4d4de8 0px 1px 4px;
+        // margin-bottom: 30px !important;
         // box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
         padding: 12px;
         border:0px solid;
         border-radius: 1rem;
+        height:fit-content;
         #search-bar-container{
             #search-bar{
                 display: inline-block;
@@ -55,21 +61,47 @@ main{
             select{
                 background-color:#4d4de8;
                 color:white;
+                display: inline-block;
+                font-size: 1rem;
+                font-family:'Tajawal', sans-serif; 
+                padding:6px; 
             }
-               
+            #gender{
+                font-size: larger;
+                display: flex;
+                justify-content: space-evenly;
+                align-items: center;
+                font-family: 'Tajawal', sans-serif;  
+                label{
+                    margin-top: 12px;
+                }
+            } 
+            input[type='text']{
+                display: inline-block;
+                height:30px;
+                font-size: 1rem;
+                border:0px solid;
+                box-shadow: 0 0 2px 1px rgb(144, 163, 246);
+                border-radius: 0.3rem;
+            }  
         }
     }
     #emp-list{
-        width: 600px;
+        margin-top: 60px;
+        width: 618px;
         overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         .emp{
         margin:0;
-        overflow-y: scroll;
         height: 60px;
-        width: 100%;
-        border: 0px solid;
+        width: 585px;
+        border: 0px solid #4d4de8;
         border-radius: 0.3rem;
-        box-shadow: #4d4de8 1.95px 1.95px 2.6px;
+        border-left-width:9px;
+        // box-shadow: #4d4de8 1.95px 1.95px 2.6px;
+        box-shadow: #4d4de8 0px 1px 4px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -86,7 +118,10 @@ main{
             color:#4d4de8;
             // background-color: rgb(216, 214, 214);
         }
-    }    
+    }  
+    .emp:hover{
+        transform: scale(0.99);
+    }  
     .emp > div{
         height: fit-content;
         width: fit-content;
@@ -96,10 +131,12 @@ main{
             border:0px solid;
             border-radius: 50%;
             display: inline-block;
+            margin-top: 6px;
         }
         .emp_name{
             display: inline-block;
-            font-size: 2.1rem;   
+            font-size: 2.1rem; 
+            font-family: 'Tajawal', sans-serif;  
         }
         .Male {
             background-image: url('https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png');
@@ -121,6 +158,9 @@ main{
             background-size: contain;
             background-position: center;
         }    
-    }    
+    }
+    // .emp > div:hover{
+    //     transform: scale(0.9) !important;
+    // }    
   }  
 }

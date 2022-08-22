@@ -17,9 +17,10 @@ module.exports.employe_overview
  module.exports.employe_info = (req,res) => {
     console.log('Anand in emp_info');
     console.log(req.query.emp_no);
-    return res.render('emp_info',{
+    return res.render('emp_info1',{
         emp_no:req.query.emp_no
     });
+    // return res.render('emp_info1.ejs');
 };
 
 module.exports.render_sign_in = (req,res) =>{

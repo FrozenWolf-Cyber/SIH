@@ -9,6 +9,7 @@ $.ajax('http://sih-smart-attendance.herokuapp.com/get_info', {
         data:{emp_no:'a'+emp_no+'a'},
         success: function (data, status, xhr) {
              emp_data = data; 
+             console.log(data);
              empProfileRender(data);
              davis(data);          
         }
@@ -44,22 +45,22 @@ function empProfileRender(data){
         });
     }
 };
-$.ajax('http://sih-smart-attendance.herokuapp.com/get_img', {
-        type: 'POST',  
-        data:{emp_no:'a'+emp_no+'a'},
-        success: function (data, status, xhr) {
-             console.log('get_image',data);    
-             // strip off the data: url prefix to get just the base64-encoded bytes
-            //  $.ajax('/profile_img',{
-            //     type:'POST',
-            //     data,
-            //     success:function (data,status,xhr){
-            //         console.log(data);
-            //     }
-            //  });
+// $.ajax('http://sih-smart-attendance.herokuapp.com/get_img', {
+//         type: 'POST',  
+//         data:{emp_no:'a'+emp_no+'a'},
+//         success: function (data, status, xhr) {
+//              console.log('get_image',data);    
+//              // strip off the data: url prefix to get just the base64-encoded bytes
+//             //  $.ajax('/profile_img',{
+//             //     type:'POST',
+//             //     data,
+//             //     success:function (data,status,xhr){
+//             //         console.log(data);
+//             //     }
+//             //  });
              
-        }
-});
+//         }
+// });
 
 
 
@@ -71,15 +72,15 @@ $.ajax('http://sih-smart-attendance.herokuapp.com/get_img', {
 //     print(a.size)
 
 
-// const intervalId = setInterval(() => {
+const intervalId = setInterval(() => {
     
-//     if(emp_data){
-//         console.log('not: fetched!'); 
-//         clearInterval(intervalId);
+    if(emp_data){
+        console.log('not: fetched!'); 
+        clearInterval(intervalId);
           
-//     }
-//     else{
-//        console.log('not:fetching data...');
-//     }
+    }
+    else{
+       console.log('not:fetching data...');
+    }
 
-// },600);
+},600);

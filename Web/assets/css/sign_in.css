@@ -1,6 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Aboreto&family=EB+Garamond&display=swap");
 body {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: start;
   align-items: center;
   flex-direction: column;
   height: 100vh;
@@ -13,7 +14,7 @@ body h1 {
   font-size: 3rem;
   color: #4d4de8;
   font-weight: bolder;
-  text-shadow: 2px 0px 4px rgba(88, 86, 236, 0.8), -2px 0px 4px rgba(81, 86, 232, 0.8), 0px 2px 4px rgba(88, 102, 235, 0.8);
+  font-family: 'EB Garamond', serif;
 }
 
 body form {
