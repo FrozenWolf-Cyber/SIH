@@ -8,15 +8,18 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Base64;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.totalrecon.ipravesh.data.model.VolleySingleton;
 
@@ -27,6 +30,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
+import com.totalrecon.ipravesh.ui.login.LoginActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -41,41 +45,82 @@ import org.eazegraph.lib.models.PieModel;
 public class employee_dashboard extends AppCompatActivity {
     PieChart pieChart;
     ImageView image;
-    TextView name , emplno , desig , gender , officeaddress , phonenumber , logdetails;
+    TextView name, emplno, desig, gender, officeaddress, phonenumber, email, logdetails;
     Button back;
+    BottomNavigationView navView;
+    Button exit_button;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         //clear_data();
         //show_message(show_data());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dashboard);
+        setContentView(R.layout.dashboard_profile);
         // pie chart
-        pieChart = findViewById(R.id.piechart);
-        // back button
-        back = findViewById(R.id.back);
+//        pieChart = findViewById(R.id.piechart);
+//        // back button
+//        back = findViewById(R.id.back);
         // text views for other details
+        exit_button=(Button)findViewById(R.id.button7);
         name = findViewById(R.id.name);
-        emplno = findViewById(R.id.employeenumber);
+        emplno = findViewById(R.id.eno);
         desig = findViewById(R.id.designation);
         gender = findViewById(R.id.gender);
-        officeaddress = findViewById(R.id.officeaddress);
-        phonenumber = findViewById(R.id.phonenumber);
+        officeaddress = findViewById(R.id.office);
+        phonenumber = findViewById(R.id.phone);
         logdetails = findViewById(R.id.logdetails);
+        email = findViewById(R.id.email);
         // image view
-        image = findViewById(R.id.photo);
+        image = findViewById(R.id.imageView13);
+        navView = findViewById(R.id.nav_view);
 
         show_log();
         setimage();
         show_all_datas();
 
-        back.setOnClickListener(new View.OnClickListener() {
+        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.Add) {
+                    Intent intent = new Intent(employee_dashboard.this, cameraActivity.class);
+                    startActivity(intent);
+                }
+                if (item.getItemId() == R.id.Logs) {
+                    Intent i = new Intent(employee_dashboard.this, logs.class);
+                    startActivity(i);
+                }
+                if (item.getItemId() == R.id.Alerts) {
+                    Intent i = new Intent(employee_dashboard.this, Alerts.class);
+                    startActivity(i);
+                }
+                if (item.getItemId() == R.id.house) {
+                    Intent i = new Intent(employee_dashboard.this, check_status.class);
+                    startActivity(i);
+                }
 
-                Intent i = new Intent(employee_dashboard.this , check_status.class);
-                startActivity(i);
+                return true;
             }
         });
+
+        exit_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                show_message("Logged out successfully!");
+                Intent i = new Intent(employee_dashboard.this, LoginActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+
+
+//        back.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Intent i = new Intent(employee_dashboard.this , check_status.class);
+//                startActivity(i);
+//            }
+//        });
     }
     public void show_all_datas()
     {
@@ -85,6 +130,7 @@ public class employee_dashboard extends AppCompatActivity {
         gender.setText(""+read_data("gender"));
         officeaddress.setText(""+read_data("branch_name"));
         phonenumber.setText(""+read_data("phonenumber"));
+        email.setText(""+read_data("mail_id"));
     }
     public void show_log()
     {
@@ -249,7 +295,7 @@ public class employee_dashboard extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-
+        super.onBackPressed();
     }
 
 }
