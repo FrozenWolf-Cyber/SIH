@@ -257,7 +257,7 @@ class Database:
     async def get_user_details(self, emp_no):
         details = None
 
-        for i in await self.database.fetch_all("SELECT name, designation, emp_no, gender, branch_name, contact_no FROM EMPLOYEE_DETAILS  WHERE emp_no = '%s'" % (emp_no,)):
+        for i in await self.database.fetch_all("SELECT name, mail_id, designation, emp_no, gender, branch_name, contact_no FROM EMPLOYEE_DETAILS WHERE emp_no = '%s'" % (emp_no,)):
             i = tuple(i.values())
             details = i
 
