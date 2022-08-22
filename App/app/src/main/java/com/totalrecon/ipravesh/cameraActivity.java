@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ import com.totalrecon.ipravesh.data.model.VolleySingleton;
 import com.google.gson.Gson;
 
 import com.totalrecon.ipravesh.data.model.model;
+import com.totalrecon.ipravesh.LoadingDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -71,21 +73,11 @@ public class cameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        Button buttonFirst = (Button)findViewById(R.id.button_first);
 
         my_model = new model("mobile_face_net.tflite", cameraActivity.this);
 
-        // default camera functionality start
+        // Default camera functionality start
         start_camera();
-
-        // also open camera when button is clicked ...
-
-        buttonFirst.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                start_camera();
-            }
-        });
     }
 
     public void start_camera()
@@ -111,41 +103,50 @@ public class cameraActivity extends AppCompatActivity {
 
         // Match the request 'pic id with requestCode
         super.onActivityResult(requestCode, resultCode, data);
-        // BitMap is data structure of image file
-        // which store the image in memory
-        Bitmap photo = (Bitmap) data.getExtras().get("data");//store in fileoutputstream memory such that it can be reused by the second activity
+
+            // BitMap is data structure of image file
+            // which store the image in memory
+            Bitmap photo = (Bitmap) data.getExtras().get("data");//store in fileoutputstream memory such that it can be reused by the second activity
 //        Bitmap t = null;
 //        if (photo == t){
 //            Log.i("BITMAP","NULL");
 //        }
-        Log.i("BITMAP",photo.toString());
-        my_model.getEmbeddings((photo));
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                current_emebeds = my_model.embeds;
-                Log.i("EMBEDS", Arrays.toString(current_emebeds));
-                String verify = verified(current_emebeds);
-                if (verify.equals("true")){
-                    Log.i("VERFICATION ","YAAY VERFIED!!");
-                    // verification
+            Log.i("BITMAP", photo.toString());
+            my_model.getEmbeddings((photo));
+
+            LoadingDialog loadingDialog = new LoadingDialog();
+            loadingDialog.activity = cameraActivity.this;
+            loadingDialog.startLoadingDialog();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    current_emebeds = my_model.embeds;
+                    Log.i("EMBEDS", Arrays.toString(current_emebeds));
+                    String verify = verified(current_emebeds);
+                    if (verify.equals("true")) {
+                        Log.i("VERFICATION ", "YAAY VERFIED!!");
+                        // verification
 //                    show_alert("Verified!");
-                    Intent i = new Intent(cameraActivity.this, geoActivity.class);
-                    startActivity(i);
+                        loadingDialog.dismissDialog();
+                        Intent i = new Intent(cameraActivity.this, geoActivity.class);
+                        startActivity(i);
 
 //                    Toast.makeText(getApplicationContext(), "VERIFIED !!", Toast.LENGTH_SHORT).show();
 //                    inverse_check_in_out();
-                }
-                if (verify.equals("false")) {
-                    show_alert("Face doesn't match!");
-                }
-                if (verify.equals("no face")) {
-                    show_alert("There are no faces!");
+                    }
+                    if (verify.equals("false")) {
+                        loadingDialog.dismissDialog();
+                        show_alert("Face doesn't match!");
+                    }
+                    if (verify.equals("no face")) {
+                        loadingDialog.dismissDialog();
+                        show_alert("There are no faces!");
 //                    Toast.makeText(getApplicationContext(), "FACE DOESN'T MATCH", Toast.LENGTH_SHORT).show();
-                }
+                    }
 
-            }
-        }, 2000);
+                }
+            }, 2000);
+
 
     }
 
@@ -223,9 +224,17 @@ public class cameraActivity extends AppCompatActivity {
         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
+//                dialogInterface.cancel();
+                Intent j = new Intent(cameraActivity.this, check_status.class);
+                startActivity(j);
             }
-        });
+        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        Intent j = new Intent(cameraActivity.this, check_status.class);
+                        startActivity(j);
+                    }
+                });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
 

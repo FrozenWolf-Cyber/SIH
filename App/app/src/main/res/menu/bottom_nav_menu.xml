@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/house"
+        android:icon="@drawable/house"
+        android:title="House"
+
+                />
+
+    <item
+        android:id="@+id/Logs"
+        android:icon="@drawable/notebook"
+        android:title="Logs" />
+
+    <item
+        android:id="@+id/Add"
+        android:icon="@drawable/plus"
+        android:title="Add" />
+    <item
+        android:id="@+id/Alerts"
+        android:title="Alerts"
+        android:icon="@drawable/bell"/>
+
+    <item
+        android:id="@+id/Profile"
+        android:title="Profile"
+        android:icon="@drawable/user_ic"/>
+
+
+</menu>

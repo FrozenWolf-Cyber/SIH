@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity{
             public void onClick(View view) {
 
                 String pass = password.getText().toString();
-                String user = username.getText().toString();
+                String user = username.getText().toString().trim();
 
                 if (pass.equals("") || user.equals("")) {
                     show_message("Please enter a proper username and password !");
@@ -180,6 +180,9 @@ public class LoginActivity extends AppCompatActivity{
                                                                 write_data("gender", gender);
                                                                 String phonenumber = (String) jsonObject.get("contact_no");
                                                                 write_data("phonenumber", phonenumber);
+                                                                String emailid = (String) jsonObject.get("mail_id");
+                                                                write_data("mail_id", emailid);
+
 
                                                                 Log.i("RESPONSE", "" + json_rec);
                                                                 Log.i("RESPONSE", "" + branch_name);
@@ -329,6 +332,13 @@ public class LoginActivity extends AppCompatActivity{
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
         myEdit.putString(filename, data);
         myEdit.commit();
+    }
+    @Override
+    public void onBackPressed(){
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
     }
 
 }

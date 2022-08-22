@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/face_icon2"
@@ -16,48 +15,57 @@
         android:roundIcon="@drawable/face_icon2"
         android:supportsRtl="true"
         android:theme="@style/Theme.FaceRecognition">
-
         <activity
-            android:name="com.totalrecon.ipravesh.ui.login.LoginActivity"
-            android:exported="true"
-            android:label="@string/app_name">
+            android:name=".Splashscreen"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.totalrecon.ipravesh.geoActivity"
-            android:exported="true"
-            android:label="Geo Location" />
+            android:name=".logs"
+            android:exported="false"
+            />
         <activity
-            android:name="com.totalrecon.ipravesh.employee_dashboard"
-            android:exported="true"
-            android:label="Dashboard" />
+            android:name=".Alerts"
+            android:exported="false" />
         <activity
-            android:name="com.totalrecon.ipravesh.cameraActivity"
+            android:name=".ui.login.LoginActivity"
             android:exported="true"
-            android:label="Capture" />
+            android:noHistory="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
-            android:name="com.totalrecon.ipravesh.register_new_employee_cred"
-            android:exported="true"
-            android:label="Register" />
+            android:name=".geoActivity"
+            android:exported="true" />
         <activity
-            android:name="com.totalrecon.ipravesh.uploadsigninActivity"
-            android:exported="true"
-            android:label="Upload to server" />
+            android:name=".employee_dashboard"
+            android:exported="true" />
         <activity
-            android:name="com.totalrecon.ipravesh.threeshot"
-            android:exported="true"
-            android:label="Photo Capture" />
+            android:name=".cameraActivity"
+            android:exported="true" />
         <activity
-            android:name="com.totalrecon.ipravesh.register"
-            android:exported="true"
-            android:label="Registration" />
+            android:name=".register_new_employee_cred"
+            android:exported="true" />
         <activity
-            android:name="com.totalrecon.ipravesh.check_status"
-            android:exported="true"
-            android:label="CHECK STATUS" />
+            android:name=".uploadsigninActivity"
+            android:exported="true" />
+        <activity
+            android:name=".threeshot"
+            android:exported="true" />
+        <activity
+            android:name=".register"
+            android:exported="true" />
+        <activity
+            android:name=".check_status"
+            android:exported="true" />
     </application>
 
 </manifest>

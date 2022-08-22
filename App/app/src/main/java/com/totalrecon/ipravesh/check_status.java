@@ -1,34 +1,41 @@
 package com.totalrecon.ipravesh;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.totalrecon.ipravesh.ui.login.LoginActivity;
 
 public class check_status extends AppCompatActivity{
     private Button check_both , exit_button , dashboard;
     private TextView textView;
     private EditText editText1;
-
+    CardView cardView;
     String cur_status;
+    BottomNavigationView navView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.check_status_layout);
-        check_both=(Button)findViewById(R.id.buttonKavi);
-        dashboard=(Button)findViewById(R.id.buttonKavi2);
-        exit_button=(Button)findViewById(R.id.button2);
-        
-        editText1 = (EditText) findViewById(R.id.password);
+        setContentView(R.layout.dahsboard_home);
+//        check_both=(Button)findViewById(R.id.buttonKavi);
+//        dashboard=(Button)findViewById(R.id.buttonKavi2);
+//        exit_button=(Button)findViewById(R.id.button2);
+        cardView = findViewById(R.id.cardview);
+//        editText1 = (EditText) findViewById(R.id.password);
+        navView = findViewById(R.id.nav_view);
 
         cur_status = read_data("check_status");
 //        show_message("debugging purpose: cur_status = "+cur_status);
@@ -39,7 +46,7 @@ public class check_status extends AppCompatActivity{
 //            show_message("You will be checking in now!");
 //        }
 //        show_message("debug:  " + cur_status);
-        check_both.setOnClickListener(new View.OnClickListener() {
+        cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                     if (cur_status.equals("")) {
@@ -64,23 +71,47 @@ public class check_status extends AppCompatActivity{
 
             }
         });
-        exit_button.setOnClickListener(new View.OnClickListener() {
+
+        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                show_message("Logged out successfully!");
-                Intent i = new Intent(check_status.this, LoginActivity.class);
-                startActivity(i);
-                finish();
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.Add) {
+                    Intent intent = new Intent(check_status.this, cameraActivity.class);
+                    startActivity(intent);
+                }
+                if (item.getItemId() == R.id.Alerts) {
+                    Intent i = new Intent(check_status.this, Alerts.class);
+                    startActivity(i);
+                }
+                if (item.getItemId() == R.id.Profile) {
+                    Intent i = new Intent(check_status.this, employee_dashboard.class);
+                    startActivity(i);
+                }
+                if (item.getItemId() == R.id.Logs) {
+                    Intent i = new Intent(check_status.this, logs.class);
+                    startActivity(i);
+                }
+
+                return true;
             }
         });
-        dashboard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                show_message("Dashboard opened");
-                Intent i = new Intent(check_status.this, employee_dashboard.class);
-                startActivity(i);
-            }
-        });
+//        exit_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                show_message("Logged out successfully!");
+//                Intent i = new Intent(check_status.this, LoginActivity.class);
+//                startActivity(i);
+//                finish();
+//            }
+//        });
+//        dashboard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                show_message("Dashboard opened");
+//                Intent i = new Intent(check_status.this, employee_dashboard.class);
+//                startActivity(i);
+//            }
+//        });
     }
     public void show_message(String s)
     {

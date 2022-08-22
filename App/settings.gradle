@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "Face_Recognition"
+rootProject.name = "Face Recognition"

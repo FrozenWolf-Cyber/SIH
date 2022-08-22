@@ -48,7 +48,8 @@ public class threeshot extends AppCompatActivity {
     private static boolean pic_taken = false;
     private ImageView imageView5 , imageView6 , imageView7;
     private CheckBox checkbox;
-    Button submit_button, back_button;
+    Button submit_button;
+    ImageView back_button;
 
     private String upload_URL = "https://sih-smart-attendance.herokuapp.com/signup";
     Bitmap headshot;
@@ -85,16 +86,16 @@ public class threeshot extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_threeshot);
+        setContentView(R.layout.activity_threeshot_new);
         // declare all elements
 
         my_model = new model("mobile_face_net.tflite", threeshot.this);
         imageView5 = (ImageView)findViewById(R.id.imageView5);
-        imageView6 = (ImageView)findViewById(R.id.imageView6);
-        imageView7 = (ImageView)findViewById(R.id.imageView7);
+        imageView6 = (ImageView)findViewById(R.id.imageView14);
+        imageView7 = (ImageView)findViewById(R.id.imageView16);
         checkbox = (CheckBox) findViewById(R.id.checkBox);
         submit_button = findViewById(R.id.button5);
-        back_button = findViewById(R.id.button6);
+        back_button = findViewById(R.id.imageView4);
         // front view
         imageView5.setOnClickListener(new View.OnClickListener() {
 
@@ -189,7 +190,7 @@ public class threeshot extends AppCompatActivity {
         // Match the request 'pic id' with requestCode
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == pic_id1) {
+        if (requestCode == pic_id1 && resultCode == RESULT_OK) {
             count_of_times[0] = 0;
             Bitmap photo = (Bitmap) data.getExtras().get("data");
 
@@ -244,7 +245,7 @@ public class threeshot extends AppCompatActivity {
                 }
             }, 1500);
         }
-        if (requestCode == pic_id2) {
+        if (requestCode == pic_id2 && resultCode == RESULT_OK) {
             count_of_times[1] = 0;
             Bitmap photo = (Bitmap) data.getExtras().get("data");
 
@@ -297,7 +298,7 @@ public class threeshot extends AppCompatActivity {
                 }
             }, 1500);
         }
-        if (requestCode == pic_id3) {
+        if (requestCode == pic_id3 && resultCode == RESULT_OK) {
             count_of_times[2] = 0;
             Bitmap photo = (Bitmap) data.getExtras().get("data");
 
@@ -347,6 +348,9 @@ public class threeshot extends AppCompatActivity {
                     }
                 }
             }, 1500);
+        }
+        else{
+
         }
         Log.i("PHOTOS:" , count_of_times[0] + ","+count_of_times[1] + ","+count_of_times[2]);
     }
