@@ -7,14 +7,54 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
+
+
+    form{
+        color:#4d4de8;
+        height: 90px;
+        width: 420px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        box-shadow: #4d4de8 0px 3px 8px;
+        border:0px solid;
+        border-radius: 0.6rem;
+        input{
+            pointer-events: none;
+        }
+        .edit{
+            font-size: smaller;
+            color:white;
+            border: 0px solid;
+            border-radius: 0.3rem;
+            height:fit-content;
+            width: fit-content;
+            padding:1px 3px 1px 3px;
+            background-color: grey;
+        }
+        .editable-input{
+            pointer-events: inherit; 
+        }
+        #update-button{
+            background-color: #4d4de8;
+            color:white;
+            font-size: larger;
+            padding:3px 6px 3px 6px;
+            border:0px solid;
+            border-radius: 0.5rem;
+        }
+    }
 }
 #calender-container{
     height: 450px;
     width: 660px;
-    border:2px solid;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    box-shadow: #4d4de8 0px 3px 8px;
+    border-radius: 1rem;
+    border:0px solid;
     .calender-nav{
         height:fit-content;
         width: fit-content;
@@ -37,11 +77,18 @@
         .day{
             height: 30px;
             width: 60px;
-            border: 2px solid;
+            border: 0px solid;
+            border-radius: 0.3rem;
+            background-color: #4d4de8;
+            color:white;
+            font-weight: bolder;
+            text-align: center;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
         }
         .dates{
             height: 60px !important;
             width: 60px !important;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
         }
         .highlight{
             background-color: lightgrey;
@@ -49,38 +96,5 @@
         .present{
             background-color: rgb(110, 236, 110);
         }
-    }
-}
-form{
-    border:2px solid;
-    height: 90px;
-    width: 420px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    input{
-        pointer-events: none;
-    }
-    .edit{
-        font-size: smaller;
-        color:white;
-        border: 0px solid;
-        border-radius: 0.3rem;
-        height:fit-content;
-        width: fit-content;
-        padding:1px 3px 1px 3px;
-        background-color: grey;
-    }
-    .editable-input{
-        pointer-events: inherit; 
-    }
-    #update-button{
-        background-color: rgb(43, 35, 193);
-        color:white;
-        font-size: larger;
-        padding:3px 6px 3px 6px;
-        border:0px solid;
-        border-radius: 0.5rem;
     }
 }

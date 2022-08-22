@@ -22,7 +22,7 @@
   border-radius: 0.5rem;
   background-color: #ffffff;
   padding: 12px;
-  box-shadow: #e4e3e4 0px 1px 3px 0px, #d5d4d5 0px 0px 0px 1px;
+  box-shadow: #4d4de8 0px 3px 8px;
 }
 
 #main-container1 #profile-pic-container #profile-pic {
@@ -50,7 +50,7 @@
 }
 
 #main-container1 .info {
-  box-shadow: #e4e3e4 0px 1px 3px 0px, #d5d4d5 0px 0px 0px 1px;
+  box-shadow: #4d4de8 0px 3px 8px;
   height: 45px;
   width: 360px !important;
   border: 0px solid;

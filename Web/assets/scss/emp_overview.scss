@@ -1,11 +1,25 @@
 
 
-main{
-    display: flex;
-    align-items: center  !important;
-    justify-content: space-around;
+#main{
+    height:100%;
     width:100%;
-    .vis{
-        border:2px solid grey;
+    display: grid;
+    grid-template-rows: 70px 1fr;
+    h1{
+        width:100%;
+        font-size: 2.1rem;
+        box-sizing: border-box;
+        text-align: left !important;
+        padding-left: 12px;
+        color:grey;
+    }
+    main{
+        display: flex;
+        align-items: center  !important;
+        justify-content: space-around;
+        width:100%;
+        .vis{
+           box-shadow: #4d4de8 0px 3px 8px;
+        }
     }
 }

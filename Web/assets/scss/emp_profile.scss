@@ -27,7 +27,7 @@ $containers-color:#ffffff;
             border-radius: 0.5rem;
             background-color: $containers-color;
             padding:12px;
-            box-shadow: rgb(228, 227, 228) 0px 1px 3px 0px, rgb(213, 212, 213) 0px 0px 0px 1px;
+            box-shadow: #4d4de8 0px 3px 8px;
             #profile-pic{
                 height:72px;
                 width:72px;
@@ -52,7 +52,7 @@ $containers-color:#ffffff;
             padding-bottom: 21px;
         }
         .info{
-            box-shadow: rgb(228, 227, 228) 0px 1px 3px 0px, rgb(213, 212, 213) 0px 0px 0px 1px;
+            box-shadow: #4d4de8 0px 3px 8px;
             height:45px;
             width: 360px !important;
             border:0px solid;

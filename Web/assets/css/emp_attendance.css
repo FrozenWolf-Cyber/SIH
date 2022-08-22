@@ -7,13 +7,56 @@
   align-items: center;
 }
 
+#main-container2 form {
+  color: #4d4de8;
+  height: 90px;
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: #4d4de8 0px 3px 8px;
+  border: 0px solid;
+  border-radius: 0.6rem;
+}
+
+#main-container2 form input {
+  pointer-events: none;
+}
+
+#main-container2 form .edit {
+  font-size: smaller;
+  color: white;
+  border: 0px solid;
+  border-radius: 0.3rem;
+  height: fit-content;
+  width: fit-content;
+  padding: 1px 3px 1px 3px;
+  background-color: grey;
+}
+
+#main-container2 form .editable-input {
+  pointer-events: inherit;
+}
+
+#main-container2 form #update-button {
+  background-color: #4d4de8;
+  color: white;
+  font-size: larger;
+  padding: 3px 6px 3px 6px;
+  border: 0px solid;
+  border-radius: 0.5rem;
+}
+
 #calender-container {
   height: 450px;
   width: 660px;
-  border: 2px solid;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  box-shadow: #4d4de8 0px 3px 8px;
+  border-radius: 1rem;
+  border: 0px solid;
 }
 
 #calender-container .calender-nav {
@@ -41,12 +84,19 @@
 #calender-container #calender .day {
   height: 30px;
   width: 60px;
-  border: 2px solid;
+  border: 0px solid;
+  border-radius: 0.3rem;
+  background-color: #4d4de8;
+  color: white;
+  font-weight: bolder;
+  text-align: center;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 #calender-container #calender .dates {
   height: 60px !important;
   width: 60px !important;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 #calender-container #calender .highlight {
@@ -55,42 +105,4 @@
 
 #calender-container #calender .present {
   background-color: #6eec6e;
-}
-
-form {
-  border: 2px solid;
-  height: 90px;
-  width: 420px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-
-form input {
-  pointer-events: none;
-}
-
-form .edit {
-  font-size: smaller;
-  color: white;
-  border: 0px solid;
-  border-radius: 0.3rem;
-  height: fit-content;
-  width: fit-content;
-  padding: 1px 3px 1px 3px;
-  background-color: grey;
-}
-
-form .editable-input {
-  pointer-events: inherit;
-}
-
-form #update-button {
-  background-color: #2b23c1;
-  color: white;
-  font-size: larger;
-  padding: 3px 6px 3px 6px;
-  border: 0px solid;
-  border-radius: 0.5rem;
 }

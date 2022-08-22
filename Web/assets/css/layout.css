@@ -3,20 +3,24 @@ body {
   width: 100vw;
   height: 100vh;
   display: grid;
-  grid-template-columns: 60px 1fr;
+  grid-template-columns: 72px 1fr;
   overflow-y: hidden;
   background-color: #f1eff1;
+  margin-left: 6px;
 }
 
 body #side-nav {
+  box-shadow: #4d4de8 0px 3px 8px;
+  border: 0px solid;
+  border-radius: 1rem;
   font-size: 1.8rem;
   height: 100vh;
-  width: 100%;
+  width: 63px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background-color: #3e3e40;
+  background-color: white;
   color: #959595;
 }
 
@@ -37,9 +41,12 @@ body #side-nav nav a {
   text-decoration: none;
 }
 
-body #side-nav nav a:hover {
-  color: white;
-  border-left: 6px solid white;
+body #side-nav nav a i {
+  color: #b7b7b7;
+}
+
+body #side-nav nav a i:hover {
+  color: #4d4de8 !important;
 }
 
 body #side-nav img {
@@ -47,11 +54,14 @@ body #side-nav img {
   width: 100%;
 }
 
-.nav-highlight {
-  color: white;
-  border-left: 6px solid white;
+body #side-nav a {
+  color: #959595;
+}
+
+body #side-nav a:hover {
+  color: #4d4de8;
 }
 
 .nav-highlight i {
-  color: white;
+  color: #4d4de8 !important;
 }
