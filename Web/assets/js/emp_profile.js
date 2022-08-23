@@ -1,6 +1,11 @@
 
 
 const emp_no = document.querySelector('input[name="emp_no"]').value;
+const male = document.querySelector('#male');
+const female = document.querySelector('#female');
+const GenderContainer = document.querySelector('#gender-container');
+male.remove();
+female.remove();
 console.log(emp_no);var emp_data;
 // url = 'http://127.0.0.1:5000/get_info'
 // input data = {'emp_no' : emp_no}
@@ -35,6 +40,22 @@ function empProfileRender(data){
                 }
             }
         };
+
+
+        if(data.gender == 'M')
+        {
+          GenderContainer.innerHTML = '';
+          GenderContainer.appendChild(male);  
+        }
+        else if(data.gender == 'F')
+        {
+          GenderContainer.innerHTML = '';
+          GenderContainer.appendChild(female);
+        }
+        else
+        {
+            GenderContainer.innerHTML = '';
+        }
 
     }
     else

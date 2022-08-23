@@ -224,6 +224,7 @@ var month_name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep
        this.CheckOutElement = document.querySelector('#check-out');
        this.no_of_days;
        this.monthDisplay = document.querySelector('#mmyy');
+       this.monthDisplay.innerHTML = month_name[now.getMonth()] + '-' + this.year;
     //    this.mmCode = Date.getMonth();
     //    this.monthDisplay.innerHTML = month_name[this.month.substr(1)] + '-' + this.year;
        document.querySelector('#right-cal-nav').addEventListener('click',(event) => {
@@ -262,6 +263,7 @@ var month_name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep
     //    this.monthDisplay.innerHTML = month_name[this.mmCode] + '-' + this.year;
        console.log(this.year+'-'+this.month+'-01'); 
        const first_date = new Date(this.year+'-'+this.month+'-01');
+       this.monthDisplay.innerHTML = month_name[first_date.getMonth()] + '-' + this.year;
        console.log();
        const month = getAllDaysInMonth(first_date.getFullYear(), first_date.getMonth())
        let start_date_no = first_date.getDay()+1;

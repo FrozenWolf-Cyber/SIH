@@ -61,19 +61,28 @@
 }
 
 #calender-container nav {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
   margin-bottom: 12px;
   margin-top: 12px;
+  width: 180px;
+}
+
+#calender-container nav #mmyy {
+  margin-left: 6px;
+  margin-right: 6px;
 }
 
 #calender-container nav #right-cal-nav {
   display: inline-block;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   color: #4d4de8;
 }
 
 #calender-container nav #left-cal-nav {
   display: inline-block;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   color: #4d4de8;
 }
 
@@ -84,7 +93,6 @@
   column-gap: 1px;
   row-gap: 1px;
   grid-template-columns: repeat(7, 60px);
-  margin-left: 12px;
 }
 
 #calender-container #calender .day {
@@ -118,4 +126,5 @@
 
 #calender-container #calender .select {
   border: 2px solid #4d4de8;
+  box-sizing: border-box;
 }

@@ -58,16 +58,24 @@
     border-radius: 1rem;
     border:0px solid;
     nav{
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
         margin-bottom:12px;
         margin-top: 12px;
+        width:180px;
+        #mmyy{
+            margin-left:6px;
+            margin-right:6px;
+        }
         #right-cal-nav{
             display: inline-block; 
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             color:#4d4de8;       
         }
         #left-cal-nav{
             display: inline-block; 
-            font-size: 1.2rem;       
+            font-size: 1.5rem;       
             color:#4d4de8;
         }
     }
@@ -79,7 +87,7 @@
         column-gap: 1px;
         row-gap: 1px;
         grid-template-columns: repeat(7,60px);
-        margin-left: 12px;
+        // margin-left: 12px;
         .day{
             height: 24px;
             width: 45px;
@@ -107,6 +115,7 @@
         }
         .select{
             border:2px solid #4d4de8;
+            box-sizing: border-box;
         }
     }
 }
