@@ -13,7 +13,7 @@ public class LoadingDialog {
     public Activity activity;
     private AlertDialog dialog;
 
-    void startLoadingDialog(){
+    void startLoadingDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -23,6 +23,7 @@ public class LoadingDialog {
         dialog.show();
     }
 
-    void dismissDialog(){
+    void dismissDialog() {
         dialog.dismiss();
     }
+}
