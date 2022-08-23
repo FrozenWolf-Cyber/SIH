@@ -1,12 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Aboreto&family=EB+Garamond&display=swap");
 body {
   margin: 0;
   width: 100vw;
   height: 100vh;
   display: grid;
   grid-template-columns: 72px 1fr;
-  overflow-y: hidden;
   background-color: #f1eff1;
   margin-left: 6px;
+  font-family: 'EB Garamond', serif;
 }
 
 body #side-nav {
@@ -64,4 +65,20 @@ body #side-nav a:hover {
 
 .nav-highlight i {
   color: #4d4de8 !important;
+}
+
+::-webkit-input-placeholder {
+  font-family: 'EB Garamond', serif;
+}
+
+::-moz-placeholder {
+  font-family: 'EB Garamond', serif;
+}
+
+:-ms-input-placeholder {
+  font-family: 'EB Garamond', serif;
+}
+
+::placeholder {
+  font-family: 'EB Garamond', serif;
 }

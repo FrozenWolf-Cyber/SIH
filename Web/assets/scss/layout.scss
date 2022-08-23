@@ -1,16 +1,19 @@
 
 
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&family=EB+Garamond&display=swap');
+
+
 body{
   margin:0;
   width:100vw;
   height:100vh;
   display: grid;
   grid-template-columns: 72px 1fr;
-  overflow-y: hidden;
+  // overflow-y: ;
   background-color: #f1eff1;
   // justify-items: center;
   margin-left:6px;
-
+  font-family: 'EB Garamond', serif;
   #side-nav{
     // box-shadow: #4d4de8 0px 50px 100px -9px, #4d4de8 0px 30px 60px -9px, #4d4de8 0px -2px 6px 0px inset;
     box-shadow: #4d4de8 0px 3px 8px;
@@ -71,4 +74,19 @@ body{
   }  // i{
   //   // color:white;
   // }
+}
+
+
+
+::-webkit-input-placeholder {
+  font-family: 'EB Garamond', serif;
+}
+::-moz-placeholder {
+  font-family: 'EB Garamond', serif;
+}
+:-ms-input-placeholder {
+  font-family: 'EB Garamond', serif;
+}
+::placeholder {
+  font-family: 'EB Garamond', serif;
 }

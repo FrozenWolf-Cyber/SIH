@@ -147,7 +147,6 @@ main #emp-list .emp > div .avatar {
 main #emp-list .emp > div .emp_name {
   display: inline-block;
   font-size: 2.1rem;
-  font-family: 'Tajawal', sans-serif;
 }
 
 main #emp-list .emp > div .Male {

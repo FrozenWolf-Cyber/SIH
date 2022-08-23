@@ -17,10 +17,14 @@
 #main main {
   display: flex;
   align-items: center  !important;
-  justify-content: space-around;
+  justify-content: space-evenly;
   width: 100%;
 }
 
 #main main .vis {
   box-shadow: #4d4de8 0px 3px 8px;
+  border: 0px solid;
+  border-radius: 0.9rem;
+  height: 600px;
+  width: 600px;
 }
