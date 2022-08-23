@@ -27,7 +27,12 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
+import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
+import org.tensorflow.lite.support.common.TensorOperator;
+import org.tensorflow.lite.support.common.ops.NormalizeOp;
+import org.tensorflow.lite.support.image.ImageProcessor;
+import org.tensorflow.lite.support.image.TensorImage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -49,10 +54,15 @@ public class model {
     int inputSize=112;  //Input size for model
     boolean isModelQuantized=false;
     float[][] embeedings;
-    float IMAGE_MEAN = 128.0f;
-    float IMAGE_STD = 128.0f;
     public float embeds[];
-    int OUTPUT_SIZE=192; //Output size of model
+    int OUTPUT_SIZE=128; //Output size of model
+
+    private static final float IMAGE_MEAN = 127.5f;
+    private static final float IMAGE_STD = 128.0f;
+    private static final TensorOperator PREPROCESS_NORMALIZE_OP =
+            new NormalizeOp(IMAGE_MEAN, IMAGE_STD);
+
+    private TensorImage tfInputBuffer = new TensorImage(DataType.UINT8);
 
     String modelFile="mobile_face_net.tflite"; //model name
     Activity activity;
@@ -70,6 +80,18 @@ public class model {
                         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
                         .build();
         detector = FaceDetection.getClient(highAccuracyOpts);
+    }
+
+    private TensorImage loadImage(final Bitmap bitmapBuffer) {
+        // Initializes preprocessor if null
+        ImageProcessor tfImageProcessor =
+                new ImageProcessor.Builder()
+                        .add(PREPROCESS_NORMALIZE_OP)
+                        .build();
+
+        Log.d("EMBEDS DEBUGGG", "tfImageProcessor initialized successfully. imageSize: ");
+        tfInputBuffer.load(bitmapBuffer);
+        return tfImageProcessor.process(tfInputBuffer);
     }
 
     public void getEmbeddings(Bitmap img_bitmap){
@@ -100,7 +122,7 @@ public class model {
                                             Bitmap cropped_face = getCropBitmapByCPU(frame_bmp1, boundingBox);
 
                                             //Scale the acquired Face to 112*112 which is required input for model
-                                            Bitmap scaled = getResizedBitmap(cropped_face, 112, 112);
+                                            Bitmap scaled = Bitmap.createScaledBitmap(cropped_face, 96, 112,true);
 
                                             recognizeImage(scaled); //Send scaled bitmap to create face embeddings.
 
@@ -135,35 +157,7 @@ public class model {
     private void recognizeImage(final Bitmap bitmap) {
         //Create ByteBuffer to store normalized image
 
-        ByteBuffer imgData = ByteBuffer.allocateDirect(1 * inputSize * inputSize * 3 * 4);
-
-        imgData.order(ByteOrder.nativeOrder());
-
-        intValues = new int[inputSize * inputSize];
-
-        //get pixel values from Bitmap to normalize
-        bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-        imgData.rewind();
-
-        for (int i = 0; i < inputSize; ++i) {
-            for (int j = 0; j < inputSize; ++j) {
-                int pixelValue = intValues[i * inputSize + j];
-                if (isModelQuantized) {
-                    // Quantized model
-                    imgData.put((byte) ((pixelValue >> 16) & 0xFF));
-                    imgData.put((byte) ((pixelValue >> 8) & 0xFF));
-                    imgData.put((byte) (pixelValue & 0xFF));
-                } else { // Float model
-                    imgData.putFloat((((pixelValue >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    imgData.putFloat((((pixelValue >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    imgData.putFloat(((pixelValue & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-
-                }
-            }
-        }
-        //imgData is input to our model
-        Object[] inputArray = {imgData};
+        Object[] inputArray = {loadImage(bitmap).getBuffer()};
 
         Map<Integer, Object> outputMap = new HashMap<>();
 

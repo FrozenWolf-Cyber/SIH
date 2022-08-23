@@ -49,6 +49,7 @@ public class cameraActivity extends AppCompatActivity {
 
     // Define the pic id
     private static final int pic_id = 121;
+    private static float threshold = 49.0958f;
     private static boolean pic_taken = false;
     public model my_model;
     public float current_emebeds[] = new float[]{1,2,3};
@@ -164,19 +165,19 @@ public class cameraActivity extends AppCompatActivity {
         try {
             embeds_n = obj.embed1;
             distance = my_model.findDistance(embeds_n, user_embeds);
-            if (distance<1.000f){
+            if (distance<threshold){
                 return "true";
             }
 
             embeds_n = obj.embed2;
             distance = my_model.findDistance(embeds_n, user_embeds);
-            if (distance<1.000f){
+            if (distance<threshold){
                 return "true";
             }
 
             embeds_n = obj.embed3;
             distance = my_model.findDistance(embeds_n, user_embeds);
-            if (distance<1.000f){
+            if (distance<threshold){
                 return "true";
             }
 
