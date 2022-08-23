@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -35,6 +36,9 @@ import com.totalrecon.ipravesh.data.model.VolleySingleton;
 import com.totalrecon.ipravesh.data.model.model;
 import com.totalrecon.ipravesh.ui.login.LoginActivity;
 import com.google.gson.Gson;
+
+import org.tensorflow.lite.DataType;
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -77,6 +81,15 @@ public class threeshot extends AppCompatActivity {
         myEdit.commit();
     }
 
+    public Bitmap getBitmapFromAssets(String fileName) throws IOException {
+        AssetManager assetManager = getAssets();
+
+        InputStream istr = assetManager.open(fileName);
+        Bitmap bitmap = BitmapFactory.decodeStream(istr);
+        istr.close();
+
+        return bitmap;
+    }
     idWithArray obj = new idWithArray();
     idWithEmbeds user_embeds = new idWithEmbeds();
     public model my_model;
@@ -88,7 +101,17 @@ public class threeshot extends AppCompatActivity {
         setContentView(R.layout.activity_threeshot);
         // declare all elements
 
-        my_model = new model("mobile_face_net.tflite", threeshot.this);
+        my_model = new model("DW_seesawFaceNetv2.tflite", threeshot.this);
+
+
+        try {
+            my_model.getEmbeddings(getBitmapFromAssets("img_full.jpg"));
+            Log.i("EMBEDS","FED THE BITMAP TO MODEL...");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         imageView5 = (ImageView)findViewById(R.id.imageView5);
         imageView6 = (ImageView)findViewById(R.id.imageView6);
         imageView7 = (ImageView)findViewById(R.id.imageView7);
@@ -100,6 +123,7 @@ public class threeshot extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
+                Log.i("EMBEDS", Arrays.toString(my_model.embeds));
                 try {
                     FileOutputStream fOut = openFileOutput("cur_image",MODE_PRIVATE);
                     OutputStreamWriter osw = new OutputStreamWriter(fOut);

@@ -13,6 +13,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.Log;
+import android.util.Size;
 
 import androidx.annotation.NonNull;
 
@@ -27,13 +28,23 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
+import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
+import org.tensorflow.lite.Tensor;
+import org.tensorflow.lite.support.common.FileUtil;
+import org.tensorflow.lite.support.common.TensorOperator;
+import org.tensorflow.lite.support.common.ops.NormalizeOp;
+import org.tensorflow.lite.support.image.ImageProcessor;
+import org.tensorflow.lite.support.image.TensorImage;
+import org.tensorflow.lite.support.image.ops.ResizeOp;
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
@@ -44,15 +55,26 @@ import java.util.Map;
 public class model {
     FaceDetector detector;
     Interpreter tfLite;
+    Tensor outputTensor;
+    TensorBuffer outputProbabilityBuffer;
 
     int[] intValues;
     int inputSize=112;  //Input size for model
     boolean isModelQuantized=false;
     float[][] embeedings;
-    float IMAGE_MEAN = 128.0f;
-    float IMAGE_STD = 128.0f;
+//    float IMAGE_MEAN = 128.0f;
+//    float IMAGE_STD = 128.0f;
     public float embeds[];
-    int OUTPUT_SIZE=192; //Output size of model
+    Size tfInputSize;
+    int OUTPUT_SIZE=512; //Output size of model
+
+    private static final float IMAGE_MEAN = 0;
+    private static final float IMAGE_STD = 255.0f;
+    private static final TensorOperator PREPROCESS_NORMALIZE_OP =
+            new NormalizeOp(IMAGE_MEAN, IMAGE_STD);
+
+    private TensorImage tfInputBuffer = new TensorImage(DataType.UINT8);
+
 
     String modelFile="mobile_face_net.tflite"; //model name
     Activity activity;
@@ -62,6 +84,14 @@ public class model {
         this.activity = activity;
         try {
             tfLite=new Interpreter(loadModelFile(this.activity,modelFile));
+            int[] inputShape = tfLite.getInputTensor(/* inputIndex */ 0).shape();
+            tfInputSize =
+                    new Size(inputShape[2], inputShape[1]); // Order of axis is: {1, height, width, 3}
+
+            outputTensor = tfLite.getOutputTensor(/* probabilityTensorIndex */ 0);
+            outputProbabilityBuffer =
+                    TensorBuffer.createFixedSize(outputTensor.shape(), outputTensor.dataType());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,9 +102,40 @@ public class model {
         detector = FaceDetection.getClient(highAccuracyOpts);
     }
 
+    private TensorImage loadImage(final Bitmap bitmapBuffer) {
+        // Initializes preprocessor if null
+        ImageProcessor tfImageProcessor =
+                    new ImageProcessor.Builder()
+//                            .add(
+//                                    new ResizeOp(
+//                                            96,
+//                                            112,
+//                                            ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
+                            .add(PREPROCESS_NORMALIZE_OP)
+                            .build();
+            Log.d("EMBEDS DEBUGGG", "tfImageProcessor initialized successfully. imageSize: ");
+        tfInputBuffer.load(bitmapBuffer);
+        return tfImageProcessor.process(tfInputBuffer);
+    }
+
     public void getEmbeddings(Bitmap img_bitmap){
 //        Bitmap img_bitmap = BitmapFactory.decodeResource(activity.getResources(), id);
+
         InputImage image = InputImage.fromBitmap(img_bitmap, 0);
+//        tfInputBuffer = loadImage(img_bitmap);
+////
+//        ByteBuffer ith_output = ByteBuffer.allocateDirect(1 * inputSize * inputSize * 3 * 4);  // Float tensor, shape 3x2x4.
+//        ith_output.order(ByteOrder.nativeOrder());
+//
+//        Map<Integer, Object> outputMap = new HashMap<>();
+//
+//        outputMap.put(i, ith_output);
+//
+//
+//        Log.d("TENOR DEBUG", "tensorSize: " + tfInputBuffer.getWidth() + " x " + tfInputBuffer.getHeight());
+////
+////        // Runs the inference call
+//        tfLite.runForMultipleInputsOutputs(tfInputBuffer.getBuffer(), outputProbabilityBuffer.getBuffer().rewind());
 
         Task<List<Face>> result =
                 detector.process(image)
@@ -94,15 +155,15 @@ public class model {
                                             Bitmap frame_bmp1 =BitmapFactory.decodeByteArray(imageBytes,0,imageBytes.length);
 
                                             //Get bounding box of face
-                                            RectF boundingBox = new RectF(face.getBoundingBox());
+//                                            RectF boundingBox = new RectF(face.getBoundingBox());
 
                                             //Crop out bounding box from whole Bitmap(image)
-                                            Bitmap cropped_face = getCropBitmapByCPU(frame_bmp1, boundingBox);
+//                                            Bitmap cropped_face = getCropBitmapByCPU(frame_bmp1, boundingBox);
 
                                             //Scale the acquired Face to 112*112 which is required input for model
-                                            Bitmap scaled = getResizedBitmap(cropped_face, 112, 112);
+//                                            Bitmap scaled = getResizedBitmap(cropped_face, 96, 112);
 
-                                            recognizeImage(scaled); //Send scaled bitmap to create face embeddings.
+                                            recognizeImage(frame_bmp1); //Send scaled bitmap to create face embeddings.
 
                                         }
                                         else {
@@ -132,38 +193,24 @@ public class model {
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
     }
 
+    public static float[] bytesToFloats(byte[] bytes) {
+        if (bytes.length % Float.BYTES != 0)
+            throw new RuntimeException("Illegal length");
+        float floats[] = new float[bytes.length / Float.BYTES];
+        ByteBuffer.wrap(bytes).asFloatBuffer().get(floats);
+        return floats;
+    }
     private void recognizeImage(final Bitmap bitmap) {
         //Create ByteBuffer to store normalized image
+        Bitmap inputBitmap = Bitmap.createScaledBitmap(
+                bitmap,
+                112,
+                112,
+                true
+        );
+        Log.i("DEBUG BUFFER : ", Float.toString(loadImage((inputBitmap)).getHeight())+ Float.toString(loadImage((inputBitmap)).getWidth()));
+        Object[] inputArray = {loadImage((inputBitmap)).getBuffer()};
 
-        ByteBuffer imgData = ByteBuffer.allocateDirect(1 * inputSize * inputSize * 3 * 4);
-
-        imgData.order(ByteOrder.nativeOrder());
-
-        intValues = new int[inputSize * inputSize];
-
-        //get pixel values from Bitmap to normalize
-        bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-        imgData.rewind();
-
-        for (int i = 0; i < inputSize; ++i) {
-            for (int j = 0; j < inputSize; ++j) {
-                int pixelValue = intValues[i * inputSize + j];
-                if (isModelQuantized) {
-                    // Quantized model
-                    imgData.put((byte) ((pixelValue >> 16) & 0xFF));
-                    imgData.put((byte) ((pixelValue >> 8) & 0xFF));
-                    imgData.put((byte) (pixelValue & 0xFF));
-                } else { // Float model
-                    imgData.putFloat((((pixelValue >> 16) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    imgData.putFloat((((pixelValue >> 8) & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-                    imgData.putFloat(((pixelValue & 0xFF) - IMAGE_MEAN) / IMAGE_STD);
-
-                }
-            }
-        }
-        //imgData is input to our model
-        Object[] inputArray = {imgData};
 
         Map<Integer, Object> outputMap = new HashMap<>();
 

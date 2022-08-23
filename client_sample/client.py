@@ -13,8 +13,9 @@ def random_string_generator(str_size):
 def random_number_generator(str_size):
     return ''.join(random.choice(string.digits) for x in range(str_size))
 
-URL = "https://sih-smart-attendance.herokuapp.com"
+# URL = "https://sih-smart-attendance.herokuapp.com"
 # URL = "http://127.0.0.1:5000"
+URL = 'https://ipravesh.azurewebsites.net'
 
 timmings = []
 
@@ -216,7 +217,7 @@ def do_analysis(nth_parallel):
 
 
 threads = []
-for i in range(1):
+for i in range(100):
     timmings.append(0)
     t = threading.Thread(target=do_analysis, args=[i])
     t.start()
