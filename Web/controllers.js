@@ -31,7 +31,7 @@ module.exports.isAuth = false;
 
 module.exports.auth = (req,res) => {
     console.log(req.body);
-    return res.redirect('/emp_overview');
+    return res.redirect('/emp_list');
 };
 
 
