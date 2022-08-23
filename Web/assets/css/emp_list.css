@@ -1,0 +1,174 @@
+@import url("https://fonts.googleapis.com/css2?family=Aboreto&family=EB+Garamond&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Aboreto&family=EB+Garamond&family=Tajawal&display=swap");
+main {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 69px 150px 1fr;
+  justify-items: center;
+}
+
+main h1 {
+  width: 100%;
+  font-size: 2.1rem;
+  box-sizing: border-box;
+  text-align: left !important;
+  padding-left: 12px;
+  color: grey;
+  font-style: 'Tajawal', sans-serif;
+}
+
+main #search {
+  box-shadow: #4d4de8 0px 1px 4px;
+  padding: 12px;
+  border: 0px solid;
+  border-radius: 1rem;
+  height: fit-content;
+}
+
+main #search #search-bar-container {
+  height: fit-content;
+  width: fit-content;
+  border: 0px solid;
+  border-radius: 2rem;
+  box-shadow: #d6d8d9 3px 3px 6px 0px inset, #ede8ea -3px -3px 6px 1px inset;
+  box-shadow: 0 0 2px 1px #90a3f6;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 3px 12px 3px 9px;
+  margin: 30px 0px 21px 0px;
+}
+
+main #search #search-bar-container #search-bar {
+  display: inline-block;
+  height: 36px;
+  width: 600px !important;
+  background-color: #f6f4f6;
+  font-size: larger;
+  border: 0px solid;
+}
+
+main #search #search-bar-container span {
+  display: inline-block;
+  height: fit-content;
+  width: fit-content;
+}
+
+main #search #adv-search {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+main #search #adv-search select {
+  background-color: #4d4de8;
+  color: white;
+  display: inline-block;
+  font-size: 1rem;
+  font-family: 'Tajawal', sans-serif;
+  padding: 6px;
+}
+
+main #search #adv-search #gender {
+  font-size: larger;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-family: 'Tajawal', sans-serif;
+}
+
+main #search #adv-search #gender label {
+  margin-top: 12px;
+}
+
+main #search #adv-search input[type='text'] {
+  display: inline-block;
+  height: 30px;
+  font-size: 1rem;
+  border: 0px solid;
+  box-shadow: 0 0 2px 1px #90a3f6;
+  border-radius: 0.3rem;
+}
+
+main #emp-list {
+  margin-top: 60px;
+  width: 618px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+main #emp-list .emp {
+  margin: 0;
+  height: 60px;
+  width: 585px;
+  border: 0px solid #4d4de8;
+  border-radius: 0.3rem;
+  border-left-width: 9px;
+  box-shadow: #4d4de8 0px 1px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
+  text-decoration: none;
+  margin-top: 12px;
+}
+
+main #emp-list .emp i {
+  font-size: 1rem;
+  display: inline-block;
+  border: 0px solid;
+  border-radius: 50%;
+  padding: 15px;
+  font-size: 1rem;
+  color: #4d4de8;
+}
+
+main #emp-list .emp:hover {
+  transform: scale(0.99);
+}
+
+main #emp-list .emp > div {
+  height: fit-content;
+  width: fit-content;
+}
+
+main #emp-list .emp > div .avatar {
+  height: 45px;
+  width: 45px;
+  border: 0px solid;
+  border-radius: 50%;
+  display: inline-block;
+  margin-top: 6px;
+}
+
+main #emp-list .emp > div .emp_name {
+  display: inline-block;
+  font-size: 2.1rem;
+}
+
+main #emp-list .emp > div .Male {
+  background-image: url("https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png");
+  background-size: contain;
+  background-position: center;
+}
+
+main #emp-list .emp > div .M {
+  background-image: url("https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png");
+  background-size: contain;
+  background-position: center;
+}
+
+main #emp-list .emp > div .m {
+  background-image: url("https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png");
+  background-size: contain;
+  background-position: center;
+}
+
+main #emp-list .emp > div .F {
+  background-image: url("https://cdn3.iconfinder.com/data/icons/avatar-set/512/Avatar12-512.png");
+  background-size: contain;
+  background-position: center;
+}

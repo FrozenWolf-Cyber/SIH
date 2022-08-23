@@ -1,0 +1,43 @@
+
+
+<link rel="stylesheet" href="/css/emp_attendance.css">
+
+
+<div id="main-container2">
+
+
+    <div id="calender-container">
+        <div id="left-cal-nav" class="calender-nav"><img src="/images/left-arrow.png" alt=""></div>
+        <div id="calender">
+            <div class="day">sun</div>
+            <div class="day">mon</div>
+            <div class="day">tues</div>
+            <div class="day">wed</div>
+            <div class="day">thu</div>
+            <div class="day">fri</div>
+            <div class="day">sat</div>
+
+            <%for(let i = 1;i <= 37;i++){%>
+                <div class="dates" id="<%= 'd'+i %>"></div>
+            <%}%>    
+        </div>
+        <div id="right-cal-nav" class="calender-nav"><img src="/images/left-arrow.png" alt=""></div>
+    </div>
+
+    <form action="" id="update-log">
+        <div>
+            <label for="check-in">Check in</label>
+            <input type="text" id="check-in">
+            <button class="edit">edit</button>
+        </div>
+        
+        <div>
+            <label for="check-out">Check out</label>
+            <input type="text" id="check-out">
+            <button class="edit">edit</button>
+        </div>
+        
+    </form>
+</div>
+<script src="/js/emp_attendance.js"></script>
+

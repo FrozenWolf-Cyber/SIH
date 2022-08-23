@@ -1,0 +1,33 @@
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+<link rel="stylesheet" href="/css/emp_list.css">
+
+<main>
+    <h1 id="page-heading">Employee List</h1>
+    <div id="search">
+        <div id="search-bar-container"> 
+            <span class="material-symbols-outlined" style="color:#4d4de8">search</span>
+            <input type="text" id = 'search-bar' name='emp_name' placeholder="Employee name...">
+        </div>
+        <div id="adv-search">
+            <select name="emp_designation">
+                <option value="">Designation</option>
+            </select>
+            <div id="gender" style="color: #4d4de8;">
+                 <label for="male">Male</label>
+                 <input type="radio" id="male" value="m" name="gender">
+                 <label for="female">Female</label>
+                 <input type="radio" id="female" value="f" name="gender"> 
+            </div>
+            <input type="text" name="emp_no" placeholder="Emp no">
+        </div>
+    </div>
+    <div id = 'emp-list'>
+    </div>
+</main>
+
+
+<script src="/js/emp_list.js"></script>
+<script src="/js/fill_search_bar.js"></script>
+<script src="/js/search_emp.js"></script>

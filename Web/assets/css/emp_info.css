@@ -1,0 +1,95 @@
+@import url("https://fonts.googleapis.com/css2?family=Aboreto&family=EB+Garamond&display=swap");
+main {
+  display: grid;
+  gap: 3px;
+  grid-template-columns: 1.8fr 1.2fr;
+  justify-items: center;
+  align-items: center;
+}
+
+main #main {
+  display: grid;
+  gap: 6px;
+  grid-template-rows: 1fr 1fr;
+  height: 98%;
+  width: 98%;
+  justify-items: center;
+  align-items: center;
+}
+
+main #main #profile-container {
+  height: 98%;
+  width: 98%;
+  border: 0px solid;
+  border-radius: 1rem;
+  box-shadow: #4d4de8 0px 3px 8px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+main #main #graph-container {
+  height: 98%;
+  width: 98%;
+  border: 0px solid;
+  border-radius: 1rem;
+  box-shadow: #4d4de8 0px 3px 8px;
+}
+
+main #calender-container {
+  height: 98%;
+  width: 98%;
+  border: 0px solid;
+  border-radius: 1rem;
+  box-shadow: #4d4de8 0px 3px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+main #calender-container form {
+  font-size: 1.2rem;
+  font-family: 'EB Garamond', serif;
+  margin-top: 21px;
+  color: #4d4de8;
+  height: 90px;
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  border: 0px solid;
+  border-radius: 0.6rem;
+}
+
+main #calender-container form input {
+  pointer-events: none;
+  display: inline-block;
+  height: 24px;
+  width: 180px;
+}
+
+main #calender-container form .edit {
+  font-size: smaller;
+  color: white;
+  border: 0px solid;
+  border-radius: 0.3rem;
+  height: fit-content;
+  width: fit-content;
+  padding: 3px 6px 3px 6px;
+  background-color: grey;
+}
+
+main #calender-container form .editable-input {
+  pointer-events: inherit;
+}
+
+main #calender-container form #update-button {
+  background-color: #4d4de8;
+  color: white;
+  font-size: larger;
+  padding: 3px 6px 3px 6px;
+  border: 0px solid;
+  border-radius: 0.5rem;
+}

@@ -1,0 +1,34 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/62ef345795.js" crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" href="/css/layout.css">
+    <title>i-Pravesh</title>
+    <%- style %>
+</head>
+<body>
+    <div id="side-nav">
+        <img id='logo' src="/images/toppng.com-gail-india-vector-logo-400x400.png" alt="">
+        
+        <nav>
+            <a href="/emp_list"><i class="fa-solid fa-user-tie" id="emp"></i></a>
+            <a href="/emp_overview"><i class="fa-solid fa-chart-line" id="analytics"></i></a>
+            <a href="/create_emp"><i class="fa-solid fa-user-plus" id="add-emp"></i></a>
+        </nav>
+
+        <a href="/" ><i class="fa-solid fa-right-from-bracket"></i></a>
+   </div>
+
+   <%- body %>
+
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script src="/js/layout.js"></script>
+   <%- script %>
+</body>
+</html>

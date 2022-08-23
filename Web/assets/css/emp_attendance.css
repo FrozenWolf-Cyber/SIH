@@ -1,0 +1,130 @@
+#main-container2 {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#main-container2 form {
+  margin-top: 60px;
+  color: #4d4de8;
+  height: 150px;
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: #4d4de8 0px 3px 8px;
+  border: 0px solid;
+  border-radius: 0.6rem;
+}
+
+#main-container2 form input {
+  pointer-events: none;
+}
+
+#main-container2 form .edit {
+  font-size: smaller;
+  color: white;
+  border: 0px solid;
+  border-radius: 0.3rem;
+  height: fit-content;
+  width: fit-content;
+  padding: 1px 3px 1px 3px;
+  background-color: grey;
+}
+
+#main-container2 form .editable-input {
+  pointer-events: inherit;
+}
+
+#main-container2 form #update-button {
+  background-color: #4d4de8;
+  color: white;
+  font-size: larger;
+  padding: 3px 6px 3px 6px;
+  border: 0px solid;
+  border-radius: 0.5rem;
+}
+
+#calender-container {
+  height: fit-content;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: #4d4de8 0px 3px 8px;
+  border-radius: 1rem;
+  border: 0px solid;
+}
+
+#calender-container nav {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 12px;
+  margin-top: 12px;
+  width: 180px;
+}
+
+#calender-container nav #mmyy {
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+#calender-container nav #right-cal-nav {
+  display: inline-block;
+  font-size: 1.5rem;
+  color: #4d4de8;
+}
+
+#calender-container nav #left-cal-nav {
+  display: inline-block;
+  font-size: 1.5rem;
+  color: #4d4de8;
+}
+
+#calender-container #calender {
+  height: fit-content;
+  width: fit-content;
+  display: grid;
+  column-gap: 1px;
+  row-gap: 1px;
+  grid-template-columns: repeat(7, 60px);
+}
+
+#calender-container #calender .day {
+  height: 24px;
+  width: 45px;
+  border: 0px solid;
+  border-radius: 0.21rem;
+  background-color: #4d4de8;
+  color: white;
+  font-weight: bolder;
+  text-align: center;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  text-transform: capitalize;
+}
+
+#calender-container #calender .dates {
+  height: 45px !important;
+  width: 51px !important;
+  border: 0px solid;
+  border-radius: 0.21rem;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+#calender-container #calender .highlight {
+  background-color: lightgrey;
+}
+
+#calender-container #calender .present {
+  background-color: #6eec6e;
+}
+
+#calender-container #calender .select {
+  border: 2px solid #4d4de8;
+  box-sizing: border-box;
+}

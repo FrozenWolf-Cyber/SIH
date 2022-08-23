@@ -1,0 +1,166 @@
+@import url("https://fonts.googleapis.com/css2?family=Aboreto&family=EB+Garamond&display=swap");
+body {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  width: 100vw;
+  background-color: #f1eff1;
+  background-size: cover;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url("../images/bg.jpg");
+}
+
+body h1 {
+  font-size: 3rem;
+  color: #4d4de8;
+  font-weight: bolder;
+  font-family: 'EB Garamond', serif;
+}
+
+body form {
+  height: 450px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: white;
+  border: 0px solid;
+  border-radius: 1.2rem;
+  box-shadow: rgba(134, 134, 243, 0.3) 0px 7px 29px 0px;
+}
+
+body img {
+  width: 120px;
+  height: 90px;
+}
+
+#login-form .animate-label {
+  position: relative;
+  margin-top: 30px;
+}
+
+#login-form .animate-label label {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  transition: .3s all ease;
+  font-size: 1.5rem;
+  width: 100%;
+  color: #888888;
+  font-family: 'EB Garamond', serif;
+}
+
+#login-form .animate-label input {
+  width: 270px;
+}
+
+#login-form .animate-label input:valid + label, #login-form .animate-label input:focus + label {
+  bottom: 30px;
+  font-size: 1rem;
+}
+
+#login-form .animate-label input:focus + label {
+  color: #4d4de8;
+}
+
+#login-form .animate-label line:before {
+  content: '';
+  position: absolute;
+  background: #4d4de8;
+  width: 0px;
+  height: 2px;
+  right: 50%;
+  bottom: 0;
+}
+
+#login-form .animate-label input:focus ~ line:before {
+  width: 100%;
+  right: 0;
+  transition: all .3s ease;
+}
+
+#login-form body {
+  font-family: 'Helvetica', sans-serif;
+  background: #f6f6f6;
+}
+
+#login-form .wrapper {
+  width: 350px;
+  height: 400px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 50px;
+}
+
+#login-form img {
+  width: 80px;
+}
+
+#login-form h1 {
+  font-weight: normal;
+  font-size: 24px;
+  margin-bottom: 0;
+  line-height: 34px;
+}
+
+#login-form p {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+#login-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+#login-form input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #c6c6c6;
+  padding-bottom: 6px;
+}
+
+#login-form input:focus {
+  outline: none;
+}
+
+#login-form input#password {
+  margin-top: 15px;
+}
+
+#login-form a {
+  color: #4d4de8;
+  text-decoration: none;
+  margin-top: 30px;
+  font-size: 14px;
+}
+
+#login-form .flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#login-form button {
+  display: block;
+  border-radius: 5px;
+  height: 40px;
+  width: 270px;
+  background-color: #4d4de8;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 14px;
+  box-shadow: 0 1p x 4px 0 rgba(0, 0, 0, 0.26);
+  font-family: 'EB Garamond', serif;
+  font-size: larger;
+  margin-top: 30px;
+}

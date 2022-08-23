@@ -1,0 +1,30 @@
+#main {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 70px 1fr;
+}
+
+#main h1 {
+  width: 100%;
+  font-size: 2.1rem;
+  box-sizing: border-box;
+  text-align: left !important;
+  padding-left: 12px;
+  color: grey;
+}
+
+#main main {
+  display: flex;
+  align-items: center  !important;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+#main main .vis {
+  box-shadow: #4d4de8 0px 3px 8px;
+  border: 0px solid;
+  border-radius: 0.9rem;
+  height: 600px;
+  width: 600px;
+}

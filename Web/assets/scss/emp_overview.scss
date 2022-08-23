@@ -1,0 +1,38 @@
+
+
+#main{
+    height:100%;
+    width:100%;
+    display: grid;
+    grid-template-rows: 70px 1fr;
+    h1{
+        width:100%;
+        font-size: 2.1rem;
+        box-sizing: border-box;
+        text-align: left !important;
+        padding-left: 12px;
+        color:grey;
+    }
+    main{
+        display: flex;
+        align-items: center  !important;
+        // flex-direction: column;
+        justify-content: space-evenly;
+        width:100%;
+        .vis{
+           box-shadow: #4d4de8 0px 3px 8px;
+           border:0px solid;
+           border-radius: 0.9rem;
+           height: 600px;
+           width: 600px;
+        }
+        // #container1{
+        //     height:270px;
+        //     width:270px;
+        // }
+        // #container3{
+        //     height:300px;
+        //     width:600px;
+        // }
+    }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "anandavenkatesh-a",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "d3": "^7.6.1",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "express-ejs-layouts": "^2.5.1",
+    "highcharts": "^10.2.0",
+    "node-base64-image": "^2.0.4",
+    "node-sass-middleware": "^1.0.1",
+    "nodejs-base64": "^2.0.0",
+    "nodemon": "^2.0.19",
+    "svg": "^0.1.0"
+  }
+}
