@@ -6,17 +6,29 @@
     android:layout_height="match_parent"
     tools:context="com.totalrecon.ipravesh.geoActivity"
     android:orientation="vertical"
-    android:background = "@drawable/bg">
+    >
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="102dp"
-        android:layout_height="78dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifImageView"
+        android:layout_width="330dp"
+        android:layout_height="310dp"
+        android:layout_marginTop="44dp"
+        android:src="@drawable/location"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView21" />
+
+    <ImageView
+        android:id="@+id/imageView21"
+        android:layout_width="312dp"
+        android:layout_height="119dp"
+        android:layout_marginTop="44dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ipraveshicon" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

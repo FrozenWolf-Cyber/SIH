@@ -31,8 +31,9 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity{
 
-    private Button login_button , signup_button;
+    private Button login_button;
     private EditText password , username;
+    private TextView signup_button;
 
     public class idWithEmbeds {
         public String emp_no;
@@ -66,7 +67,7 @@ public class LoginActivity extends AppCompatActivity{
         setContentView(R.layout.existing_user_login_new);
 
         login_button = (Button) findViewById(R.id.login);
-        signup_button = (Button) findViewById(R.id.signupbutton);
+        signup_button = findViewById(R.id.textView34);
 
         password = (EditText) findViewById(R.id.password);
         username = (EditText) findViewById(R.id.username);

@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class logs extends AppCompatActivity {
-    PieChart pieChart;
+//    PieChart pieChart;
     TextView logdetails;
     BottomNavigationView navView;
     @Override
@@ -39,7 +39,7 @@ public class logs extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logd);
         // pie chart
-        pieChart = findViewById(R.id.piechart);
+//        pieChart = findViewById(R.id.piechart);
         logdetails = findViewById(R.id.logdetails2);
         navView = findViewById(R.id.nav_view);
 
@@ -113,7 +113,7 @@ public class logs extends AppCompatActivity {
 
                         logdetails.setText(log_data_detail+"");
                         // set pie chart after percentage calculated
-                        set_pie_chart(present, 100 - present);
+//                        set_pie_chart(present, 100 - present);
 
                     }
                     catch(Exception e)
@@ -142,21 +142,21 @@ public class logs extends AppCompatActivity {
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
 
     }
-    public void set_pie_chart(float percent1 , float percent2)
-    {
-        pieChart.addPieSlice(
-                new PieModel(
-                        "present",
-                        percent1,
-                        Color.parseColor("#28fc03")));
-        pieChart.addPieSlice(
-                new PieModel(
-                        "absent",
-                        percent2,
-                        Color.parseColor("#fc2403")));
-        pieChart.startAnimation();
-
-    }
+//    public void set_pie_chart(float percent1 , float percent2)
+//    {
+//        pieChart.addPieSlice(
+//                new PieModel(
+//                        "present",
+//                        percent1,
+//                        Color.parseColor("#28fc03")));
+//        pieChart.addPieSlice(
+//                new PieModel(
+//                        "absent",
+//                        percent2,
+//                        Color.parseColor("#fc2403")));
+//        pieChart.startAnimation();
+//
+//    }
     public String read_data(String filename)
     {
         SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
