@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.totalrecon.ipravesh.ui.login.LoginActivity;
 
+import java.util.Calendar;
+
 public class check_status extends AppCompatActivity{
     private Button check_both , exit_button , dashboard;
     private TextView textView;
@@ -35,9 +37,19 @@ public class check_status extends AppCompatActivity{
 //        exit_button=(Button)findViewById(R.id.button2);
         cardView = findViewById(R.id.cardview);
 //        editText1 = (EditText) findViewById(R.id.password);
+        textView = findViewById(R.id.textView22);
         navView = findViewById(R.id.nav_view);
 
         cur_status = read_data("check_status");
+
+        Calendar c = Calendar.getInstance();
+        int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
+        if(timeOfDay >= 0 && timeOfDay < 12){
+            textView.setText("Good morning" + ",\n" + read_data("name") + "!");
+        }
+        else {
+            textView.setText("Good evening" + ",\n" + read_data("name") + "!");
+        }
 //        show_message("debugging purpose: cur_status = "+cur_status);
 //        if (cur_status.equals("checkin")) {
 //            show_message("You will be checking out now!");

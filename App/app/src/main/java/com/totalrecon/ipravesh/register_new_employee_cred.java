@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -30,7 +31,7 @@ import java.util.Map;
 public class register_new_employee_cred extends AppCompatActivity {
 
     private Button button;
-    private Button button2;
+    private TextView button2;
     private EditText username , password , confirmpassword , empl_no;
     String user_name, pass_word, confirm_password, emplno;
     @Override
@@ -40,7 +41,7 @@ public class register_new_employee_cred extends AppCompatActivity {
         setContentView(R.layout.activity_signup_newemployee_cred_new);
 
         button=findViewById(R.id.next);
-        button2=findViewById(R.id.signin);
+        button2=findViewById(R.id.textView33);
         username=findViewById(R.id.username);
         password=findViewById(R.id.password);
         empl_no=findViewById(R.id.employee_number);

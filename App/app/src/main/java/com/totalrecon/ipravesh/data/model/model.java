@@ -16,6 +16,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -37,6 +38,7 @@ import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +85,12 @@ public class model {
                                     @Override
                                     public void onSuccess(List<Face> faces) {
                                         Log.i("faces",Integer.toString(faces.size()));
-                                        if(faces.size()!=0) {
+                                        if (faces.size()>1) {
+                                            clearEmbedsArray();
+                                            // Many faces
+                                            embeds = new float[] {-1};
+                                        }
+                                        else if(faces.size()!=0) {
                                             Face face = faces.get(0); //Get first face from detected faces
 
 //                                            //mediaImage to Bitmap

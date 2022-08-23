@@ -138,6 +138,10 @@ public class cameraActivity extends AppCompatActivity {
                         loadingDialog.dismissDialog();
                         show_alert("Face doesn't match!");
                     }
+                    if (verify.equals("many faces")) {
+                        loadingDialog.dismissDialog();
+                        show_alert("There are many faces!");
+                    }
                     if (verify.equals("no face")) {
                         loadingDialog.dismissDialog();
                         show_alert("There are no faces!");
@@ -154,6 +158,10 @@ public class cameraActivity extends AppCompatActivity {
     public String verified(float[] user_embeds){
         float[] embeds_n;
         float  distance;
+
+        if (my_model.embeds.length == 1) {
+            return "many faces";
+        }
 
         SharedPreferences sh = getSharedPreferences("EmbedsSharedPref", MODE_PRIVATE);
         String s = sh.getString("json", "");
