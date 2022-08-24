@@ -41,14 +41,18 @@ public class check_status extends AppCompatActivity{
         navView = findViewById(R.id.nav_view);
 
         cur_status = read_data("check_status");
+        Log.d("ola",cur_status);
 
         Calendar c = Calendar.getInstance();
         int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
         if(timeOfDay >= 0 && timeOfDay < 12){
-            textView.setText("Good morning" + ",\n" + read_data("name") + "!");
+            textView.setText("Good morning!");
+        }
+        else if(timeOfDay >= 12 && timeOfDay < 16){
+            textView.setText("Good afternoon!");
         }
         else {
-            textView.setText("Good evening" + ",\n" + read_data("name") + "!");
+            textView.setText("Good evening!");
         }
 //        show_message("debugging purpose: cur_status = "+cur_status);
 //        if (cur_status.equals("checkin")) {
@@ -88,18 +92,22 @@ public class check_status extends AppCompatActivity{
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.Add) {
+                    finish();
                     Intent intent = new Intent(check_status.this, cameraActivity.class);
                     startActivity(intent);
                 }
                 if (item.getItemId() == R.id.Alerts) {
+                    finish();
                     Intent i = new Intent(check_status.this, Alerts.class);
                     startActivity(i);
                 }
                 if (item.getItemId() == R.id.Profile) {
+                    finish();
                     Intent i = new Intent(check_status.this, employee_dashboard.class);
                     startActivity(i);
                 }
                 if (item.getItemId() == R.id.Logs) {
+                    finish();
                     Intent i = new Intent(check_status.this, logs.class);
                     startActivity(i);
                 }
