@@ -122,7 +122,8 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                         write_data("username", user_name);
                                                         write_data("password", pass_word);
                                                         // all details verified successfully
-                                                        Intent i = new Intent(register_new_employee_cred.this, threeshot.class);
+                                                        // goto otp verification page
+                                                        Intent i = new Intent(register_new_employee_cred.this, otp_verification.class);
                                                         startActivity(i);
                                                     } else {
                                                         show_error("This username is already taken! Please enter another username.");
