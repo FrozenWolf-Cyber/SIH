@@ -52,7 +52,8 @@ public class otp_verification extends AppCompatActivity {
 
                 otp = otp_text.getText().toString();
                 String emplno = read_data("emplno");
-                String upload_URL = "https://sih-smart-attendance.herokuapp.com/";
+                Log.i("debug",emplno);
+                String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_otp";
                 //Log.i("Parameters : ",otp+" , "+emplno);
                 VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
                     @Override
@@ -60,7 +61,7 @@ public class otp_verification extends AppCompatActivity {
                         try {
                             String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                             json_rec.replaceAll("\\P{Print}", "");
-                            String resp1 = "YES";
+                            String resp1 = "\"VERIFIED\"";
                             String resp2 = "NO";
                             Log.i("RESPONSE", json_rec);
                             if (resp1.equals(json_rec)) {
@@ -84,7 +85,7 @@ public class otp_verification extends AppCompatActivity {
                     @Override
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<>();
-                        params.put("emp_no", "\"" + emplno + "\"");
+                        params.put("emp_no",  emplno );
                         params.put("otp", "\"" + otp + "\"");
                         return params;
                     }
@@ -100,7 +101,7 @@ public class otp_verification extends AppCompatActivity {
                 // send_button is clicked...
 
                 String emplno = read_data("emplno");
-                String upload_URL = "https://sih-smart-attendance.herokuapp.com/";
+                String upload_URL = "https://sih-smart-attendance.herokuapp.com/send_otp";
                 /*
                     send emp_no to server,
                     server generates otp and sends to the employee's email_id
@@ -131,7 +132,7 @@ public class otp_verification extends AppCompatActivity {
                     @Override
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<>();
-                        params.put("emp_no", "\"" + emplno + "\"");
+                        params.put("emp_no", emplno );
                         return params;
                     }
                 };
