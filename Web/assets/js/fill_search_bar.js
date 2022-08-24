@@ -14,8 +14,8 @@ function fill_search_options()
             designation.push(emp.designation);
         }
     });
-    let emp_no_min = emp_list1[0].emp_no;
-    let emp_no_max = emp_list1[emp_list1.length-1].emp_no;
+    // let emp_no_min = emp_list1[0].emp_no;
+    // let emp_no_max = emp_list1[emp_list1.length-1].emp_no;
 
 
     //fill the info in the form
@@ -25,7 +25,7 @@ function fill_search_options()
         `;
     });
 
-    EmpNoFilter.max = emp_no_max;
-    EmpNoFilter.min = emp_no_min;
+    // EmpNoFilter.max = emp_no_max;
+    // EmpNoFilter.min = emp_no_min;
 
 }
