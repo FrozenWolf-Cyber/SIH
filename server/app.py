@@ -6,25 +6,27 @@ import uvicorn
 import logging
 import pickle
 from encryption import encryption_algo
+from messenger import mailman
 from psql_database import Database
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse
 
-# db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
-# db_user =  'postgres' #'be6a5ab891fb44'
-# db_psswrd = '3112003' #heroku-psswrd
-# db_name = 'sih_attendance' #heroku-db
+db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
+db_user =  'postgres' #'be6a5ab891fb44'
+db_psswrd = '3112003' #heroku-psswrd
+db_name = 'sih_attendance' #heroku-db
 
-db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
-db_user =  'sxxkdscneuzrwf'
-db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
-db_name = 'd3rhldildqlaje'
+# db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
+# db_user =  'sxxkdscneuzrwf'
+# db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
+# db_name = 'd3rhldildqlaje'
 
 ADMIN_USERNAME = 'ADMIN'
 ADMIN_PSSWRD = 'ADMIN'
 
 encryptor = encryption_algo('cervh0s3e2hnpaitaeitad0sn', 'eaia0dnesp3thach2tir0esnv')
+# messenger = mailman()
 # encryptor = pickle.load(open('encryptor.pkl', 'rb'))
 
 mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
@@ -164,6 +166,40 @@ async def admin_signup(
     return emp_no
 
 
+@app.post('/send_otp')
+async def send_otp(
+    emp_no: str = Form(...)
+):
+    emp_no = emp_no[1:-1]
+
+    mailid = await mydb.get_mail_id(emp_no)
+    print(mailid, flush=True)
+    # otp = messenger.send_otp(mailid)
+    otp = str(2347)
+    await mydb.save_otp(emp_no, otp)
+
+    return otp
+
+
+@app.post('/check_otp')
+async def send_otp(
+    emp_no: str = Form(...),
+    otp: str = Form(...)
+):
+
+    emp_no = emp_no[1:-1]
+
+    print(emp_no, otp, flush=True)
+
+
+    if await mydb.check_otp(emp_no, otp):
+        return "VERFIED"
+
+    else:
+        return "NO"
+    
+
+
 @app.post('/signup')
 async def signup(
     user_name: str = Form(...),
@@ -214,6 +250,9 @@ async def signup(
 
     await clear_local_data(emp_no)
     return emp_no
+
+
+
 
 
 
