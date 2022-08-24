@@ -7,14 +7,15 @@ import io
 import json
 import threading
 
+
 def random_string_generator(str_size):
     return ''.join(random.choice(string.ascii_letters) for x in range(str_size))
 
 def random_number_generator(str_size):
     return ''.join(random.choice(string.digits) for x in range(str_size))
 
-URL = "https://sih-smart-attendance.herokuapp.com"
-# URL = "http://127.0.0.1:5000"
+# URL = "https://sih-smart-attendance.herokuapp.com"
+URL = "http://127.0.0.1:5000"
 
 timmings = []
 
@@ -24,7 +25,8 @@ def do_analysis(nth_parallel):
     print(f"{nth_parallel} Testing SIGNUP......\n")
     url = f'{URL}/admin_signup'
 
-    mail_id = random_string_generator(6)+'@gmail.com'
+    # mail_id = random_string_generator(6)+'@gmail.com'
+    mail_id = 'gokul3112003.com@gmail.com'
     user_name = random_string_generator(7)
     psswrd = random_string_generator(5)
     contact_no = random_number_generator(5)
@@ -64,6 +66,29 @@ def do_analysis(nth_parallel):
 
     x = requests.post(url, data= data, files=files)
     print(x.text)
+
+    # CHECK OTP
+    data = {'emp_no' : emp_no}   
+    url = f'{URL}/send_otp'
+    x = requests.post(url, data= data)
+    print(x.text)
+    otp = x.text
+
+    url = f'{URL}/send_otp'
+    x = requests.post(url, data= data)
+    print(x.text)
+
+    data = {'emp_no' : emp_no, 'otp':12}   
+    url = f'{URL}/check_otp'
+    x = requests.post(url, data= data)
+    print(x.text)
+
+
+    data = {'emp_no' : emp_no, 'otp':otp}   
+    url = f'{URL}/check_otp'
+    x = requests.post(url, data= data)
+    print(x.text)
+
 
     # CHECK USERNAME
     print(f"\n{nth_parallel} Testing CHECK USERNAME......")
