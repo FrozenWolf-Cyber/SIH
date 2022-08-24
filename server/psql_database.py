@@ -88,7 +88,7 @@ class Database:
         # sample = pickle.load(open('employee_sample.pkl','rb')) 
 
         self.team_data = [{'emp_no': '1', 'name': 'Aadarsh', 'mail_id': 'aadarsh.ram@gmail.com', 'designation': 'ML', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9488363342'},
-                        #   {'emp_no': '2', 'name': 'Gokul', 'mail_id': 'gokul3112003.com@gmail.com', 'designation': 'ML', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9384742775'},
+                          {'emp_no': '2', 'name': 'Gokul', 'mail_id': 'gokul3112003.com@gmail.com', 'designation': 'ML', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9384742775'},
                           {'emp_no': '3', 'name': 'Selva', 'mail_id': 'snsn010212@gmail.com', 'designation': 'APP', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9003299917'},
                           {'emp_no': '4', 'name': 'Ashwanth', 'mail_id': 'ashwanth064@gmail.com', 'designation': 'APP', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9940497154'},
                           {'emp_no': '5', 'name': 'Kavimalar', 'mail_id': 'kavimalar2508@gmail.com', 'designation': 'APP', 'gender': 'F', 'branch_name': 'Office6', 'contact_no': '6385768683'},
@@ -148,7 +148,7 @@ class Database:
 
 
     async def save_otp(self, emp_no, otp):
-        await self.database.execute("INSERT INTO OTP (emp_no , otp, creation) VALUES ('%s', '%s', current_timestamp)" % (emp_no, otp))
+        await self.database.execute("INSERT INTO OTP (emp_no , otp, creation) VALUES ('%s', '%s', current_timestamp)" % (emp_no, str(otp)))
 
         return "DONE"
 
@@ -156,12 +156,10 @@ class Database:
     async def check_otp(self, emp_no, otp):
         await self.clear_otp()
 
-        otp = []
         r = None
         for i in await self.database.fetch_all("SELECT emp_no, otp, creation  FROM OTP WHERE emp_no = '%s' AND otp = '%s'" % (emp_no, otp)):
             r = tuple(i.values())
             break
-
 
         if r is not None:
             await self.database.execute("DELETE FROM OTP WHERE emp_no = '%s'" % (emp_no))

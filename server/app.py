@@ -26,7 +26,7 @@ ADMIN_USERNAME = 'ADMIN'
 ADMIN_PSSWRD = 'ADMIN'
 
 encryptor = encryption_algo('cervh0s3e2hnpaitaeitad0sn', 'eaia0dnesp3thach2tir0esnv')
-# messenger = mailman()
+messenger = mailman()
 # encryptor = pickle.load(open('encryptor.pkl', 'rb'))
 
 mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
@@ -141,7 +141,7 @@ async def admin_signup(
             
         except:
             # print("SERVER ERROR WHILE UPDATING ADMIN SIGNUP IN PSQL")
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0.2)
 
         else:
             sucess = True
@@ -173,16 +173,15 @@ async def send_otp(
     emp_no = emp_no[1:-1]
 
     mailid = await mydb.get_mail_id(emp_no)
-    print(mailid, flush=True)
-    # otp = messenger.send_otp(mailid)
-    otp = str(2347)
+    mailid = encryptor.AES_decrypt(mailid)
+    otp = messenger.send_otp(mailid)
     await mydb.save_otp(emp_no, otp)
 
-    return otp
+    return "SENT"
 
 
 @app.post('/check_otp')
-async def send_otp(
+async def check_otp(
     emp_no: str = Form(...),
     otp: str = Form(...)
 ):
