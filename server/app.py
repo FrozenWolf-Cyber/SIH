@@ -6,6 +6,7 @@ import uvicorn
 import logging
 import pickle
 from encryption import encryption_algo
+from messenger import mailman
 from psql_database import Database
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
@@ -25,6 +26,7 @@ ADMIN_USERNAME = 'ADMIN'
 ADMIN_PSSWRD = 'ADMIN'
 
 encryptor = encryption_algo('cervh0s3e2hnpaitaeitad0sn', 'eaia0dnesp3thach2tir0esnv')
+messenger = mailman()
 # encryptor = pickle.load(open('encryptor.pkl', 'rb'))
 
 mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
@@ -139,7 +141,7 @@ async def admin_signup(
             
         except:
             # print("SERVER ERROR WHILE UPDATING ADMIN SIGNUP IN PSQL")
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0.2)
 
         else:
             sucess = True
@@ -162,6 +164,40 @@ async def admin_signup(
         return "ALREADY IN USE"
 
     return emp_no
+
+
+@app.post('/send_otp')
+async def send_otp(
+    emp_no: str = Form(...)
+):
+    emp_no = emp_no[1:-1]
+
+    mailid = await mydb.get_mail_id(emp_no)
+    mailid = encryptor.AES_decrypt(mailid)
+    otp = messenger.send_otp(mailid)
+    await mydb.save_otp(emp_no, otp)
+
+    return "SENT"
+
+
+@app.post('/check_otp')
+async def check_otp(
+    emp_no: str = Form(...),
+    otp: str = Form(...)
+):
+
+    emp_no = emp_no[1:-1]
+    otp = otp[1:-1]
+
+    print(emp_no, otp, flush=True)
+
+
+    if await mydb.check_otp(emp_no, otp):
+        return "VERIFIED"
+
+    else:
+        return "NO"
+    
 
 
 @app.post('/signup')
@@ -214,6 +250,9 @@ async def signup(
 
     await clear_local_data(emp_no)
     return emp_no
+
+
+
 
 
 
