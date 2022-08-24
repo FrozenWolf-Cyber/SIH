@@ -138,6 +138,7 @@ class Database:
     async def get_mail_id(self, emp_no):
         details = None
 
+        print("SELECT mail_id FROM EMPLOYEE_DETAILS WHERE emp_no = '%s'" % (emp_no,), flush=True)
         for i in await self.database.fetch_all("SELECT mail_id FROM EMPLOYEE_DETAILS WHERE emp_no = '%s'" % (emp_no,)):
             i = tuple(i.values())
             details = i
