@@ -24,6 +24,7 @@ import com.totalrecon.ipravesh.ui.login.LoginActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class otp_verification extends AppCompatActivity {
 
     private Button send_button , next_button;
+    private TextView resend_button;
     private EditText otp_text;
     String otp;
     @Override
@@ -42,13 +44,22 @@ public class otp_verification extends AppCompatActivity {
 
         send_button=(Button)findViewById(R.id.send);
         next_button=(Button)findViewById(R.id.next);
+        resend_button =  findViewById(R.id.resend_otp);
         otp_text=(EditText) findViewById(R.id.otp);
+
+        // by default send -> enable , validate -> disable
+        send_button.setEnabled(true);
+        next_button.setEnabled(false);
 
         next_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 // operation when the button is clicked...
+
+                // make send -> enable , validate -> disable
+                send_button.setEnabled(true);
+                next_button.setEnabled(false);
 
                 otp = otp_text.getText().toString();
                 String emplno = read_data("emplno");
@@ -99,6 +110,9 @@ public class otp_verification extends AppCompatActivity {
             public void onClick(View view) {
 
                 // send_button is clicked...
+                // make send -> disable , validate -> enable
+                send_button.setEnabled(false);
+                next_button.setEnabled(true);
 
                 String emplno = read_data("emplno");
                 String upload_URL = "https://sih-smart-attendance.herokuapp.com/send_otp";
@@ -133,6 +147,52 @@ public class otp_verification extends AppCompatActivity {
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<>();
                         params.put("emp_no", emplno );
+                        return params;
+                    }
+                };
+                VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+            }
+        });
+        resend_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // resend_button is clicked...
+                // only post request to be done .
+
+                String emplno = read_data("emplno");
+                String upload_URL = "https://sih-smart-attendance.herokuapp.com/resend_otp";
+                /*
+                    send emp_no to server,
+                    server generates otp and sends to the employee's email_id
+                 */
+
+                // Log.i("Parameters : ", emplno);
+                VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
+                        try {
+
+                            String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                            json_rec.replaceAll("\\P{Print}", "");
+                            String resp1 = "YES";
+                            String resp2 = "NO";
+                            Log.i("RESPONSE", json_rec);
+
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("emp_no", ""+emplno+"" );
                         return params;
                     }
                 };
