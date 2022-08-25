@@ -44,16 +44,13 @@ public class otp_verification extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.otp_verification_signup);
 
-
         next_button=(Button)findViewById(R.id.next);
         resend_button =  findViewById(R.id.resend_otp);
         otp_text=(EditText) findViewById(R.id.otp);
 
         // by default send -> enable , validate -> disable , resend -> disable
-
         next_button.setEnabled(true);
         resend_button.setEnabled(true);
-
 
         next_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +59,6 @@ public class otp_verification extends AppCompatActivity {
                 // operation when the button is clicked...
 
                 // make send -> enable , validate -> disable , resend -> false
-
 
                 next_button.setEnabled(true);
                 resend_button.setEnabled(true);
