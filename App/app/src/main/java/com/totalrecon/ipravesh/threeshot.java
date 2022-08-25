@@ -87,11 +87,14 @@ public class threeshot extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_threeshot_new);
         // declare all elements
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
 
         my_model = new model("mobile_face_net.tflite", threeshot.this);
         imageView5 = (ImageView)findViewById(R.id.imageView5);
@@ -419,7 +422,6 @@ public class threeshot extends AppCompatActivity {
                         Log.i("Return from server: ", json_rec);
                         saveEmbedsToSP(user_embeds);
                         clearSP();
-                        Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(threeshot.this, LoginActivity.class);
                         startActivity(i);
                         finish();
@@ -432,8 +434,8 @@ public class threeshot extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
                     show_message("Server Error");
+                    error.printStackTrace();
                 }
             }) {
                 @Override
@@ -492,13 +494,22 @@ public class threeshot extends AppCompatActivity {
         return s1;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Exit();
                 finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+    public void Exit(){
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+    }
+
 }
