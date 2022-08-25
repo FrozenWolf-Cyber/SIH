@@ -27,7 +27,7 @@
         android:id="@+id/password"
         android:layout_width="310dp"
         android:layout_height="34dp"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="14dp"
         android:layout_marginBottom="32dp"
         android:background="@null"
         android:fontFamily="@font/mulishregular"
@@ -37,9 +37,7 @@
         android:inputType="textPassword"
         android:selectAllOnFocus="true"
         app:layout_constraintBottom_toTopOf="@+id/login"
-        app:layout_constraintStart_toEndOf="@+id/imageView19"
-        app:layout_constraintTop_toBottomOf="@+id/textView16"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toEndOf="@+id/imageView19" />
 
     <TextView
         android:id="@+id/textView12"
@@ -88,8 +86,6 @@
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toTopOf="@+id/login"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView16"
-        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/lock_ic" />
 
     <TextView

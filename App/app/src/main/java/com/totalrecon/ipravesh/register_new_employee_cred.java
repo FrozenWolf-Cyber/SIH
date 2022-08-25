@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,9 +39,7 @@ public class register_new_employee_cred extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_newemployee_cred_new);
 
@@ -178,7 +175,44 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                             if (resp.equals(json_rec)) {
                                                                 write_data("username", user_name);
                                                                 write_data("password", pass_word);
+                                                                String emplno = read_data("emplno");
+                                                                String upload_URL = "https://sih-smart-attendance.herokuapp.com/send_otp";
+                /*
+                    send emp_no to server,
+                    server generates otp and sends to the employee's email_id
+                 */
 
+                                                                // Log.i("Parameters : ", emplno);
+                                                                VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+                                                                    @Override
+                                                                    public void onResponse(NetworkResponse response) {
+                                                                        try {
+
+                                                                            String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                                                                            json_rec.replaceAll("\\P{Print}", "");
+                                                                            String resp1 = "YES";
+                                                                            String resp2 = "NO";
+                                                                            Log.i("RESPONSE", json_rec);
+
+                                                                        } catch (UnsupportedEncodingException e) {
+                                                                            e.printStackTrace();
+                                                                        }
+                                                                    }
+                                                                }, new Response.ErrorListener() {
+                                                                    @Override
+                                                                    public void onErrorResponse(VolleyError error) {
+                                                                        error.printStackTrace();
+                                                                    }
+                                                                }) {
+                                                                    @Override
+                                                                    protected Map<String, String> getParams() {
+                                                                        Map<String, String> params = new HashMap<>();
+                                                                        params.put("emp_no", emplno );
+                                                                        return params;
+                                                                    }
+                                                                };
+                                                                VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+                                                                Log.i("ollaala","lalala");
 
                                                                 // all details verified successfully
                                                                 Intent i = new Intent(register_new_employee_cred.this, otp_verification.class);
@@ -196,8 +230,6 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                 }, new Response.ErrorListener() {
                                                     @Override
                                                     public void onErrorResponse(VolleyError error) {
-                                                        loadingDialog.dismissDialog();
-                                                        show_error("Server Error");
                                                         error.printStackTrace();
                                                     }
                                                 }) {
@@ -224,8 +256,6 @@ public class register_new_employee_cred extends AppCompatActivity {
                             }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    loadingDialog.dismissDialog();
-                                    show_error("Server Error");
                                     error.printStackTrace();
                                 }
                             }) {
@@ -243,7 +273,7 @@ public class register_new_employee_cred extends AppCompatActivity {
                             // starting finished activity
                             //startActivity(i);
                         }
-                    }, 2000);
+                    }, 4000);
 
 
                     // check_emp_no
@@ -413,23 +443,5 @@ public class register_new_employee_cred extends AppCompatActivity {
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
         myEdit.putString(filename, data);
         myEdit.commit();
-    }
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void onBackPressed(){
-        //super.onBackPressed();
-        Intent a = new Intent(register_new_employee_cred.this, LoginActivity.class);
-        startActivity(a);
     }
 }

@@ -3,71 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <Button
-        android:id="@+id/send"
-        android:layout_width="354dp"
-        android:layout_height="49dp"
-        android:layout_gravity="start"
-        android:layout_marginTop="108dp"
-        android:background="@drawable/rounded_button"
-        android:enabled="true"
-        android:fontFamily="@font/mulishbold"
-        android:text="Send OTP"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/otp"
-        tools:text="Send OTP" />
-
-    <Button
-        android:id="@+id/next"
-        android:layout_width="354dp"
-        android:layout_height="49dp"
-        android:layout_gravity="start"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/rounded_button"
-        android:enabled="true"
-        android:fontFamily="@font/mulishbold"
-        android:text="Validate"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/send"
-        tools:text="Validate" />
-
-    <EditText
-        android:id="@+id/otp"
-        android:layout_width="319dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="60dp"
-        android:fontFamily="@font/mulishregular"
-        android:gravity="center_horizontal"
-        android:hint="Enter OTP"
-        android:imeActionLabel="@string/action_sign_in_short"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView37" />
+    android:layout_height="match_parent"
+    android:background="@color/blue">
 
     <TextView
         android:id="@+id/textView37"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="28dp"
         android:fontFamily="@font/mulishregular"
         android:gravity="center_horizontal"
         android:text="Please enter the OTP received\nin your registered email address."
         android:textAllCaps="false"
+        android:textColor="#EFE9E9"
+        android:textColorLink="#F3EBEB"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.65"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView36" />
 
@@ -78,21 +30,89 @@
         android:layout_marginTop="28dp"
         android:fontFamily="@font/mulishsemibold"
         android:text="OTP Verification"
+        android:textColor="#F6EFEF"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/resend_otp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="RESEND OTP"
-        android:textColor="@color/blue"
+    <androidx.cardview.widget.CardView
+        android:layout_width="406dp"
+        android:layout_height="444dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.86"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.453" />
+        android:background="@drawable/round_card"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CardView"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/otp"
+                android:layout_width="319dp"
+                android:layout_height="44dp"
+                android:fontFamily="@font/mulishregular"
+                android:gravity="center_horizontal"
+                android:hint="Enter OTP"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:selectAllOnFocus="true"
+                app:layout_constraintBottom_toTopOf="@+id/resend_otp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.505"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.417" />
+
+            <Button
+                android:id="@+id/next"
+                android:layout_width="354dp"
+                android:layout_height="49dp"
+                android:layout_gravity="start"
+                android:layout_marginBottom="84dp"
+                android:background="@drawable/rounded_button"
+                android:enabled="true"
+                android:fontFamily="@font/mulishbold"
+                android:text="Validate"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.692"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Validate" />
+
+            <TextView
+                android:id="@+id/resend_otp"
+                android:layout_width="121dp"
+                android:layout_height="36dp"
+                android:layout_marginBottom="56dp"
+                android:gravity="center"
+                android:text="RESEND OTP"
+                android:textColor="@color/blue"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/next"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.501"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/textView38"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Didn't recieve an OTP?"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/resend_otp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/otp"
+                app:layout_constraintVertical_bias="0.787" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
