@@ -306,7 +306,7 @@ public class geoActivity extends AppCompatActivity {
                         if (dis < 0.1 + zero_error) {
                             write_data("latitude" , Double.toString(latitude));
                             write_data("longitude" , Double.toString(longitude));
-                                Intent i = new Intent(geoActivity.this, cameraActivity.class);
+                                Intent i = new Intent(geoActivity.this, CameraLiveActivity.class);
                                 startActivity(i);
 
                             // send_log(Double.toString(latitude), Double.toString(longitude));

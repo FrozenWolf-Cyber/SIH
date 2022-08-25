@@ -154,7 +154,7 @@ public class CameraLiveActivity extends AppCompatActivity {
 
     int turns = 2;
     int blinks = 3;
-    int ACTION_TIME_ELAPSED = 3000;
+    int ACTION_TIME_ELAPSED = 10000;
     int time = ACTION_TIME_ELAPSED;
     String[] turn_actions_possible = {"LEFT", "RIGHT"};
     String chosen_action = null;
@@ -191,6 +191,9 @@ public class CameraLiveActivity extends AppCompatActivity {
             public void onFinish() {
                 timer.setText("try again");
                 time = ACTION_TIME_ELAPSED;
+                Intent j = new Intent(CameraLiveActivity.this, check_status.class);
+                startActivity(j);
+                finish();
             }
 
         }.start();
@@ -257,9 +260,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                 time = ACTION_TIME_ELAPSED;
                 start_action = true;
 
-                Intent j = new Intent(CameraLiveActivity.this, check_status.class);
-                startActivity(j);
-                finish();
+
             }
 
         }.start();
@@ -359,12 +360,12 @@ public class CameraLiveActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(List<Face> faces) {
                                                 float rightEyeOpenProb = -1;
-                                                if (faces.size()>1){
-                                                    show_message("MORE THAN ONE FACE IN THE FRAME");
-                                                    Intent i = new Intent(CameraLiveActivity.this, check_status.class);
-                                                    startActivity(i);
-                                                    finish();
-                                                }
+//                                                if (faces.size()>1){
+//                                                    show_message("MORE THAN ONE FACE IN THE FRAME");
+//                                                    Intent i = new Intent(CameraLiveActivity.this, check_status.class);
+//                                                    startActivity(i);
+//                                                    finish();
+//                                                }
 
                                                 if (start_action) {
                                                     if (timer_activated == false){
@@ -380,12 +381,16 @@ public class CameraLiveActivity extends AppCompatActivity {
                                                             Random random = new Random();
                                                             chosen_action = turn_actions_possible[random.nextInt(turn_actions_possible.length)];
                                                             commands.setText("TURN "+chosen_action);
+                                                            timer_activated = true;
+                                                            Log.i("TURN","");
 
                                                         }
                                                         else{
                                                             blinks--;
                                                             chosen_action = "BLINK";
                                                             commands.setText("BLINK ONCE");
+                                                            timer_activated = true;
+                                                            Log.i("BLINK","");
                                                         }
                                                     }
                                                     if (faces.size() != 0) {

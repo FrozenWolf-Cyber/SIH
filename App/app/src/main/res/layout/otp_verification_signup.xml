@@ -7,7 +7,7 @@
     android:background="@color/blue">
 
     <TextView
-        android:id="@+id/textView37"
+        android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
