@@ -27,10 +27,4 @@
     <style name="Theme.FaceRecognition.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.FaceRecognition.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-    <style name="ShapeAppearanceOverlay.CardView" parent="">
-    <item name="cornerFamilyTopLeft">rounded</item>
-    <item name="cornerFamilyBottomRight">rounded</item>
-    <item name="cornerSizeBottomLeft">30%</item>
-    <item name="cornerSizeBottomRight">30%</item>
-    </style>
 </resources>

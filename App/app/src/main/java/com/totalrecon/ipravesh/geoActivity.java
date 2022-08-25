@@ -83,7 +83,6 @@ public class geoActivity extends AppCompatActivity {
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(2000);
-        locationRequest.setSmallestDisplacement(10);
 
         getCurrentLocation();
 
@@ -301,7 +300,7 @@ public class geoActivity extends AppCompatActivity {
                         Log.i("RESPONSE", dis + "\n" + latitude + "\n" + longitude);
 
                         // dis is in km
-                        double zero_error = 30 * (0.001);
+                        double zero_error = 10 * (0.001);
                         if (dis < 0.1 + zero_error) {
                             send_log(Double.toString(latitude), Double.toString(longitude));
                             // send the log status with location to server
@@ -451,10 +450,17 @@ public class geoActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Exit();
                 finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void Exit(){
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
     }
 
 }
