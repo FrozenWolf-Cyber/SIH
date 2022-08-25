@@ -10,38 +10,41 @@
         android:id="@+id/textView35"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
         android:fontFamily="@font/mulishextrabold"
-        android:text="Notification"
+        android:text="Notifications"
         android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.469"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.064" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
-        android:layout_width="345dp"
-        android:layout_height="109dp"
+        android:id="@+id/cardView2"
+        android:layout_width="356dp"
+        android:layout_height="47dp"
         android:layout_marginBottom="140dp"
+        app:cardBackgroundColor="@color/blue"
         app:cardCornerRadius="20dp"
-        app:cardBackgroundColor="@android:color/holo_orange_light"
         app:layout_constraintBottom_toTopOf="@+id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView35"
         app:layout_constraintVertical_bias="0.18">
 
+        <ImageView
+            android:id="@+id/imageView22"
+            android:layout_width="51dp"
+            android:layout_height="36dp"
+            app:srcCompat="@drawable/bellringing" />
+
         <TextView
             android:id="@+id/textView36"
-            android:layout_width="match_parent"
-            android:layout_height="61dp"
-            android:layout_marginTop="22dp"
-            android:fontFamily="@font/soraregular"
-            android:text=" Welcome to GAIL"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            android:textStyle="italic" />
+            android:layout_width="345dp"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/mulishregular"
+            android:gravity="right"
+            android:text=" Welcome to I-Pravesh!"
+            android:textSize="24sp" />
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
