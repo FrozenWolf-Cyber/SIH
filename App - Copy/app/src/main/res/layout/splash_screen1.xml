@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_screen">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="325dp"
+        android:layout_height="130dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="260dp"
+        android:background="@drawable/ip_logo_splash"
+        android:foregroundGravity="center"/>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="402dp"
+        android:layout_marginBottom="265dp"
+        android:fontFamily="@font/mulishregular"
+        android:gravity="bottom"
+        android:layout_centerHorizontal="true"
+        android:text="Total Recon - NIT Trichy"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>
