@@ -157,6 +157,8 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                 }, new Response.ErrorListener() {
                                                     @Override
                                                     public void onErrorResponse(VolleyError error) {
+                                                        loadingDialog.dismissDialog();
+                                                        show_error("server error");
                                                         error.printStackTrace();
                                                     }
                                                 }) {
@@ -183,6 +185,8 @@ public class register_new_employee_cred extends AppCompatActivity {
                             }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
+                                    loadingDialog.dismissDialog();
+                                    show_error("server error");
                                     error.printStackTrace();
                                 }
                             }) {
