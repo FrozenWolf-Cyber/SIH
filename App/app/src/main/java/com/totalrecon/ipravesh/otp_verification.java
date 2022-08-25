@@ -3,12 +3,14 @@ package com.totalrecon.ipravesh;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,9 +49,11 @@ public class otp_verification extends AppCompatActivity {
         resend_button =  findViewById(R.id.resend_otp);
         otp_text=(EditText) findViewById(R.id.otp);
 
-        // by default send -> enable , validate -> disable
+        // by default send -> enable , validate -> disable , resend -> disable
         send_button.setEnabled(true);
         next_button.setEnabled(false);
+        resend_button.setEnabled(false);
+        resend_button.setTextColor(Color.GRAY);
 
         next_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,9 +61,12 @@ public class otp_verification extends AppCompatActivity {
 
                 // operation when the button is clicked...
 
-                // make send -> enable , validate -> disable
-                send_button.setEnabled(true);
-                next_button.setEnabled(false);
+                // make send -> enable , validate -> disable , resend -> false
+
+                send_button.setEnabled(false);
+                next_button.setEnabled(true);
+                resend_button.setEnabled(true);
+                resend_button.setTextColor(Color.BLUE);
 
                 otp = otp_text.getText().toString();
                 String emplno = read_data("emplno");
@@ -110,9 +117,12 @@ public class otp_verification extends AppCompatActivity {
             public void onClick(View view) {
 
                 // send_button is clicked...
-                // make send -> disable , validate -> enable
+                // make send -> disable , validate -> enable , resend -> enable
                 send_button.setEnabled(false);
                 next_button.setEnabled(true);
+                resend_button.setEnabled(true);
+                resend_button.setTextColor(Color.BLUE);
+
 
                 String emplno = read_data("emplno");
                 String upload_URL = "https://sih-smart-attendance.herokuapp.com/send_otp";
@@ -159,9 +169,9 @@ public class otp_verification extends AppCompatActivity {
 
                 // resend_button is clicked...
                 // only post request to be done .
-
+                Log.i("response" , "click");
                 String emplno = read_data("emplno");
-                String upload_URL = "https://sih-smart-attendance.herokuapp.com/resend_otp";
+                String upload_URL = "https://sih-smart-attendance.herokuapp.com/send_otp";
                 /*
                     send emp_no to server,
                     server generates otp and sends to the employee's email_id
@@ -178,6 +188,7 @@ public class otp_verification extends AppCompatActivity {
                             String resp1 = "YES";
                             String resp2 = "NO";
                             Log.i("RESPONSE", json_rec);
+                            show_toast("OTP has been resend to your email!");
 
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
@@ -216,7 +227,10 @@ public class otp_verification extends AppCompatActivity {
         alert.setCanceledOnTouchOutside(false);
         alert.show();
     }
-
+    public void show_toast(String s)
+    {
+        Toast.makeText(getApplicationContext(),""+s, Toast.LENGTH_LONG).show();
+    }
     public String read_data(String filename)
     {
         SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
