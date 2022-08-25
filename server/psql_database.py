@@ -1,8 +1,6 @@
 import databases
 import sqlalchemy
-import random
-import string
-import pickle
+import datetime
 
 def convert_str_to_date(x):
     temp = x.split('@')
@@ -14,6 +12,7 @@ class Database:
  
         self.database = databases.Database(DATABASE_URL)
         self.metadata = sqlalchemy.MetaData()
+        self.otp_expiry = 5 # minutes
 
         self.engine = sqlalchemy.create_engine(DATABASE_URL)
         self.metadata.create_all(self.engine)
@@ -77,6 +76,13 @@ class Database:
                           PRIMARY KEY (emp_no));
         ''')
 
+        await self.database.execute('''CREATE TABLE IF NOT EXISTS OTP (
+                          emp_no VARCHAR(100),
+                          otp VARCHAR (10),
+                          creation TIMESTAMP);
+        
+        ''')
+
         await self.database.execute_many("INSERT INTO GEO_LOCATION (branch_name , latitude , longitude) SELECT * FROM (SELECT :branch_name , :latitude , :longitude) AS tmp WHERE NOT EXISTS (SELECT branch_name FROM GEO_LOCATION WHERE branch_name = :branch_name) LIMIT 1;", self.loc_database)
         
         # sample = pickle.load(open('employee_sample.pkl','rb')) 
@@ -128,6 +134,48 @@ class Database:
                 break
 
         return exist
+
+    async def get_mail_id(self, emp_no):
+        details = None
+
+        print("SELECT mail_id FROM EMPLOYEE_DETAILS WHERE emp_no = '%s'" % (emp_no,), flush=True)
+        for i in await self.database.fetch_all("SELECT mail_id FROM EMPLOYEE_DETAILS WHERE emp_no = '%s'" % (emp_no,)):
+            i = tuple(i.values())
+            details = i
+
+        details = list(details)
+
+        return details[0]
+
+
+    async def save_otp(self, emp_no, otp):
+        await self.database.execute("INSERT INTO OTP (emp_no , otp, creation) VALUES ('%s', '%s', current_timestamp)" % (emp_no, str(otp)))
+
+        return "DONE"
+
+
+    async def check_otp(self, emp_no, otp):
+        await self.clear_otp()
+
+        r = None
+        for i in await self.database.fetch_all("SELECT emp_no, otp, creation  FROM OTP WHERE emp_no = '%s' AND otp = '%s'" % (emp_no, otp)):
+            r = tuple(i.values())
+            break
+
+        if r is not None:
+            await self.database.execute("DELETE FROM OTP WHERE emp_no = '%s'" % (emp_no))
+            return True
+
+        else:
+            return False
+
+
+    async def clear_otp(self):
+        await self.database.execute("DELETE FROM OTP WHERE DATE_PART('minute', CURRENT_TIMESTAMP- creation) >= %s;" % (self.otp_expiry,))
+
+
+
+
 
 
     async def check_master_unique_data(self, data):  #(mail_id, contact no)
