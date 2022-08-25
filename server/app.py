@@ -174,7 +174,13 @@ async def send_otp(
 
     mailid = await mydb.get_mail_id(emp_no)
     mailid = encryptor.AES_decrypt(mailid)
-    otp = messenger.send_otp(mailid)
+
+    try:
+        otp = messenger.send_otp(mailid)
+    except:
+        messenger = mailman()
+        otp = messenger.send_otp(mailid)
+
     await mydb.save_otp(emp_no, otp)
 
     return "SENT"
