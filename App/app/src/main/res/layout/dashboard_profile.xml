@@ -9,14 +9,16 @@
         android:id="@+id/nav_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:showAsAction="always|withText"
         app:itemBackground="@color/gray_strong"
         app:itemIconTint="@color/gray"
         app:labelVisibilityMode="unlabeled"
-        android:showAsAction="always|withText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:menu="@menu/bottom_nav_menu" />
 
     <TextView
@@ -31,30 +33,68 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView13"
-        android:layout_width="186dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/image"
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imageView13"-->
+    <!--        android:layout_width="186dp"-->
+    <!--        android:layout_height="150dp"-->
+    <!--        android:layout_marginTop="20dp"-->
+    <!--        android:background="@drawable/image"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.497"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/textView31"-->
+    <!--        app:srcCompat="@drawable/face_icon2" />-->
+
+    <!--        app:layout_constraintTop_toBottomOf="@+id/imageView13" />-->
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/view2"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="4dp"
+        android:elevation="12dp"
+        app:cardCornerRadius="250dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView31"
-        app:srcCompat="@drawable/face_icon2" />
+        app:layout_constraintVertical_bias="0.196">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView13"
+                android:layout_width="206dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:background="@drawable/image"
+                android:paddingBottom="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.1"
+                app:srcCompat="@drawable/face_icon2" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="436dp"
         android:fontFamily="@font/sorabold"
         android:text="Full Name"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView13" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/designation"
@@ -66,35 +106,40 @@
         android:text="Designation"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.475"
+        app:layout_constraintHorizontal_bias="0.483"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="408dp"
         android:layout_height="347dp"
         app:layout_constraintBottom_toTopOf="@+id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/designation">
+        app:layout_constraintTop_toBottomOf="@+id/designation"
+        app:layout_constraintVertical_bias="0.389">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="-8dp">
 
             <ImageView
                 android:id="@+id/imageView14"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="44dp"
+                android:layout_marginStart="52dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginBottom="16dp"
                 app:layout_column="0"
                 app:layout_constraintBottom_toTopOf="@+id/imageView15"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0"
+                app:layout_constraintVertical_bias="0.619"
                 app:layout_row="0"
                 app:srcCompat="@drawable/person"
                 app:tint="@color/blue" />
@@ -103,8 +148,8 @@
                 android:id="@+id/gender"
                 android:layout_width="275dp"
                 android:layout_height="39dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="36dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
                 android:fontFamily="@font/soramedium"
                 android:gravity="center"
                 android:text="TextView"
@@ -118,8 +163,8 @@
                 android:id="@+id/imageView20"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="44dp"
-                android:layout_marginBottom="72dp"
+                android:layout_marginStart="52dp"
+                android:layout_marginBottom="80dp"
                 android:foregroundGravity="center"
                 app:layout_column="0"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -132,8 +177,8 @@
                 android:id="@+id/imageView17"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="44dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginStart="52dp"
+                android:layout_marginBottom="20dp"
                 app:layout_column="0"
                 app:layout_constraintBottom_toTopOf="@+id/imageView20"
                 app:layout_constraintStart_toStartOf="parent"
@@ -145,8 +190,8 @@
                 android:id="@+id/imageView16"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="44dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginStart="52dp"
+                android:layout_marginBottom="8dp"
                 app:layout_column="0"
                 app:layout_constraintBottom_toTopOf="@+id/imageView17"
                 app:layout_constraintStart_toStartOf="parent"
@@ -158,8 +203,8 @@
                 android:id="@+id/imageView15"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="44dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginStart="52dp"
+                android:layout_marginBottom="16dp"
                 app:layout_column="0"
                 app:layout_constraintBottom_toTopOf="@+id/imageView16"
                 app:layout_constraintStart_toStartOf="parent"
@@ -172,16 +217,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:backgroundTint="#ff0000"
                 android:text="LOGOUT"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.501"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/eno"
                 android:layout_width="275dp"
                 android:layout_height="39dp"
-                android:layout_marginEnd="36dp"
+                android:layout_marginEnd="24dp"
                 android:layout_marginBottom="4dp"
                 android:fontFamily="@font/soramedium"
                 android:gravity="center"
@@ -190,14 +237,14 @@
                 app:layout_constraintBottom_toTopOf="@+id/email"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/gender"
-                app:layout_constraintVertical_bias="0.607" />
+                app:layout_constraintVertical_bias="0.6" />
 
             <TextView
                 android:id="@+id/email"
                 android:layout_width="275dp"
                 android:layout_height="39dp"
-                android:layout_marginEnd="36dp"
-                android:layout_marginBottom="17dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="12dp"
                 android:fontFamily="@font/soramedium"
                 android:gravity="center"
                 android:text="TextView"
@@ -209,8 +256,8 @@
                 android:id="@+id/phone"
                 android:layout_width="275dp"
                 android:layout_height="39dp"
-                android:layout_marginEnd="36dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="20dp"
                 android:fontFamily="@font/soramedium"
                 android:gravity="center"
                 android:text="TextView"
@@ -222,8 +269,8 @@
                 android:id="@+id/office"
                 android:layout_width="275dp"
                 android:layout_height="39dp"
-                android:layout_marginEnd="36dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
                 android:fontFamily="@font/soramedium"
                 android:gravity="center"
                 android:text="TextView"

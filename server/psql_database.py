@@ -7,7 +7,7 @@ def convert_str_to_date(x):
     return '-'.join(temp[0].split('-')[::-1]) + '@' + temp[1]
 
 class Database:
-    def __init__(self,host,user,passwd,database):
+    def __init__(self,host,user,passwd,database, encryptor):
         DATABASE_URL = f'postgresql+psycopg2://{user}:{passwd}@{host}:5432/{database}'
  
         self.database = databases.Database(DATABASE_URL)
@@ -22,11 +22,13 @@ class Database:
                            {'branch_name':'Office2', 'latitude':'19.0760', 'longitude':'72.8777'},
                            {'branch_name':'Office3', 'latitude':'28.7041', 'longitude':'77.1025'},
                            {'branch_name':'Office4', 'latitude': '22.5726','longitude': '88.3639'},
-                           {'branch_name':'Office5', 'latitude': '13.0463', 'longitude': '80.1981'}
+                           {'branch_name':'Office5', 'latitude': '13.0463', 'longitude': '80.1981'},
+                           {'branch_name':'Office6', 'latitude': '28.4631185', 'longitude':'77.4981879'}
                           ]
 
+        self.encryptor = encryptor
     
-    async def create(self, encryptor):
+    async def create(self):
         await self.database.execute('''CREATE TABLE IF NOT EXISTS EMPLOYEE_DETAILS (
                           emp_no VARCHAR(100) UNIQUE ,
                           name VARCHAR(100) NOT NULL ,
@@ -51,6 +53,7 @@ class Database:
                           user_name VARCHAR(100) UNIQUE ,
                           password VARCHAR(100) NOT NULL ,
                           emp_no VARCHAR(100) UNIQUE ,
+                          mobileid VARCHAR(100) ,
                           PRIMARY KEY (emp_no));
         ''')
 
@@ -78,9 +81,20 @@ class Database:
 
         await self.database.execute('''CREATE TABLE IF NOT EXISTS OTP (
                           emp_no VARCHAR(100),
-                          otp VARCHAR (10),
+                          otp VARCHAR (100),
                           creation TIMESTAMP);
         
+        ''')
+
+        await self.database.execute('''CREATE TABLE IF NOT EXISTS VALIDATION ( 
+                          user_name VARCHAR(100) UNIQUE ,
+                          password VARCHAR(100) NOT NULL ,
+                          emp_no VARCHAR(100) UNIQUE ,
+                          embed1 text[],
+                          embed2 text[],
+                          embed3 text[],
+                          mobileid VARCHAR(100) ,
+                          PRIMARY KEY (emp_no));
         ''')
 
         await self.database.execute_many("INSERT INTO GEO_LOCATION (branch_name , latitude , longitude) SELECT * FROM (SELECT :branch_name , :latitude , :longitude) AS tmp WHERE NOT EXISTS (SELECT branch_name FROM GEO_LOCATION WHERE branch_name = :branch_name) LIMIT 1;", self.loc_database)
@@ -92,15 +106,16 @@ class Database:
                           {'emp_no': '3', 'name': 'Selva', 'mail_id': 'snsn010212@gmail.com', 'designation': 'APP', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9003299917'},
                           {'emp_no': '4', 'name': 'Ashwanth', 'mail_id': 'ashwanth064@gmail.com', 'designation': 'APP', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9940497154'},
                           {'emp_no': '5', 'name': 'Kavimalar', 'mail_id': 'kavimalar2508@gmail.com', 'designation': 'APP', 'gender': 'F', 'branch_name': 'Office6', 'contact_no': '6385768683'},
-                          {'emp_no': '6', 'name': 'Venkatesh', 'mail_id': 'blackvenky21@gmail.com', 'designation': 'WEB', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9543879507'},
+                        #   {'emp_no': '6', 'name': 'Venkatesh', 'mail_id': 'blackvenky21@gmail.com', 'designation': 'WEB', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9543879507'},
                           
                           ]
 
+        
         for i in range(len(self.team_data)):
             a = list(self.team_data[i].keys())
             a.remove('emp_no')
             for j in a:
-                self.team_data[i][j] = encryptor.AES_encrypt(self.team_data[i][j])
+                self.team_data[i][j] = self.encryptor.AES_encrypt(self.team_data[i][j])
                 
 
         await self.database.execute_many("INSERT INTO EMPLOYEE_DETAILS (emp_no, name, mail_id, designation, gender, branch_name, contact_no) SELECT * FROM (SELECT :emp_no, :name, :mail_id, :designation, :gender, :branch_name, :contact_no) AS tmp WHERE NOT EXISTS (SELECT emp_no FROM EMPLOYEE_DETAILS WHERE emp_no = :emp_no OR mail_id = :mail_id) LIMIT 1;", self.team_data)
@@ -138,7 +153,6 @@ class Database:
     async def get_mail_id(self, emp_no):
         details = None
 
-        print("SELECT mail_id FROM EMPLOYEE_DETAILS WHERE emp_no = '%s'" % (emp_no,), flush=True)
         for i in await self.database.fetch_all("SELECT mail_id FROM EMPLOYEE_DETAILS WHERE emp_no = '%s'" % (emp_no,)):
             i = tuple(i.values())
             details = i
@@ -181,12 +195,13 @@ class Database:
     async def check_master_unique_data(self, data):  #(mail_id, contact no)
         check = True
         # d = await self.database.execute()
-        for i in await self.database.fetch_all(f"SELECT mail_id , contact_no FROM EMPLOYEE_DETAILS WHERE contact_no = '{data[1]}' OR mail_id = '{data[0]}'"):
+        for i in await self.database.fetch_all(f"SELECT mail_id , contact_no FROM EMPLOYEE_DETAILS"):
             #mail_id , user_nam
             i = tuple(i.values())
-            if data[0] == i[0] or data[1] == i[1]:
+            if data[0] == self.encryptor.AES_decrypt(i[0]) or data[1] == self.encryptor.AES_decrypt(i[1]):
                 check = False
                 break
+
         return check
 
 
@@ -203,8 +218,8 @@ class Database:
 
 
     async def add_db(self, data):
-        user_name, password, emp_no, embed1, embed2, embed3 = data
-        await self.database.execute("INSERT INTO USER_LOGIN (user_name , password, emp_no) VALUES ('%s', '%s', '%s')" % (user_name, password, emp_no))
+        user_name, password, emp_no, mobileid, embed1, embed2, embed3 = data
+        await self.database.execute("INSERT INTO USER_LOGIN (user_name , password, emp_no, mobileid) VALUES ('%s', '%s', '%s', '%s')" % (user_name, password, emp_no, mobileid))
         await self.database.execute("INSERT INTO USER_INFO (emp_no, embed1, embed2, embed3) VALUES ('%s', '{%s}', '{%s}', '{%s}')" % (emp_no, ', '.join(embed1), ', '.join(embed2), ', '.join(embed3)))
         return 1
 
@@ -246,41 +261,75 @@ class Database:
         emp_no = None
         if user_name_availablity:
             emp_no = await self.generate_next_employee_no()
-            await self.add_master_db((mail_id, name, designation, emp_no, gender, contact_no, branch_name))
+            await self.add_master_db((self.encryptor.AES_encrypt(mail_id), name, designation, emp_no, gender, self.encryptor.AES_encrypt(contact_no), branch_name))
 
         return  user_name_availablity, emp_no
 
 
 
     async def signup(self, data):
-        user_name, password, emp_no, embed1, embed2, embed3 = data
+        user_name, password, emp_no, mobileid, embed1, embed2, embed3 = data
         user_name_availablity = await self.check_username(user_name)
 
-        await self.add_db((user_name, password, emp_no, embed1, embed2, embed3))
+        await self.add_db((user_name, password, emp_no, mobileid, embed1, embed2, embed3))
 
 
         return  user_name_availablity, emp_no
     
 
-    async def check_credentials(self, data, user_name_or_mail_id): # data = [username/mail_id, password]
+    async def check_mobileid(self, emp_no, mobileid):
+        j = None
+        for j in await self.database.fetch_all("SELECT mobileid FROM USER_LOGIN WHERE emp_no = '%s' AND mobileid = '%s'" % (emp_no, mobileid,) ):
+            j = tuple(j.values()) 
+
+        if j is None:
+            return False
+
+        else:
+            return True
+
+
+    async def reset_mobileid(self, emp_no, mobileid):
+        await self.database.execute("UPDATE USER_LOGIN SET mobileid = 'OPEN' WHERE emp_no = '%s' AND mobileid = '%s'" % (emp_no, mobileid))
+        return "DONE"
+
+    async def admin_reset_mobileid(self, emp_no):
+        await self.database.execute("UPDATE USER_LOGIN SET mobileid = 'OPEN' WHERE emp_no = '%s'" % (emp_no,))
+        return "DONE"
+
+    async def check_credentials(self, data, mobileid): # data = [username/mail_id, password]
+
         id_psswrd = None
         pswrd_incorrect = 0
 
-        if user_name_or_mail_id == 'username' :
-            for i in await self.database.fetch_all("SELECT emp_no , password FROM USER_LOGIN WHERE user_name = '%s' " % (data[0], ) ):
-                i = tuple(i.values())
-                id_psswrd = i
+        j = None
+        for j in await self.database.fetch_all("SELECT mobileid FROM USER_LOGIN WHERE user_name = '%s' " % (data[0], ) ):
+            j = tuple(j.values()) 
 
-        elif user_name_or_mail_id == 'mail_id' :
-            for i in await self.database.fetch_all("SELECT USER_LOGIN.emp_no , USER_LOGIN.password  FROM USER_LOGIN, EMPLOYEE_DETAILS  WHERE EMPLOYEE_DETAILS.mail_id = '%s' AND  USER_LOGIN.emp_no = EMPLOYEE_DETAILS.emp_no" % (data[0],) ):
-                i = tuple(i.values())
-                id_psswrd = i
+        if j is None :
+            return "USERNAME DOESN'T EXIST"
+
+        if j[0] != mobileid:
+            if j[0] == 'OPEN':
+                await self.database.execute("UPDATE USER_LOGIN SET mobileid = '%s' WHERE user_name = '%s'" % (mobileid, data[0]))
+            else:
+                return "ACCOUNT ALREADY SIGNED IN"
+
+        for i in await self.database.fetch_all("SELECT emp_no , password FROM USER_LOGIN WHERE user_name = '%s' " % (data[0], ) ):
+            i = tuple(i.values())
+            id_psswrd = i
+
 
         if id_psswrd is None:
             return "USERNAME/MAILID DOESN'T EXIST"
 
         elif len(id_psswrd) == 2: # emp_no, password
             if id_psswrd[1] == data[1]:
+                # if user_name_or_mail_id == 'username' :
+                #     await self.database.execute("UPDATE USER_LOGIN set loggedin = '1' WHERE username = '%s'" % (data[0],))
+                # else:
+                #     await self.database.execute("UPDATE USER_LOGIN, EMPLOYEE_DETAILS set USER_LOGIN.loggedin = '1' WHERE USER_LOGIN.username = '%s' AND USER_LOGIN.emp_no = EMPLOYEE_DETAILS.emp_no" % (data[0],))
+
                 return id_psswrd[0] # returns emp_no
             else :
                 return  "INCORRECT PASSWORD" # incorrect password
@@ -291,15 +340,9 @@ class Database:
 
 
     async def user_login_details(self, data, type_of_login):
-        user_name_or_mail_id , password = data[0] , data[1]
+        user_name_or_mail_id , password, mobileid = data[0] , data[1], data[2]
 
-        if type_of_login == 'username':
-            response = await self.check_credentials((user_name_or_mail_id, password),'username')
-
-        else:
-            response = await self.check_credentials((user_name_or_mail_id, password),'mail_id')
-
-        return response
+        return await self.check_credentials((user_name_or_mail_id, password), mobileid)
 
 
     async def get_user_details(self, emp_no):

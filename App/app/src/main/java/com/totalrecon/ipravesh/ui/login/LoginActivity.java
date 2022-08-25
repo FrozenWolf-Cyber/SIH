@@ -1,12 +1,17 @@
 package com.totalrecon.ipravesh.ui.login;
+import static androidx.camera.core.CameraX.getContext;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +35,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.totalrecon.ipravesh.register_new_employee_cred;
 import com.totalrecon.ipravesh.threeshot;
+import android.provider.Settings.Secure;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +50,7 @@ public class LoginActivity extends AppCompatActivity{
     private Button login_button;
     private EditText password , username;
     private TextView signup_button;
+
 
     public class idWithEmbeds {
         public String emp_no;
@@ -70,14 +78,23 @@ public class LoginActivity extends AppCompatActivity{
         return s == null ? "" : s;
     }
 
+    public static String getDeviceId(Context context) {
+
+        String id = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        return id;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.existing_user_login_new);
-getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
         login_button = (Button) findViewById(R.id.login);
         signup_button = findViewById(R.id.textView34);
+
+
 
         password = (EditText) findViewById(R.id.password);
         username = (EditText) findViewById(R.id.username);
@@ -158,10 +175,16 @@ getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                                                         Log.i("RESPONSE ", json_rec);
 
                                                         String resp1 = "\"INCORRECT PASSWORD\"";
+                                                        String reps2 = "\"ACCOUNT ALREADY SIGNED IN\"";
                                                         if (json_rec.equals(resp1)) {
                                                             loadingDialog.dismissDialog();
                                                             show_message("Your password is wrong! ");
-                                                        } else {
+                                                        }
+                                                        else if (json_rec.equals(reps2)) {
+                                                            loadingDialog.dismissDialog();
+                                                            show_message("You have already logged in through a device!");
+                                                        }
+                                                        else {
                                                             loadingDialog.dismissDialog();
                                                             show_message("You have been logged in! ");
 
@@ -315,11 +338,14 @@ getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                                             }) {
                                                 @Override
                                                 protected Map<String, String> getParams() {
+//                                                    create_uuid();
                                                     Map<String, String> params = new HashMap<>();
                                                     params.put("user_name_or_mail_id", user);
                                                     params.put("type_of_login", "username");
                                                     params.put("password", pass);
+                                                    params.put("mobileid",getDeviceId(getApplicationContext()));
                                                     return params;
+
                                                 }
                                             };
                                             VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest2);
