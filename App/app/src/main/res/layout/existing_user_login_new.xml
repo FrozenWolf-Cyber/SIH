@@ -27,8 +27,8 @@
         android:id="@+id/password"
         android:layout_width="310dp"
         android:layout_height="34dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginBottom="32dp"
         android:background="@null"
         android:fontFamily="@font/mulishregular"
         android:hint="Enter password"
@@ -36,8 +36,8 @@
         android:imeOptions="actionDone"
         android:inputType="textPassword"
         android:selectAllOnFocus="true"
-        app:layout_constraintStart_toEndOf="@+id/imageView19"
-        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+        app:layout_constraintBottom_toTopOf="@+id/login"
+        app:layout_constraintStart_toEndOf="@+id/imageView19" />
 
     <TextView
         android:id="@+id/textView12"
@@ -54,22 +54,20 @@
 
     <ImageView
         android:id="@+id/imageView18"
-        android:layout_width="27dp"
-        android:layout_height="27dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView16"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12"
-        app:layout_constraintVertical_bias="0.111"
         app:srcCompat="@drawable/user_ic" />
 
     <EditText
         android:id="@+id/username"
-        android:layout_width="319dp"
+        android:layout_width="310dp"
         android:layout_height="34dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="20dp"
         android:background="@null"
         android:fontFamily="@font/mulishregular"
         android:hint="Enter username"
@@ -83,23 +81,23 @@
     <ImageView
         android:id="@+id/imageView19"
         android:layout_width="34dp"
-        android:layout_height="29dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="15dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/login"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView16"
         app:srcCompat="@drawable/lock_ic" />
 
     <TextView
         android:id="@+id/textView16"
         android:layout_width="113dp"
         android:layout_height="28dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:fontFamily="@font/mulishsemibold"
         android:text="Password"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.104"
+        app:layout_constraintHorizontal_bias="0.097"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
@@ -108,17 +106,17 @@
         android:layout_width="354dp"
         android:layout_height="49dp"
         android:layout_gravity="start"
-        android:layout_marginTop="40dp"
+        android:layout_marginBottom="52dp"
         android:background="@drawable/rounded_button"
         android:enabled="true"
         android:fontFamily="@font/mulishbold"
         android:text="Sign In"
         android:textAllCaps="false"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView18"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"
         tools:text="Sign In" />
 
     <ImageView
@@ -137,26 +135,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginBottom="60dp"
         android:fontFamily="@font/mulishregular"
         android:text="Don't have an account?"
         android:textAllCaps="false"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView34"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="60dp"
         android:fontFamily="@font/mulishbold"
         android:text="Sign Up"
         android:textAllCaps="false"
         android:textColor="@color/blue"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/textView18"
-        app:layout_constraintTop_toBottomOf="@+id/login" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView18" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

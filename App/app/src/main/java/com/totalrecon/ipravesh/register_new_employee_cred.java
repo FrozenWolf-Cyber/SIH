@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -86,11 +87,17 @@ public class register_new_employee_cred extends AppCompatActivity {
                 // non-empty inputs given for emp_no , username , password
                 // proceed for post request
                 if (flag == 0) {
-                    // check_emp_no
-                    // Post request for verification
-                    String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_emp_no";
 
-                    VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+
+                    LoadingDialog loadingDialog = new LoadingDialog();
+                    loadingDialog.activity = register_new_employee_cred.this;
+                    loadingDialog.startLoadingDialog();
+
+                    // using handler class to set time delay methods
+                    Handler handler = new Handler();
+
+
+                    handler.postDelayed(new Runnable() {
                         @Override
                         public void onResponse(NetworkResponse response) {
                             try {
@@ -128,50 +135,195 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                     } else {
                                                         show_error("This username is already taken! Please enter another username.");
                                                     }
+                        public void run() {
 
-                                                } catch (UnsupportedEncodingException e) {
-                                                    e.printStackTrace();
-                                                }
+                            // check_emp_no
+                            // Post request for verification
+                            String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_emp_no";
 
+                            VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+                                @Override
+                                public void onResponse(NetworkResponse response) {
+                                    try {
+                                        String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                                        json_rec.replaceAll("\\P{Print}", "");
+                                        JSONArray jArray = new JSONArray(json_rec);
+                                        String existInMaster = jArray.getString(0);
+                                        String existInLogin = jArray.getString(1);
+                                        String resp1 = "YES";
+                                        String resp2 = "NO";
+                                        Log.i("RESPONSE", json_rec);
+                                        if (resp1.equals(existInMaster)) {
+                                            if (resp2.equals(existInLogin)) {
+                                                write_data("emplno", "\"" + emplno + "\"");
+                                                // emp_no is valid
+                                                // check username , password
+
+                                                String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
+                                                VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+                                                    @Override
+                                                    public void onResponse(NetworkResponse response) {
+                                                        try {
+                                                            String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                                                            json_rec.replaceAll("\\P{Print}", "");
+                                                            String resp = "\"NO\"";
+                                                            Log.i("RESPONSE", json_rec);
+                                                            Log.i("resp", resp);
+
+
+                                                            if (resp.equals(json_rec)) {
+                                                                write_data("username", user_name);
+                                                                write_data("password", pass_word);
+
+
+                                                                // all details verified successfully
+                                                                Intent i = new Intent(register_new_employee_cred.this, threeshot.class);
+                                                                startActivity(i);
+                                                            } else {
+                                                                loadingDialog.dismissDialog();
+                                                                show_error("This username is already taken! Please enter another username.");
+                                                            }
+
+                                                        } catch (UnsupportedEncodingException e) {
+                                                            e.printStackTrace();
+                                                        }
+
+                                                    }
+                                                }, new Response.ErrorListener() {
+                                                    @Override
+                                                    public void onErrorResponse(VolleyError error) {
+                                                        error.printStackTrace();
+                                                    }
+                                                }) {
+                                                    @Override
+                                                    protected Map<String, String> getParams() {
+                                                        Map<String, String> params = new HashMap<>();
+                                                        params.put("username", user_name);
+                                                        return params;
+                                                    }
+                                                };
+                                                VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+                                            } else {
+                                                loadingDialog.dismissDialog();
+                                                show_error("You have already been signed up! Please proceed to login.");
                                             }
-                                        }, new Response.ErrorListener() {
-                                            @Override
-                                            public void onErrorResponse(VolleyError error) {
-                                                error.printStackTrace();
-                                            }
-                                        }) {
-                                            @Override
-                                            protected Map<String, String> getParams() {
-                                                Map<String, String> params = new HashMap<>();
-                                                params.put("username", user_name);
-                                                return params;
-                                            }
-                                        };
-                                        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
-                                    } else {
-                                        show_error("You have already been signed up! Please proceed to login.");
+                                        } else {
+                                            loadingDialog.dismissDialog();
+                                            show_error("Sorry, the given employee number is invalid!");
+                                        }
+                                    } catch (UnsupportedEncodingException | JSONException e) {
+                                        e.printStackTrace();
                                     }
-                                } else {
-                                    show_error("Sorry, the given employee number is invalid!");
                                 }
-                            } catch (UnsupportedEncodingException | JSONException e) {
-                                e.printStackTrace();
-                            }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    error.printStackTrace();
+                                }
+                            }) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<>();
+                                    params.put("emp_no", "\"" + emplno + "\"");
+                                    return params;
+                                }
+                            };
+                            VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+
+                            //loadingDialog.dismissDialog();
+                            //Intent i = new Intent(register_new_employee_cred.this, threeshot.class);
+                            // starting finished activity
+                            //startActivity(i);
                         }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() {
-                            Map<String, String> params = new HashMap<>();
-                            params.put("emp_no", "\"" + emplno + "\"");
-                            return params;
-                        }
-                    };
-                    VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+                    }, 4000);
+
+
+                    // check_emp_no
+                    // Post request for verification
+//                    String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_emp_no";
+//
+//                    VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+//                        @Override
+//                        public void onResponse(NetworkResponse response) {
+//                            try {
+//                                String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+//                                json_rec.replaceAll("\\P{Print}", "");
+//                                JSONArray jArray = new JSONArray(json_rec);
+//                                String existInMaster = jArray.getString(0);
+//                                String existInLogin = jArray.getString(1);
+//                                String resp1 = "YES";
+//                                String resp2 = "NO";
+//                                Log.i("RESPONSE", json_rec);
+//                                if (resp1.equals(existInMaster)) {
+//                                    if (resp2.equals(existInLogin)) {
+//                                        write_data("emplno", "\"" + emplno + "\"");
+//                                        // emp_no is valid
+//                                        // check username , password
+//
+//                                        String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
+//                                        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+//                                            @Override
+//                                            public void onResponse(NetworkResponse response) {
+//                                                try {
+//                                                    String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+//                                                    json_rec.replaceAll("\\P{Print}", "");
+//                                                    String resp = "\"NO\"";
+//                                                    Log.i("RESPONSE", json_rec);
+//                                                    Log.i("resp", resp);
+//                                                    if (resp.equals(json_rec)) {
+//                                                        write_data("username", user_name);
+//                                                        write_data("password", pass_word);
+//                                                        // all details verified successfully
+//                                                        Intent i = new Intent(register_new_employee_cred.this, threeshot.class);
+//                                                        startActivity(i);
+//                                                    } else {
+//                                                        show_error("This username is already taken! Please enter another username.");
+//                                                    }
+//
+//                                                } catch (UnsupportedEncodingException e) {
+//                                                    e.printStackTrace();
+//                                                }
+//
+//                                            }
+//                                        }, new Response.ErrorListener() {
+//                                            @Override
+//                                            public void onErrorResponse(VolleyError error) {
+//                                                error.printStackTrace();
+//                                            }
+//                                        }) {
+//                                            @Override
+//                                            protected Map<String, String> getParams() {
+//                                                Map<String, String> params = new HashMap<>();
+//                                                params.put("username", user_name);
+//                                                return params;
+//                                            }
+//                                        };
+//                                        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+//                                    } else {
+//                                        show_error("You have already been signed up! Please proceed to login.");
+//                                    }
+//                                } else {
+//                                    show_error("Sorry, the given employee number is invalid!");
+//                                }
+//                            } catch (UnsupportedEncodingException | JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            error.printStackTrace();
+//                        }
+//                    }) {
+//                        @Override
+//                        protected Map<String, String> getParams() {
+//                            Map<String, String> params = new HashMap<>();
+//                            params.put("emp_no", "\"" + emplno + "\"");
+//                            return params;
+//                        }
+//                    };
+//                    VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+//
                 }
             }
         });
