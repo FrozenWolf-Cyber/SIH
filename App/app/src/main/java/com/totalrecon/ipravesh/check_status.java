@@ -145,8 +145,7 @@ public class check_status extends AppCompatActivity {
         myEdit.commit();
     }
 
-    public void check_status_func()
-    {
+    public void check_status_func() {
         // do a post request
         String emp_no = read_data("emp_no");
         // get image of the user
@@ -161,10 +160,10 @@ public class check_status extends AppCompatActivity {
                             json_rec.replaceAll("\\P{Print}", "");
 
                             String cur_status = json_rec;
-                            Log.i("Response" , "cur_status : "+cur_status);
-                            write_data("check_status" , cur_status);
+                            Log.i("Response", "cur_status : " + cur_status);
+                            write_data("check_status", cur_status);
 
-                            if (cur_status.equals("") || cur_status==null) {
+                            if (cur_status.equals("") || cur_status == null) {
                                 Log.i("inside", "inside");
                                 write_data("check_status", "checkout");
                                 Log.i("After change", read_data("check_status"));
@@ -192,7 +191,7 @@ public class check_status extends AppCompatActivity {
                 },
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
-                        Log.i("RESPONSE", "error : "+error);
+                        Log.i("RESPONSE", "error : " + error);
                     }
                 }) {
             @Override
@@ -203,6 +202,7 @@ public class check_status extends AppCompatActivity {
             }
         };
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(request);
+    }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
