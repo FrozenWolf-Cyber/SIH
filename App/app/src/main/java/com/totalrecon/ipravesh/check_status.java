@@ -29,7 +29,8 @@ public class check_status extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dahsboard_home);
 //        check_both=(Button)findViewById(R.id.buttonKavi);
@@ -149,5 +150,15 @@ public class check_status extends AppCompatActivity{
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
         myEdit.putString(filename, data);
         myEdit.commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
