@@ -5,7 +5,7 @@ from email.message import EmailMessage
 
 class mailman():
     def __init__(self, mailid = 'ipravesh.sih@gmail.com' , password = "xdkatsbalbwimapl"):
-        self.smtp = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        self.smtp = smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=None)
         self.smtp.login(mailid ,password)
         print("LOGGED IN...", flush=True)
         self.allowed = "0123456789"
