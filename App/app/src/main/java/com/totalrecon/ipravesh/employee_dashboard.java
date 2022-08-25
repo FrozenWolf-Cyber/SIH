@@ -86,6 +86,7 @@ public class employee_dashboard extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.Add) {
+                    check_status_func();
                     Intent intent = new Intent(employee_dashboard.this, geoActivity.class);
                     startActivity(intent);
                 }
@@ -302,6 +303,66 @@ public class employee_dashboard extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+    public void check_status_func()
+    {
+        // do a post request
+        String emp_no = read_data("emp_no");
+        // get image of the user
+        String url = "https://sih-smart-attendance.herokuapp.com/check_in_out_status";
+        VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST, url,
+                new Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
+
+                        try {
+                            String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                            json_rec.replaceAll("\\P{Print}", "");
+
+                            String cur_status = json_rec;
+                            Log.i("Response" , "cur_status : "+cur_status);
+                            write_data("check_status" , cur_status);
+
+                            if (cur_status.equals("") || cur_status==null) {
+                                Log.i("inside", "inside");
+                                Log.i("After change", read_data("check_status"));
+                                cur_status = read_data("check_status");
+                            }
+                            if (cur_status.equals("\"CHECKED OUT\"")) {
+
+                                // proceed ...
+                                show_message("Recording your entry attendance now!");
+                                Intent i = new Intent(employee_dashboard.this, geoActivity.class);
+                                startActivity(i);
+
+                            } else {
+                                // proceed ...
+                                show_message("Recording your exit attendance now!");
+                                Intent i = new Intent(employee_dashboard.this, geoActivity.class);
+                                startActivity(i);
+                            }
+                        } catch (Exception e) {
+
+                            Log.i("RESPONSE", "ERROR");
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("RESPONSE", "error : "+error);
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("emp_no", emp_no);
+                return params;
+            }
+        };
+        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(request);
+
+
     }
 
     @Override

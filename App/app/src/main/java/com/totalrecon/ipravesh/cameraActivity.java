@@ -462,7 +462,7 @@ public class cameraActivity extends AppCompatActivity {
 //        log_obj.check_out = "";
 
         String cur_status = read_data("check_status");
-        if (cur_status.equals("checkout")) {
+        if (cur_status.equals("\"CHECKED OUT\"")) {
             log_obj.check_in = strDate;
             log_obj.check_out = "blah-null";
         } else {
@@ -530,30 +530,13 @@ public class cameraActivity extends AppCompatActivity {
         };
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
     }
-
-    public void inverse_check_in_out() {
+    public void inverse_check_in_out(){
         String cur_status = read_data("check_status");
-        if (cur_status.equals("checkin")) {
+        if (cur_status.equals("checkin")){
             write_data("check_status", "checkout");
-        } else {
+        }
+        else {
             write_data("check_status", "checkin");
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Exit();
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    public void Exit(){
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 }
