@@ -82,7 +82,7 @@ public class employee_dashboard extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.Add) {
-                    Intent intent = new Intent(employee_dashboard.this, cameraActivity.class);
+                    Intent intent = new Intent(employee_dashboard.this, geoActivity.class);
                     startActivity(intent);
                 }
                 if (item.getItemId() == R.id.Logs) {

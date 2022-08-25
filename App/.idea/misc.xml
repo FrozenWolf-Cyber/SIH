@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_alerts.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_camera.xml" value="0.14356884057971014" />
         <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_geo.xml" value="0.14356884057971014" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_logd.xml" value="0.12771739130434784" />
         <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_login.xml" value="0.1308876811594203" />
         <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_register.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_signup_final_upload.xml" value="0.1308876811594203" />
@@ -12,6 +14,7 @@
         <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_signup_newemployee_cred.xml" value="0.12" />
         <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_threeshot.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/check_status_layout.xml" value="0.1" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/dahsboard_home.xml" value="0.12771739130434784" />
         <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/dashboard.xml" value="0.18025078369905956" />
         <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/existing_user.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/existing_user_login.xml" value="0.11503623188405797" />
