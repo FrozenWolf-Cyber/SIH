@@ -190,6 +190,7 @@ public class threeshot extends AppCompatActivity {
         // Match the request 'pic id' with requestCode
 
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == pic_id1 && resultCode == RESULT_OK) {
             count_of_times[0] = 0;
             Bitmap photo = (Bitmap) data.getExtras().get("data");
@@ -389,6 +390,13 @@ public class threeshot extends AppCompatActivity {
 
     public void upload_sign_up()
     {
+            LoadingDialog loadingDialog = new LoadingDialog();
+            loadingDialog.activity = threeshot.this;
+            loadingDialog.startLoadingDialog();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
             readSP();
             SharedPreferences sh = getSharedPreferences("EmbedsSharedPref", MODE_PRIVATE);
             String s = sh.getString("json", "");
@@ -415,12 +423,14 @@ public class threeshot extends AppCompatActivity {
                         Log.i("Return from server: ", json_rec);
                         saveEmbedsToSP(user_embeds);
                         clearSP();
+                        loadingDialog.dismissDialog();
                         Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(threeshot.this, LoginActivity.class);
                         startActivity(i);
                         finish();
 
                     } catch (UnsupportedEncodingException e) {
+                        loadingDialog.dismissDialog();
                         e.printStackTrace();
                     }
 
@@ -428,6 +438,8 @@ public class threeshot extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    loadingDialog.dismissDialog();
+                    Toast.makeText(getApplicationContext(), "Server error", Toast.LENGTH_SHORT).show();
                     error.printStackTrace();
                 }
             }) {
@@ -462,6 +474,8 @@ public class threeshot extends AppCompatActivity {
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+                }
+            }, 2000);
     }
 
     public void readSP() {

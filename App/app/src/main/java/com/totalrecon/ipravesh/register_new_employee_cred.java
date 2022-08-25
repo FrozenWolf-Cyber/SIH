@@ -140,7 +140,7 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                                 write_data("username", user_name);
                                                                 write_data("password", pass_word);
 
-
+                                                                loadingDialog.dismissDialog();
                                                                 // all details verified successfully
                                                                 Intent i = new Intent(register_new_employee_cred.this, threeshot.class);
                                                                 startActivity(i);
@@ -200,7 +200,7 @@ public class register_new_employee_cred extends AppCompatActivity {
                             // starting finished activity
                             //startActivity(i);
                         }
-                    }, 4000);
+                    }, 2000);
 
 
                     // check_emp_no
