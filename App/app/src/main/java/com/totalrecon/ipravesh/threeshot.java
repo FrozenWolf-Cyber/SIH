@@ -210,6 +210,9 @@ public class threeshot extends AppCompatActivity {
                         show_error("No face detected! Please try again.");
                         count_of_times[0] -= 1;
                     }
+                    else if(user_embeds.embed1.length == 1) {
+                        show_error("Multiple faces detected! Please try again.");
+                    }
 
                     else {
                         try {
@@ -234,13 +237,13 @@ public class threeshot extends AppCompatActivity {
                                 if (checkbox.isChecked()) {
                                     submit_button.setEnabled(true);
                                 }
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
                                         saveEmbedsToSP(user_embeds);
                                         Log.i("EmbedsSPSave", "Saved to SharedPref");
-                                    }
-                                }, 2000);
+//                                    }
+//                                }, 1500);
                             }
                         } catch (Exception e) {
                             show_error("error " + e);
@@ -264,6 +267,9 @@ public class threeshot extends AppCompatActivity {
                         show_error("No face detected! Please try again.");
                         count_of_times[1] -= 1;
                     }
+                    else if(user_embeds.embed2.length == 1) {
+                        show_error("Multiple faces detected! Please try again.");
+                    }
                     else {
                         try {
                             FileInputStream fin = openFileInput("cur_image");
@@ -286,13 +292,13 @@ public class threeshot extends AppCompatActivity {
                                 if (checkbox.isChecked()) {
                                     submit_button.setEnabled(true);
                                 }
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
                                         saveEmbedsToSP(user_embeds);
                                         Log.i("SPSave", "Saved to SharedPref");
-                                    }
-                                }, 2000);
+//                                    }
+//                                }, 1500);
 
                             }
                         } catch (Exception e) {
@@ -312,10 +318,14 @@ public class threeshot extends AppCompatActivity {
                 public void run() {
                     user_embeds.embed3 = my_model.embeds;
                     Log.i("EMBEDS", Arrays.toString(user_embeds.embed3));
+
                     // Check if no faces detected
                     if(Arrays.toString(user_embeds.embed3).equals("null")) {
                         show_error("No face detected! Please try again.");
                         count_of_times[2] -= 1;
+                    }
+                    else if(user_embeds.embed3.length == 1) {
+                        show_error("Multiple faces detected! Please try again.");
                     }
                     else {
                         try {
@@ -338,13 +348,13 @@ public class threeshot extends AppCompatActivity {
                                 if (checkbox.isChecked()) {
                                     submit_button.setEnabled(true);
                                 }
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
                                         saveEmbedsToSP(user_embeds);
                                         Log.i("SPSave", "Saved to SharedPref");
-                                    }
-                                }, 2000);
+//                                    }
+//                                }, 1500);
                             }
                         } catch (Exception e) {
                             show_error("error " + e);
