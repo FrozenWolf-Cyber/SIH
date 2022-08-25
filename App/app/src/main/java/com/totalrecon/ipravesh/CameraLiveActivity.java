@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -110,6 +111,7 @@ import java.nio.ReadOnlyBufferException;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -118,6 +120,7 @@ public class CameraLiveActivity extends AppCompatActivity {
 
     // Define the pic id
     private static final int pic_id = 121;
+    public boolean turned_left = true;
     private static boolean pic_taken = false;
     public model my_model;
     public float current_emebeds[] = new float[]{1,2,3};
@@ -144,10 +147,21 @@ public class CameraLiveActivity extends AppCompatActivity {
     public int n_closes = 0;
     public boolean closed = false;
     public boolean done = false;
+    public boolean start_action = false;
+    public boolean timer_activated = false;
+    public boolean half_blink = false;
     public Bitmap main_img = null;
+
+    int turns = 2;
+    int blinks = 3;
+    int ACTION_TIME_ELAPSED = 3000;
+    int time = ACTION_TIME_ELAPSED;
+    String[] turn_actions_possible = {"LEFT", "RIGHT"};
+    String chosen_action = null;
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     PreviewView previewView;
+    TextView commands, timer;
     Button camera_switch;
     CameraSelector cameraSelector;
     boolean developerMode=false;
@@ -155,11 +169,34 @@ public class CameraLiveActivity extends AppCompatActivity {
     Context context=CameraLiveActivity.this;
     int cam_face=CameraSelector.LENS_FACING_BACK; //Default Back Camera
 
-
+    CountDownTimer TIMER;
 
     private static int SELECT_PICTURE = 1;
     ProcessCameraProvider cameraProvider;
     private static final int MY_CAMERA_REQUEST_CODE = 100;
+
+    public String checkDigit(int number) {
+        return number <= 9 ? "0" + number : String.valueOf(number);
+    }
+
+    public CountDownTimer generateTimer(){
+
+        return new CountDownTimer(ACTION_TIME_ELAPSED, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                timer.setText("0:"+checkDigit(time));
+                time--;
+            }
+
+            public void onFinish() {
+                timer.setText("try again");
+                time = ACTION_TIME_ELAPSED;
+            }
+
+        }.start();
+
+
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -169,6 +206,9 @@ public class CameraLiveActivity extends AppCompatActivity {
         setContentView(R.layout.camera_live);
         previewView =findViewById(R.id.previewView);
         camera_switch=findViewById(R.id.button3);
+        commands = findViewById(R.id.commands);
+        timer = findViewById(R.id.timer);
+
 
         my_model = new model("mobile_face_net.tflite", CameraLiveActivity.this);
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -205,7 +245,24 @@ public class CameraLiveActivity extends AppCompatActivity {
 
         cameraBind();
 
+        TIMER = new CountDownTimer(ACTION_TIME_ELAPSED, 1000) {
 
+            public void onTick(long millisUntilFinished) {
+                timer.setText("0:"+checkDigit(time));
+                time--;
+            }
+
+            public void onFinish() {
+                timer.setText("try again");
+                time = ACTION_TIME_ELAPSED;
+                start_action = true;
+
+                Intent j = new Intent(CameraLiveActivity.this, check_status.class);
+                startActivity(j);
+                finish();
+            }
+
+        }.start();
 
     }
 
@@ -301,52 +358,110 @@ public class CameraLiveActivity extends AppCompatActivity {
                                         new OnSuccessListener<List<Face>>() {
                                             @Override
                                             public void onSuccess(List<Face> faces) {
-                                                float smileProb = -1;
                                                 float rightEyeOpenProb = -1;
-                                                if(faces.size()!=0) {
+                                                if (faces.size()>1){
+                                                    show_message("MORE THAN ONE FACE IN THE FRAME");
+                                                    Intent i = new Intent(CameraLiveActivity.this, check_status.class);
+                                                    startActivity(i);
+                                                    finish();
+                                                }
 
-                                                    Face face = faces.get(0);
+                                                if (start_action) {
+                                                    if (timer_activated == false){
+                                                        TIMER = generateTimer();
+                                                        if (blinks == 0 && turns == 0){
+                                                            TIMER.cancel();
+                                                            timer_activated = true;
+                                                            do_verification();
 
-                                                        if (face.getRightEyeOpenProbability() != null) {
-                                                            rightEyeOpenProb = face.getRightEyeOpenProbability();
-                                                            if (rightEyeOpenProb > 0.9 && closed == false){
-                                                                n_opens+=1;
-                                                                if (main_img == null) {
-                                                                    Bitmap frame_bmp = toBitmap(mediaImage);
-                                                                    int rot = imageProxy.getImageInfo().getRotationDegrees();
+                                                        }
+                                                        if (blinks<turns){
+                                                            turns--;
+                                                            Random random = new Random();
+                                                            chosen_action = turn_actions_possible[random.nextInt(turn_actions_possible.length)];
+                                                            commands.setText("TURN "+chosen_action);
 
-                                                                    //Adjust orientation of Face
-                                                                    main_img = rotateBitmap(frame_bmp, rot, false, false);
+                                                        }
+                                                        else{
+                                                            blinks--;
+                                                            chosen_action = "BLINK";
+                                                            commands.setText("BLINK ONCE");
+                                                        }
+                                                    }
+                                                    if (faces.size() != 0) {
+
+                                                        Face face = faces.get(0);
+
+                                                        if (chosen_action == "BLINK") {
+                                                            if (face.getRightEyeOpenProbability() != null) {
+                                                                rightEyeOpenProb = face.getRightEyeOpenProbability();
+                                                                if (rightEyeOpenProb > 0.9 && closed == false) {
+                                                                    n_opens += 1;
+                                                                    if (main_img == null) {
+                                                                        Bitmap frame_bmp = toBitmap(mediaImage);
+                                                                        int rot = imageProxy.getImageInfo().getRotationDegrees();
+
+                                                                        //Adjust orientation of Face
+                                                                        main_img = rotateBitmap(frame_bmp, rot, false, false);
+                                                                    }
+                                                                    closed = true;
+
+                                                                    if (half_blink == false){
+                                                                        half_blink = true;
+                                                                    }
+                                                                    else{
+                                                                        half_blink = false;
+                                                                        closed = false;
+                                                                        TIMER.cancel();
+                                                                        timer_activated = false;
+                                                                        time = ACTION_TIME_ELAPSED;
+                                                                    }
+                                                                } else if (rightEyeOpenProb < 0.1 && closed == true) {
+                                                                    closed = false;
+                                                                    n_closes += 1;
                                                                 }
-                                                                closed = true;
-                                                            }
-
-                                                            else if (rightEyeOpenProb < 0.1 && closed == true){
-                                                                closed = false;
-                                                                n_closes+=1;
                                                             }
                                                         }
 
+
+                                                        else if (chosen_action == "LEFT") {
+                                                            if (face.getHeadEulerAngleY() >= 30) {
+                                                                Log.i("U HAVE TURNED LEFT", "");
+                                                                TIMER.cancel();
+                                                                time = ACTION_TIME_ELAPSED;
+                                                                timer_activated = false;
+
+                                                            }
+                                                        }
+
+                                                        else if (chosen_action == "RIGHT") {
+                                                            if (face.getHeadEulerAngleY() <= -30) {
+                                                                Log.i("U HAVE TURNED RIGHT", "");
+                                                                TIMER.cancel();
+                                                                time = ACTION_TIME_ELAPSED;
+                                                                timer_activated = false;
+                                                            }
+
+                                                        }
                                                         // If face tracking was enabled:
                                                         if (face.getTrackingId() != null) {
                                                             int id = face.getTrackingId();
                                                         }
 
 
+                                                        Log.i("X : ", Float.toString(face.getHeadEulerAngleX()));
+                                                        Log.i("Y : ", Float.toString(face.getHeadEulerAngleY()));
+                                                        Log.i("Z : ", Float.toString(face.getHeadEulerAngleZ()));
 
-                                                        Log.i("CLOSES : ", Float.toString(n_closes));
-                                                        Log.i("OPENS : ", Float.toString(n_opens));
-
-                                                        if (n_closes>=2 && done == false){
-                                                            do_verification();
-                                                            done = true;
-                                                        }
+//                                                        if (n_closes >= 2 && done == false) {
+//                                                            do_verification();
+//                                                            done = true;
+//                                                        }
 
 
+                                                    } else {
+                                                    }
 
-                                                }
-                                                else
-                                                {
                                                 }
 
                                             }
@@ -673,6 +788,11 @@ public class CameraLiveActivity extends AppCompatActivity {
         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
         parcelFileDescriptor.close();
         return image;
+    }
+
+    public void show_message(String s)
+    {
+        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
     }
 
 }
