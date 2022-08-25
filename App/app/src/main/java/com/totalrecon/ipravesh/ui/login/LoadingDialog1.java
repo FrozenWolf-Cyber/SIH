@@ -1,14 +1,12 @@
-package com.totalrecon.ipravesh;
+package com.totalrecon.ipravesh.ui.login;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.view.LayoutInflater;
 
-import androidx.fragment.app.Fragment;
-
 import com.totalrecon.ipravesh.R;
 
-public class LoadingDialog {
+public class LoadingDialog1 {
 
     public Activity activity;
     private AlertDialog dialog;
