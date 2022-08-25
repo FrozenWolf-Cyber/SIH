@@ -366,8 +366,6 @@ public class geoActivity extends AppCompatActivity {
         myEdit.commit();
     }
 
-
-
 }
 
 

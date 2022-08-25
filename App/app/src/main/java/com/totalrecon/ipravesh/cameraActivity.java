@@ -460,7 +460,7 @@ public class cameraActivity extends AppCompatActivity {
 //        log_obj.check_out = "";
 
         String cur_status = read_data("check_status");
-        if (cur_status.equals("checkout")) {
+        if (cur_status.equals("\"CHECKED OUT\"")) {
             log_obj.check_in = strDate;
             log_obj.check_out = "blah-null";
         } else {
