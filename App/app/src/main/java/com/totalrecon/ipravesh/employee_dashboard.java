@@ -52,6 +52,10 @@ public class employee_dashboard extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
+
         //clear_data();
         //show_message(show_data());
         super.onCreate(savedInstanceState);
@@ -188,6 +192,7 @@ public class employee_dashboard extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                show_message("Server Error");
                 error.printStackTrace();
             }
         }) {
@@ -221,7 +226,7 @@ public class employee_dashboard extends AppCompatActivity {
                             image.setImageBitmap(bitmap);
 
                         } catch (Exception e) {
-
+                            show_message("Server Error");
                             Log.i("DASHBOARD" , "ERROR");
                             e.printStackTrace();
                         }
@@ -229,6 +234,7 @@ public class employee_dashboard extends AppCompatActivity {
                 },
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
+                        show_message("Server Error");
                         Log.i("DASHBOARD","error");
                     }
                 }){
@@ -296,6 +302,16 @@ public class employee_dashboard extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

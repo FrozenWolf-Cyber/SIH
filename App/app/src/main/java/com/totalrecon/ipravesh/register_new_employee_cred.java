@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,7 +38,9 @@ public class register_new_employee_cred extends AppCompatActivity {
     String user_name, pass_word, confirm_password, emplno;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_newemployee_cred_new);
 
@@ -158,7 +161,7 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                     @Override
                                                     public void onErrorResponse(VolleyError error) {
                                                         loadingDialog.dismissDialog();
-                                                        show_error("server error");
+                                                        show_error("Server Error");
                                                         error.printStackTrace();
                                                     }
                                                 }) {
@@ -186,7 +189,7 @@ public class register_new_employee_cred extends AppCompatActivity {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
                                     loadingDialog.dismissDialog();
-                                    show_error("server error");
+                                    show_error("Server Error");
                                     error.printStackTrace();
                                 }
                             }) {
@@ -354,5 +357,23 @@ public class register_new_employee_cred extends AppCompatActivity {
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
         myEdit.putString(filename, data);
         myEdit.commit();
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onBackPressed(){
+        //super.onBackPressed();
+        Intent a = new Intent(register_new_employee_cred.this, LoginActivity.class);
+        startActivity(a);
     }
 }

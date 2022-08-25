@@ -1,5 +1,6 @@
 package com.totalrecon.ipravesh;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.content.SharedPreferences;
 import android.widget.Button;
@@ -84,6 +86,11 @@ public class threeshot extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_threeshot_new);
@@ -427,6 +434,7 @@ public class threeshot extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    show_message("Server Error");
                     error.printStackTrace();
                 }
             }) {
@@ -485,4 +493,16 @@ public class threeshot extends AppCompatActivity {
         String s1 = sh.getString(filename, "");
         return s1;
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

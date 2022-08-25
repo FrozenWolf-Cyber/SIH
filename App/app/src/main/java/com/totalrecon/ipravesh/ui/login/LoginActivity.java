@@ -1,4 +1,6 @@
 package com.totalrecon.ipravesh.ui.login;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -6,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -71,7 +74,8 @@ public class LoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.existing_user_login_new);
-
+getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
         login_button = (Button) findViewById(R.id.login);
         signup_button = findViewById(R.id.textView34);
 
@@ -116,7 +120,7 @@ public class LoginActivity extends AppCompatActivity{
                     // check_username
 
 
-                    LoadingDialog1 loadingDialog = new LoadingDialog1();
+                    LoadingDialog loadingDialog = new LoadingDialog();
                     loadingDialog.activity = LoginActivity.this;
                     loadingDialog.startLoadingDialog();
 
@@ -211,7 +215,7 @@ public class LoginActivity extends AppCompatActivity{
 
                                                                     } catch (UnsupportedEncodingException e) {
                                                                         loadingDialog.dismissDialog();
-                                                                        show_message("server error");
+                                                                        show_message("Server Error");
                                                                         e.printStackTrace();
                                                                     }
                                                                 }
@@ -220,7 +224,7 @@ public class LoginActivity extends AppCompatActivity{
                                                                 @Override
                                                                 public void onErrorResponse(VolleyError error) {
                                                                     loadingDialog.dismissDialog();
-                                                                    show_message("server error");
+                                                                    show_message("Server Error");
                                                                     error.printStackTrace();
                                                                 }
                                                             }) {
@@ -306,7 +310,7 @@ public class LoginActivity extends AppCompatActivity{
                                                 public void onErrorResponse(VolleyError error) {
                                                     error.printStackTrace();
                                                     loadingDialog.dismissDialog();
-                                                    show_message("server error");
+                                                    show_message("Server Error");
                                                 }
                                             }) {
                                                 @Override
@@ -336,7 +340,7 @@ public class LoginActivity extends AppCompatActivity{
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
                                     loadingDialog.dismissDialog();
-                                    show_message("server error");
+                                    show_message("Server Error");
                                     error.printStackTrace();
                                 }
                             }) {
@@ -585,5 +589,13 @@ public class LoginActivity extends AppCompatActivity{
         a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(a);
     }
-
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
