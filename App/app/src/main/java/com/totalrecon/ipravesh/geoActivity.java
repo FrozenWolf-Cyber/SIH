@@ -300,16 +300,10 @@ public class geoActivity extends AppCompatActivity {
                         if (dis < 0.1 + zero_error) {
                             write_data("latitude" , Double.toString(latitude));
                             write_data("longitude" , Double.toString(longitude));
-
-                            if(read_data("flag").equals("true"))
-                            {
-
-                            }else
-                            {
                                 Intent i = new Intent(geoActivity.this, cameraActivity.class);
                                 startActivity(i);
-                            }
-                            //send_log(Double.toString(latitude), Double.toString(longitude));
+
+                            // send_log(Double.toString(latitude), Double.toString(longitude));
                             // send the log status with location to server
                         } else {
                             display_distance_error();
