@@ -37,6 +37,11 @@ public class logs extends AppCompatActivity {
     BottomNavigationView navView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logd);
         // pie chart
@@ -49,6 +54,8 @@ public class logs extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.Add) {
                     check_status_func();
+                    Intent intent = new Intent(logs.this, geoActivity.class);
+                    startActivity(intent);
                 }
                 if (item.getItemId() == R.id.Alerts) {
                     Intent i = new Intent(logs.this, Alerts.class);
@@ -128,6 +135,7 @@ public class logs extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                show_message("Server Error");
                 error.printStackTrace();
             }
         }) {
@@ -232,6 +240,17 @@ public class logs extends AppCompatActivity {
     }
 
     public void show_message(String s) {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+        // Error due to file writing and other operations
+        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

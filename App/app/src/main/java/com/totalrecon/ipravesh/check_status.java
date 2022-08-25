@@ -41,7 +41,8 @@ public class check_status extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dahsboard_home);
 //        check_both=(Button)findViewById(R.id.buttonKavi);
@@ -86,6 +87,8 @@ public class check_status extends AppCompatActivity {
                 if (item.getItemId() == R.id.Add) {
                     finish();
                     check_status_func();
+                    Intent intent = new Intent(check_status.this, geoActivity.class);
+                    startActivity(intent);
                 }
                 if (item.getItemId() == R.id.Alerts) {
                     finish();
@@ -200,7 +203,13 @@ public class check_status extends AppCompatActivity {
             }
         };
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(request);
-
-
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,5 +1,6 @@
 package com.totalrecon.ipravesh;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.content.SharedPreferences;
 import android.widget.Button;
@@ -88,6 +90,8 @@ public class threeshot extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_threeshot_new);
         // declare all elements
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
 
         my_model = new model("mobile_face_net.tflite", threeshot.this);
         imageView5 = (ImageView)findViewById(R.id.imageView5);
@@ -206,6 +210,9 @@ public class threeshot extends AppCompatActivity {
                         show_error("No face detected! Please try again.");
                         count_of_times[0] -= 1;
                     }
+                    else if(user_embeds.embed1.length == 1) {
+                        show_error("Multiple faces detected! Please try again.");
+                    }
 
                     else {
                         try {
@@ -230,13 +237,13 @@ public class threeshot extends AppCompatActivity {
                                 if (checkbox.isChecked()) {
                                     submit_button.setEnabled(true);
                                 }
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
                                         saveEmbedsToSP(user_embeds);
                                         Log.i("EmbedsSPSave", "Saved to SharedPref");
-                                    }
-                                }, 2000);
+//                                    }
+//                                }, 1500);
                             }
                         } catch (Exception e) {
                             show_error("error " + e);
@@ -260,6 +267,9 @@ public class threeshot extends AppCompatActivity {
                         show_error("No face detected! Please try again.");
                         count_of_times[1] -= 1;
                     }
+                    else if(user_embeds.embed2.length == 1) {
+                        show_error("Multiple faces detected! Please try again.");
+                    }
                     else {
                         try {
                             FileInputStream fin = openFileInput("cur_image");
@@ -282,13 +292,13 @@ public class threeshot extends AppCompatActivity {
                                 if (checkbox.isChecked()) {
                                     submit_button.setEnabled(true);
                                 }
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
                                         saveEmbedsToSP(user_embeds);
                                         Log.i("SPSave", "Saved to SharedPref");
-                                    }
-                                }, 2000);
+//                                    }
+//                                }, 1500);
 
                             }
                         } catch (Exception e) {
@@ -308,10 +318,14 @@ public class threeshot extends AppCompatActivity {
                 public void run() {
                     user_embeds.embed3 = my_model.embeds;
                     Log.i("EMBEDS", Arrays.toString(user_embeds.embed3));
+
                     // Check if no faces detected
                     if(Arrays.toString(user_embeds.embed3).equals("null")) {
                         show_error("No face detected! Please try again.");
                         count_of_times[2] -= 1;
+                    }
+                    else if(user_embeds.embed3.length == 1) {
+                        show_error("Multiple faces detected! Please try again.");
                     }
                     else {
                         try {
@@ -334,13 +348,13 @@ public class threeshot extends AppCompatActivity {
                                 if (checkbox.isChecked()) {
                                     submit_button.setEnabled(true);
                                 }
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
                                         saveEmbedsToSP(user_embeds);
                                         Log.i("SPSave", "Saved to SharedPref");
-                                    }
-                                }, 2000);
+//                                    }
+//                                }, 1500);
                             }
                         } catch (Exception e) {
                             show_error("error " + e);
@@ -429,6 +443,7 @@ public class threeshot extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    show_message("Server Error");
                 }
             }) {
                 @Override
@@ -485,5 +500,15 @@ public class threeshot extends AppCompatActivity {
         SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         String s1 = sh.getString(filename, "");
         return s1;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

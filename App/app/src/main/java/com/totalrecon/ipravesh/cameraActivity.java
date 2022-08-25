@@ -22,6 +22,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.app.Activity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -98,6 +99,8 @@ public class cameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
 
         my_model = new model("mobile_face_net.tflite", cameraActivity.this);
         loadingDialog.activity = cameraActivity.this;
@@ -401,7 +404,6 @@ public class cameraActivity extends AppCompatActivity {
         alertDialog.show();
 
     }
-
     public void display_distance_error() {
         // person not in campus, automatically exit ....
 
@@ -528,7 +530,6 @@ public class cameraActivity extends AppCompatActivity {
         };
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
     }
-
     public void inverse_check_in_out(){
         String cur_status = read_data("check_status");
         if (cur_status.equals("checkin")){
