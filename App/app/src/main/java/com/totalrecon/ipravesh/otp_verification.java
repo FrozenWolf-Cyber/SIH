@@ -66,7 +66,7 @@ public class otp_verification extends AppCompatActivity {
 
                 next_button.setEnabled(true);
                 resend_button.setEnabled(true);
-                
+
                 otp = otp_text.getText().toString();
                 String emplno = read_data("emplno");
                 Log.i("debug",emplno);
