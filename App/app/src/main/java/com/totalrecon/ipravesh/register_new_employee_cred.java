@@ -200,7 +200,7 @@ public class register_new_employee_cred extends AppCompatActivity {
                             // starting finished activity
                             //startActivity(i);
                         }
-                    }, 4000);
+                    }, 2000);
 
 
                     // check_emp_no

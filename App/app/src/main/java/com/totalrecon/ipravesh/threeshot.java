@@ -415,7 +415,6 @@ public class threeshot extends AppCompatActivity {
                         Log.i("Return from server: ", json_rec);
                         saveEmbedsToSP(user_embeds);
                         clearSP();
-                        Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(threeshot.this, LoginActivity.class);
                         startActivity(i);
                         finish();
