@@ -22,7 +22,7 @@ public class Alerts extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.Add) {
-                    Intent intent = new Intent(Alerts.this, cameraActivity.class);
+                    Intent intent = new Intent(Alerts.this, geoActivity.class);
                     startActivity(intent);
                 }
                 if (item.getItemId() == R.id.Logs) {

@@ -53,7 +53,7 @@ public class logs extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.Add) {
-                    Intent intent = new Intent(logs.this, cameraActivity.class);
+                    Intent intent = new Intent(logs.this, geoActivity.class);
                     startActivity(intent);
                 }
                 if (item.getItemId() == R.id.Alerts) {

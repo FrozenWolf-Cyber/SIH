@@ -76,13 +76,13 @@ public class check_status extends AppCompatActivity{
 
                         // proceed ...
                         show_message("Recording your entry attendance now!");
-                        Intent i = new Intent(check_status.this,cameraActivity.class);
+                        Intent i = new Intent(check_status.this,geoActivity.class);
                         startActivity(i);
 
                     }else{
                         // proceed ...
                         show_message("Recording your exit attendance now!");
-                        Intent i = new Intent(check_status.this, cameraActivity.class);
+                        Intent i = new Intent(check_status.this, geoActivity.class);
                         startActivity(i);
                     }
 
@@ -94,7 +94,7 @@ public class check_status extends AppCompatActivity{
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.Add) {
                     finish();
-                    Intent intent = new Intent(check_status.this, cameraActivity.class);
+                    Intent intent = new Intent(check_status.this, geoActivity.class);
                     startActivity(intent);
                 }
                 if (item.getItemId() == R.id.Alerts) {
