@@ -3,6 +3,7 @@ package com.totalrecon.ipravesh;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -83,6 +85,13 @@ public class threeshot extends AppCompatActivity {
     idWithArray obj = new idWithArray();
     idWithEmbeds user_embeds = new idWithEmbeds();
     public model my_model;
+
+    public static String getDeviceId(Context context) {
+
+        String id = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        return id;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -449,13 +458,14 @@ public class threeshot extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<>();
-
+                    params.put("mobileid",getDeviceId(getApplicationContext()));
                     params.put("user_name", obj.user_name);
                     params.put("password", obj.password);
                     params.put("emp_no", obj.emp_no);
                     params.put("embed1", Arrays.toString(user_embeds.embed1));
                     params.put("embed2", Arrays.toString(user_embeds.embed2));
                     params.put("embed3", Arrays.toString(user_embeds.embed3));
+
                     Log.i("params", params.toString());
                     return params;
                 }
