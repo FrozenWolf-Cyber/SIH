@@ -86,7 +86,7 @@ public class employee_dashboard extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.Add) {
-                    Intent intent = new Intent(employee_dashboard.this, geoActivity.class);
+                    Intent intent = new Intent(employee_dashboard.this, cameraActivity.class);
                     startActivity(intent);
                 }
                 if (item.getItemId() == R.id.Logs) {
@@ -308,10 +308,17 @@ public class employee_dashboard extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Exit();
                 finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void Exit(){
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
     }
 
 }

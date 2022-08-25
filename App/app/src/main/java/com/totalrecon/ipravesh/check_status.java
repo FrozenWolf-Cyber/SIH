@@ -76,13 +76,13 @@ public class check_status extends AppCompatActivity{
 
                         // proceed ...
                         show_message("Recording your entry attendance now!");
-                        Intent i = new Intent(check_status.this,geoActivity.class);
+                        Intent i = new Intent(check_status.this,cameraActivity.class);
                         startActivity(i);
 
                     }else{
                         // proceed ...
                         show_message("Recording your exit attendance now!");
-                        Intent i = new Intent(check_status.this, geoActivity.class);
+                        Intent i = new Intent(check_status.this, cameraActivity.class);
                         startActivity(i);
                     }
 
@@ -94,7 +94,7 @@ public class check_status extends AppCompatActivity{
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.Add) {
                     finish();
-                    Intent intent = new Intent(check_status.this, geoActivity.class);
+                    Intent intent = new Intent(check_status.this, cameraActivity.class);
                     startActivity(intent);
                 }
                 if (item.getItemId() == R.id.Alerts) {
@@ -156,9 +156,16 @@ public class check_status extends AppCompatActivity{
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Exit();
                 finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void Exit(){
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
     }
 }
