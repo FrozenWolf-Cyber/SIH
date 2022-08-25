@@ -56,10 +56,6 @@
             android:screenOrientation="sensorPortrait"
             android:exported="true" />
         <activity
-            android:name=".otp_verification"
-            android:screenOrientation="sensorPortrait"
-            android:exported="true" />
-        <activity
             android:name=".register_new_employee_cred"
             android:screenOrientation="sensorPortrait"
             android:exported="true" />

@@ -9,14 +9,16 @@
         android:id="@+id/nav_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:showAsAction="always|withText"
         app:itemBackground="@color/gray_strong"
         app:itemIconTint="@color/gray"
         app:labelVisibilityMode="unlabeled"
-        android:showAsAction="always|withText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:menu="@menu/bottom_nav_menu" />
 
     <TextView
@@ -31,30 +33,68 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView13"
-        android:layout_width="186dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/image"
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imageView13"-->
+    <!--        android:layout_width="186dp"-->
+    <!--        android:layout_height="150dp"-->
+    <!--        android:layout_marginTop="20dp"-->
+    <!--        android:background="@drawable/image"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.497"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/textView31"-->
+    <!--        app:srcCompat="@drawable/face_icon2" />-->
+
+    <!--        app:layout_constraintTop_toBottomOf="@+id/imageView13" />-->
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/view2"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="4dp"
+        android:elevation="12dp"
+        app:cardCornerRadius="250dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.455"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView31"
-        app:srcCompat="@drawable/face_icon2" />
+        app:layout_constraintVertical_bias="0.0">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView13"
+                android:layout_width="206dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:background="@drawable/image"
+                android:paddingBottom="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.593"
+                app:layout_constraintStart_toStartOf="parent"
+
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/face_icon2" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="468dp"
         android:fontFamily="@font/sorabold"
         android:text="Full Name"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView13" />
+        app:layout_constraintHorizontal_bias="0.467"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/designation"
@@ -71,17 +111,20 @@
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="408dp"
         android:layout_height="347dp"
         app:layout_constraintBottom_toTopOf="@+id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/designation">
+        app:layout_constraintTop_toBottomOf="@+id/designation"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom">
 
             <ImageView
                 android:id="@+id/imageView14"

@@ -195,7 +195,7 @@ public class cameraActivity extends AppCompatActivity {
         float[] embeds_n;
         float  distance;
 
-        if (my_model.embeds != null && my_model.embeds.length == 1) {
+        if (my_model.embeds.length == 1) {
             return "many faces";
         }
 
