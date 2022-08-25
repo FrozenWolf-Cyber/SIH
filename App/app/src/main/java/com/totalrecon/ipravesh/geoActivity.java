@@ -81,6 +81,7 @@ public class geoActivity extends AppCompatActivity {
 
         getCurrentLocation();
 
+
     }
 
     @Override
@@ -116,7 +117,7 @@ public class geoActivity extends AppCompatActivity {
         }
     }
 
-    private void getCurrentLocation() {
+    public void getCurrentLocation() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
@@ -253,7 +254,7 @@ public class geoActivity extends AppCompatActivity {
         }
     }
 
-    public void check_distance(double latitude, double longitude) {
+    public void check_distance(double latitude, double longitude ) {
 
         double[] coord = new double[2];
 
@@ -297,7 +298,18 @@ public class geoActivity extends AppCompatActivity {
                         // dis is in km
                         double zero_error = 30 * (0.001);
                         if (dis < 0.1 + zero_error) {
-                            send_log(Double.toString(latitude), Double.toString(longitude));
+                            write_data("latitude" , Double.toString(latitude));
+                            write_data("longitude" , Double.toString(longitude));
+
+                            if(read_data("flag").equals("true"))
+                            {
+
+                            }else
+                            {
+                                Intent i = new Intent(geoActivity.this, cameraActivity.class);
+                                startActivity(i);
+                            }
+                            //send_log(Double.toString(latitude), Double.toString(longitude));
                             // send the log status with location to server
                         } else {
                             display_distance_error();
@@ -361,85 +373,7 @@ public class geoActivity extends AppCompatActivity {
     }
 
 
-    public void send_log(String latitude , String longitude) {
 
-        Date date = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy@hh:mm:ss");
-        String strDate = dateFormat.format(date);
-//        String strDate = "debug time test";
-
-//        log_obj.check_in = "";
-//        log_obj.check_out = "";
-
-        String cur_status = read_data("check_status");
-        if (cur_status.equals("checkout")) {
-            log_obj.check_in = strDate;
-            log_obj.check_out = "blah-null";
-        } else {
-            log_obj.check_out = strDate;
-            log_obj.check_in = "blah-null";
-        }
-        log_obj.emp_no = read_data("emp_no");
-
-        Log.i("EMP NO ", log_obj.emp_no);
-        Log.i(log_obj.check_in, log_obj.check_out);
-
-        String upload_URL = "https://sih-smart-attendance.herokuapp.com/update_log";
-        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
-            @Override
-            public void onResponse(NetworkResponse response) {
-                try {
-                    String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                    inverse_check_in_out();
-//                    show_alert("Your attendance has been recorded!");
-                    androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(geoActivity.this);
-                    alertDialogBuilder.setMessage("Your attendance is recorded!")
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    Intent i = new Intent(geoActivity.this, check_status.class);
-                                    startActivity(i);
-                                }
-                            });
-                    androidx.appcompat.app.AlertDialog alert = alertDialogBuilder.create();
-                    alert.setCanceledOnTouchOutside(false);
-                    alert.show();
-//                    Toast.makeText(getApplicationContext(), "Your attendance has been recorded!", Toast.LENGTH_SHORT);
-
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("emp_no", log_obj.emp_no);
-                params.put("check_in", log_obj.check_in);
-                params.put("check_out", log_obj.check_out);
-                params.put("latitude", latitude);
-                params.put("longitude",longitude);
-                return params;
-            }
-        };
-        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
-    }
-
-    public void inverse_check_in_out(){
-        String cur_status = read_data("check_status");
-        if (cur_status.equals("checkin")){
-            write_data("check_status", "checkout");
-        }
-        else {
-            write_data("check_status", "checkin");
-        }
-    }
 }
 
 
