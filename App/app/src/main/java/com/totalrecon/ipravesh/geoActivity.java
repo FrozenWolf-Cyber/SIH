@@ -77,6 +77,7 @@ public class geoActivity extends AppCompatActivity {
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(2000);
+        locationRequest.setSmallestDisplacement(10);
 
         getCurrentLocation();
 

@@ -10,7 +10,7 @@
         android:layout_width="354dp"
         android:layout_height="49dp"
         android:layout_gravity="start"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="108dp"
         android:background="@drawable/rounded_button"
         android:enabled="true"
         android:fontFamily="@font/mulishbold"
@@ -28,7 +28,7 @@
         android:layout_width="354dp"
         android:layout_height="49dp"
         android:layout_gravity="start"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/rounded_button"
         android:enabled="true"
         android:fontFamily="@font/mulishbold"
@@ -94,5 +94,5 @@
         app:layout_constraintHorizontal_bias="0.86"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.433" />
+        app:layout_constraintVertical_bias="0.453" />
 </androidx.constraintlayout.widget.ConstraintLayout>
