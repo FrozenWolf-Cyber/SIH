@@ -26,7 +26,8 @@ def do_analysis(nth_parallel):
     url = f'{URL}/admin_signup'
 
     # mail_id = random_string_generator(6)+'@gmail.com'
-    mail_id = 'gokul3112003.com@gmail.com'
+    mail_id = 'blackvenky21@gmail.com'
+    mobileid = 'abcdefghi'
     user_name = random_string_generator(7)
     psswrd = random_string_generator(5)
     contact_no = random_number_generator(5)
@@ -36,7 +37,7 @@ def do_analysis(nth_parallel):
             'designation' : 'CEO',
             'gender' : 'M',
             'branch_name' : 'India',
-            'contact_no' : contact_no,
+            'contact_no' : contact_no
             }
 
     files = [('files', ("img", open("sp/sp_left.png", "rb"), 'image/png'))]
@@ -62,6 +63,7 @@ def do_analysis(nth_parallel):
             'embed1' : embed,
             'embed2' : embed,
             'embed3' : embed,
+            'mobileid': mobileid
             }
 
     x = requests.post(url, data= data, files=files)
@@ -120,17 +122,21 @@ def do_analysis(nth_parallel):
     url = f'{URL}/login'
 
     ### mail_id user_name password name age address contact_no blood_grp    # ERROR
+
     data = {'user_name_or_mail_id' : random_string_generator(7),
-            'type_of_login' : 'mail_id', #username or mail_id
-            'password' : random_string_generator(7)}
+            'type_of_login' : 'username', #username or mail_id
+            'password' : random_string_generator(7),
+            'mobileid': mobileid}
 
     x = requests.post(url, data= data)
     print(x.text)
 
-    ### mail_id user_name password name age address contact_no blood_grp    # SHOULD WORK
-    data = {'user_name_or_mail_id' : mail_id,
-            'type_of_login' : 'mail_id', #username or mail_id
-            'password' : psswrd}
+
+
+    data = {'user_name_or_mail_id' : user_name,
+            'type_of_login' : 'username', #username or mail_id
+            'password' : psswrd,
+            'mobileid': mobileid}
 
     x = requests.post(url, data= data)
     print(x.text)
@@ -138,27 +144,41 @@ def do_analysis(nth_parallel):
 
     data = {'user_name_or_mail_id' : "ADMIN",
             'type_of_login' : "ADMIN", #username or mail_id
-            'password' : "ADMIN"}
+            'password' : "ADMIN",
+            'mobileid': mobileid}
 
     x = requests.post(url, data= data)
     print(x.text)
-    emp_no = x.text
 
+
+    url = f'{URL}/reset_mobileid'
+    data = {'emp_no' : emp_no,
+            'mobileid': mobileid}
+
+    x = requests.post(url, data= data)
+    print(x.text)
+
+    mobileid = 'xyz123'
+    url = f'{URL}/login'
+
+
+    data = {'user_name_or_mail_id' : user_name,
+            'type_of_login' : 'username', #username or mail_id
+            'password' : psswrd,
+            'mobileid': mobileid}
+
+    x = requests.post(url, data= data)
+    print(x.text)
     ### mail_id user_name password name age address contact_no blood_grp    # SHOULD WORK
     data = {'user_name_or_mail_id' : user_name,
             'type_of_login' : 'username', #username or mail_id
-            'password' : psswrd}
+            'password' : psswrd,
+            'mobileid': mobileid}
 
     x = requests.post(url, data= data)
     print(x.text)
     emp_no = x.text
 
-    data = {'user_name_or_mail_id' : random_string_generator(3),    # ERROR
-            'type_of_login' : 'mail_id', #username or mail_id
-            'password' : psswrd}
-
-    x = requests.post(url, data= data)
-    print(x.text)
 
 
     # ## GET EMBEDS                                        NEED TO REPLICATE THE APP BUT WORKS

@@ -12,15 +12,15 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse
 
-# db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
-# db_user =  'postgres' #'be6a5ab891fb44'
-# db_psswrd = '3112003' #heroku-psswrd
-# db_name = 'sih_attendance' #heroku-db
+db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
+db_user =  'postgres' #'be6a5ab891fb44'
+db_psswrd = '3112003' #heroku-psswrd
+db_name = 'sih_attendance' #heroku-db
 
-db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
-db_user =  'sxxkdscneuzrwf'
-db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
-db_name = 'd3rhldildqlaje'
+# db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
+# db_user =  'sxxkdscneuzrwf'
+# db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
+# db_name = 'd3rhldildqlaje'
 
 ADMIN_USERNAME = 'ADMIN'
 ADMIN_PSSWRD = 'ADMIN'
@@ -29,7 +29,7 @@ encryptor = encryption_algo('cervh0s3e2hnpaitaeitad0sn', 'eaia0dnesp3thach2tir0e
 messenger = mailman()
 # encryptor = pickle.load(open('encryptor.pkl', 'rb'))
 
-mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
+mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name, encryptor=encryptor)
 
 
 app = FastAPI()
@@ -129,8 +129,7 @@ async def admin_signup(
 
 ):
 
-    mail_id, name, designation, gender, contact_no, branch_name = encryptor.AES_encrypt(mail_id), encryptor.AES_encrypt(name), encryptor.AES_encrypt(designation), encryptor.AES_encrypt(gender), encryptor.AES_encrypt(contact_no), encryptor.AES_encrypt(branch_name)
-
+    name, designation, gender, branch_name = encryptor.AES_encrypt(name), encryptor.AES_encrypt(designation), encryptor.AES_encrypt(gender), encryptor.AES_encrypt(branch_name)
     data = [mail_id, name, designation, gender, branch_name, contact_no]
 
     sucess = False
@@ -181,6 +180,7 @@ async def send_otp(
         messenger = mailman()
         otp = messenger.send_otp(mailid)
 
+    otp = encryptor.SHA256_encrypt(otp)
     await mydb.save_otp(emp_no, otp)
 
     return "SENT"
@@ -195,10 +195,8 @@ async def check_otp(
     emp_no = emp_no[1:-1]
     otp = otp[1:-1]
 
-    print(emp_no, otp, flush=True)
 
-
-    if await mydb.check_otp(emp_no, otp):
+    if await mydb.check_otp(emp_no, encryptor.SHA256_encrypt(otp)):
         return "VERIFIED"
 
     else:
@@ -208,6 +206,8 @@ async def check_otp(
 
 @app.post('/signup')
 async def signup(
+
+    mobileid: str = Form(...),
     user_name: str = Form(...),
     password: str = Form(...),
     emp_no: str = Form(...),
@@ -222,8 +222,8 @@ async def signup(
     password = encryptor.SHA256_encrypt(password)
     # user_name = encryptor.SHA256_encrypt(user_name)
 
-
-    data = [user_name, password, emp_no, embed1, embed2, embed3]
+    mobileid = encryptor.SHA256_encrypt(mobileid)
+    data = [user_name, password, emp_no, mobileid, embed1, embed2, embed3]
 
     if not await mydb.check_emp_no_exist_master(emp_no):
         return "EMPLOYEE NUMBER DOESN'T EXIST IN MASTER"
@@ -258,16 +258,37 @@ async def signup(
     return emp_no
 
 
+@app.post('/reset_mobileid')
+async def reset_mobileid(
+    emp_no: str = Form(...),
+    mobileid: str = Form(...)
+):
+
+    emp_no = emp_no[1:-1]
+    mobileid = encryptor.SHA256_encrypt(mobileid)
+
+    return await mydb.reset_mobileid(emp_no, mobileid)
 
 
+@app.post('/admin_reset_mobileid')
+async def admin_reset_mobileid(
+    emp_no: str = Form(...),
+):
+
+    emp_no = emp_no[1:-1]
+
+    return await mydb.admin_reset_mobileid(emp_no)
 
 
 @app.post('/login')
 async def login(
     user_name_or_mail_id: str = Form(...),
     type_of_login: str = Form(...),
-    password: str = Form(...)
+    password: str = Form(...),
+    mobileid: str = Form(...)
+    
 ):
+    mobileid = encryptor.SHA256_encrypt(mobileid)
 
     if user_name_or_mail_id == ADMIN_USERNAME and password == ADMIN_PSSWRD:
         return "ADMIN"
@@ -275,7 +296,7 @@ async def login(
     password = encryptor.SHA256_encrypt(password)
     # user_name_or_mail_id = encryptor.SHA256_encrypt(user_name_or_mail_id)
         
-    data = [user_name_or_mail_id, password]
+    data = [user_name_or_mail_id, password, mobileid]
 
     return str(await exception_handle("SERVER ERROR WHILE CHECKING LOGIN DETAILS", mydb.user_login_details, data, type_of_login))
 
@@ -390,6 +411,22 @@ async def get_img(
     decode_img = lambda y: Response(content=base64.b64decode(y), media_type="image/jpg")
     return decode_img(e)
 
+@app.post('/get_img_website')
+async def get_img_website(
+    emp_no: str = Form(...),
+):
+    emp_no = emp_no[1:-1]
+    if not await mydb.check_emp_no_signed(emp_no):
+        return "EMPLOYEE NUMBER DOESN'T EXIST"
+
+    e = await exception_handle("SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER", mydb.get_img, emp_no)
+    if e == "SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER":
+        return e
+
+    # Return as b64 for website
+    # decode_img = lambda y: Response(content=base64.b64decode(y), media_type="image/jpg")
+    return e
+
 
 # HANDLING WEBSITE REQUESTS
 @app.post('/get_log_data')
@@ -421,7 +458,7 @@ async def validation_exception_handler(request, err):
 @app.on_event("startup")
 async def startup():
     await mydb.database.connect()
-    await mydb.create(encryptor)
+    await mydb.create()
 
 @app.on_event("shutdown")
 async def shutdown():
