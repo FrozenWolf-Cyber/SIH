@@ -367,7 +367,7 @@ public class cameraActivity extends AppCompatActivity {
         Log.i("RESPONSE", dis + "\n" + latitude + "\n" + longitude);
 
         // dis is in km
-        double zero_error = 30 * (0.001);
+        double zero_error = 30 * (0.1);
         if (dis < 0.1 + zero_error) {
             write_data("latitude" , Double.toString(latitude));
             write_data("longitude" , Double.toString(longitude));

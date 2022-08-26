@@ -154,7 +154,7 @@ public class CameraLiveActivity extends AppCompatActivity {
 
     int turns = 2;
     int blinks = 3;
-    int ACTION_TIME_ELAPSED = 10000;
+    int ACTION_TIME_ELAPSED = 6000;
     int time = ACTION_TIME_ELAPSED;
     String[] turn_actions_possible = {"LEFT", "RIGHT"};
     String chosen_action = null;
@@ -388,7 +388,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                                                         else{
                                                             blinks--;
                                                             chosen_action = "BLINK";
-                                                            commands.setText("BLINK ONCE");
+                                                            commands.setText("BLINK TWICE");
                                                             timer_activated = true;
                                                             Log.i("BLINK","");
                                                         }
