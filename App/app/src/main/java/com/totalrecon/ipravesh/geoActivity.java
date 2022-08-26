@@ -60,6 +60,13 @@ import java.util.Map;
 public class geoActivity extends AppCompatActivity {
 
     private LocationRequest locationRequest;
+    public double[] coord = new double[2];
+    public String emp_no = read_data("emp_no");
+    public String branch_name = read_data("branch_name");
+
+    // post request for fetching office address
+    public String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_branch_info";
+    public String finalBranch_name = branch_name;
 
     public class logDetails {
         public String emp_no;
@@ -86,6 +93,57 @@ public class geoActivity extends AppCompatActivity {
         //locationRequest.setSmallestDisplacement(10);
 
         getCurrentLocation();
+
+
+        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
+                try {
+                    String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                    json_rec.replaceAll("\\P{Print}", "");
+                    Log.i("RESPONSE ", json_rec);
+
+                    if (json_rec.equals("\"INCORRECT BRANCH NAME\"")) {
+                        show_message("Incorrect branch name of employee\n" + "branch_name : " + finalBranch_name);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(geoActivity.this, check_status.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        }, 2000);
+
+                    } else {
+                        Map jsonObject = new Gson().fromJson(json_rec, Map.class);
+
+                        coord[0] = Double.parseDouble("" + jsonObject.get("latitude"));
+                        coord[1] = Double.parseDouble("" + jsonObject.get("longitude"));
+                        // calculate distance
+                    }
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("emp_no", emp_no);
+                params.put("branch_name", finalBranch_name);
+                Log.i("params", "" + params.toString());
+                return params;
+            }
+        };
+        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+
 
 
     }
@@ -262,81 +320,25 @@ public class geoActivity extends AppCompatActivity {
 
     public void check_distance(double latitude, double longitude ) {
 
-        double[] coord = new double[2];
+        double dis = distance(coord[0], coord[1], latitude, longitude);
+        Log.i("Office ", coord[0] + " " + coord[1]);
+        Log.i("DISTANCE ", dis + "\n" + latitude + "\n" + longitude);
 
-        String emp_no = read_data("emp_no");
-        String branch_name = read_data("branch_name");
+        // dis is in km
+        double zero_error = 30 * (0.001);
+        if (dis < 0.1 + zero_error) {
+            write_data("latitude" , Double.toString(latitude));
+            write_data("longitude" , Double.toString(longitude));
+            Intent i = new Intent(geoActivity.this, cameraActivity.class);
+            startActivity(i);
 
-        // post request for fetching office address
-        String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_branch_info";
-        String finalBranch_name = branch_name;
-
-        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
-            @Override
-            public void onResponse(NetworkResponse response) {
-                try {
-                    String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                    json_rec.replaceAll("\\P{Print}", "");
-                    Log.i("RESPONSE ", json_rec);
-
-                    if (json_rec.equals("\"INCORRECT BRANCH NAME\"")) {
-                        show_message("Incorrect branch name of employee\n" + "branch_name : " + finalBranch_name);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(geoActivity.this, check_status.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        }, 2000);
-
-                    } else {
-                        Map jsonObject = new Gson().fromJson(json_rec, Map.class);
-
-                        coord[0] = Double.parseDouble("" + jsonObject.get("latitude"));
-                        coord[1] = Double.parseDouble("" + jsonObject.get("longitude"));
-                        // calculate distance
-
-                        double dis = distance(coord[0], coord[1], latitude, longitude);
-                        Log.i("Office", coord[0] + " " + coord[1]);
-                        Log.i("RESPONSE", dis + "\n" + latitude + "\n" + longitude);
-
-                        // dis is in km
-                        double zero_error = 30 * (0.001);
-                        if (dis < 0.1 + zero_error) {
-                            write_data("latitude" , Double.toString(latitude));
-                            write_data("longitude" , Double.toString(longitude));
-                                Intent i = new Intent(geoActivity.this, cameraActivity.class);
-                                startActivity(i);
-
-                            // send_log(Double.toString(latitude), Double.toString(longitude));
-                            // send the log status with location to server
-                        } else {
-                            display_distance_error();
-                        }
-                    }
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
+            // send_log(Double.toString(latitude), Double.toString(longitude));
+            // send the log status with location to server
+        } else {
+            display_distance_error();
         }
-                , new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("emp_no", emp_no);
-                params.put("branch_name", finalBranch_name);
-                Log.i("params", "" + params.toString());
-                return params;
-            }
-        };
-        VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+
+
 
     }
 
