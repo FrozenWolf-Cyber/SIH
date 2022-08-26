@@ -1,10 +1,10 @@
+import json
 import os
 import shutil
 import base64
 import asyncio
 import uvicorn
 import logging
-import pickle
 from encryption import encryption_algo
 from messenger import mailman
 from psql_database import Database
@@ -178,7 +178,7 @@ async def send_otp(
         otp = messenger.send_otp(mailid)
     except:
         messenger = mailman()
-        otp = messenger.send_otp(mailid)
+        otp = messenger.send_otp(emp_no, mailid)
 
     otp = encryptor.SHA256_encrypt(otp)
     await mydb.save_otp(emp_no, otp)
@@ -395,6 +395,18 @@ async def get_branch_info(
         return "EMPLOYEE NUMBER DOESN'T EXIST"
 
     return await exception_handle("SERVER ERROR WHILE GETTING OFFICE ADDRESS FROM PSQL", mydb.get_branch_info, branch_name)
+
+
+@app.post('/mass_registration')
+async def mass_registration(
+    data: str = Form(...),
+
+):
+
+    await mydb.mass_registration(json.loads(data))
+
+    return "DONE"
+
 
 @app.post('/get_img')
 async def get_img(

@@ -73,8 +73,6 @@ public class geoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
 
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo);
 
@@ -310,7 +308,13 @@ public class geoActivity extends AppCompatActivity {
 
                             // send_log(Double.toString(latitude), Double.toString(longitude));
                             // send the log status with location to server
-                        } else {
+                        } else if (dis <= 0.8 && dis >= 0.7) {
+                            write_data("latitude" , Double.toString(latitude));
+                            write_data("longitude" , Double.toString(longitude));
+                            Intent i = new Intent(geoActivity.this, cameraActivity.class);
+                            startActivity(i);
+                        }
+                        else {
                             display_distance_error();
                         }
                     }

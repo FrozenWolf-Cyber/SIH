@@ -86,16 +86,6 @@ class Database:
         
         ''')
 
-        await self.database.execute('''CREATE TABLE IF NOT EXISTS VALIDATION ( 
-                          user_name VARCHAR(100) UNIQUE ,
-                          password VARCHAR(100) NOT NULL ,
-                          emp_no VARCHAR(100) UNIQUE ,
-                          embed1 text[],
-                          embed2 text[],
-                          embed3 text[],
-                          mobileid VARCHAR(100) ,
-                          PRIMARY KEY (emp_no));
-        ''')
 
         await self.database.execute_many("INSERT INTO GEO_LOCATION (branch_name , latitude , longitude) SELECT * FROM (SELECT :branch_name , :latitude , :longitude) AS tmp WHERE NOT EXISTS (SELECT branch_name FROM GEO_LOCATION WHERE branch_name = :branch_name) LIMIT 1;", self.loc_database)
         
@@ -106,7 +96,7 @@ class Database:
                           {'emp_no': '3', 'name': 'Selva', 'mail_id': 'snsn010212@gmail.com', 'designation': 'APP', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9003299917'},
                           {'emp_no': '4', 'name': 'Ashwanth', 'mail_id': 'ashwanth064@gmail.com', 'designation': 'APP', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9940497154'},
                           {'emp_no': '5', 'name': 'Kavimalar', 'mail_id': 'kavimalar2508@gmail.com', 'designation': 'APP', 'gender': 'F', 'branch_name': 'Office6', 'contact_no': '6385768683'},
-                        #   {'emp_no': '6', 'name': 'Venkatesh', 'mail_id': 'blackvenky21@gmail.com', 'designation': 'WEB', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9543879507'},
+                          {'emp_no': '6', 'name': 'Venkatesh', 'mail_id': 'blackvenky21@gmail.com', 'designation': 'WEB', 'gender': 'M', 'branch_name': 'Office6', 'contact_no': '9543879507'},
                           
                           ]
 
@@ -121,6 +111,17 @@ class Database:
         await self.database.execute_many("INSERT INTO EMPLOYEE_DETAILS (emp_no, name, mail_id, designation, gender, branch_name, contact_no) SELECT * FROM (SELECT :emp_no, :name, :mail_id, :designation, :gender, :branch_name, :contact_no) AS tmp WHERE NOT EXISTS (SELECT emp_no FROM EMPLOYEE_DETAILS WHERE emp_no = :emp_no OR mail_id = :mail_id) LIMIT 1;", self.team_data)
         
 
+
+    async def mass_registration(self, data):        
+        for i in range(len(data)):
+            a = list(data[i].keys())
+            a.remove('emp_no')
+            for j in a:
+                data[i][j] = self.encryptor.AES_encrypt(data[i][j])
+                
+
+        await self.database.execute_many("INSERT INTO EMPLOYEE_DETAILS (emp_no, name, mail_id, designation, gender, branch_name, contact_no) SELECT * FROM (SELECT :emp_no, :name, :mail_id, :designation, :gender, :branch_name, :contact_no) AS tmp WHERE NOT EXISTS (SELECT emp_no FROM EMPLOYEE_DETAILS WHERE emp_no = :emp_no OR mail_id = :mail_id) LIMIT 1;", data)
+         
 
     async def generate_next_employee_no(self):
         result = await self.database.fetch_one("SELECT COUNT(emp_no) FROM EMPLOYEE_DETAILS")
@@ -271,10 +272,25 @@ class Database:
         user_name, password, emp_no, mobileid, embed1, embed2, embed3 = data
         user_name_availablity = await self.check_username(user_name)
 
+        if await self.check_mobileid_in_use(mobileid):
+            return "THIS MOBILE HAS ALREADY BEEN REGISTERED WITH DIFFERENT ACCOUNTs"
+
         await self.add_db((user_name, password, emp_no, mobileid, embed1, embed2, embed3))
 
 
         return  user_name_availablity, emp_no
+    
+
+    async def check_mobileid_in_use(self, mobileid):
+        j = None
+        for j in await self.database.fetch_all("SELECT mobileid FROM USER_LOGIN WHERE mobileid = '%s'" % (mobileid,) ):
+            j = tuple(j.values()) 
+
+        if j is None:
+            return False
+
+        else:
+            return True
     
 
     async def check_mobileid(self, emp_no, mobileid):
