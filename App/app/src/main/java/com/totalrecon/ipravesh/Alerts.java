@@ -44,6 +44,8 @@ public class Alerts extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.Add) {
                     check_status_func();
+                    Intent intent = new Intent(Alerts.this, geoActivity.class);
+                    startActivity(intent);
                 }
                 if (item.getItemId() == R.id.Logs) {
                     Intent i = new Intent(Alerts.this, logs.class);
