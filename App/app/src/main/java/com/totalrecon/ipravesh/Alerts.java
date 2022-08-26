@@ -144,42 +144,12 @@ public class Alerts extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+finishAffinity();
+//                Exit();
+//                finish();
+//                finishAndRemoveTask();
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-
-    public void OnToggleClicked(View view) {
-        long time;
-        if (((ToggleButton) view).isChecked()) {
-            Toast.makeText(Alerts.this, "Notification Time Set", Toast.LENGTH_SHORT).show();
-            Calendar calendar = Calendar.getInstance();
-
-            // calendar is called to get current time in hour and minute
-            calendar.set(Calendar.HOUR_OF_DAY, 14);
-            calendar.set(Calendar.MINUTE, 12);
-            calendar.set(Calendar.SECOND,20);
-
-            // using intent i have class AlarmReceiver class which inherits
-            // BroadcastReceiver
-            Intent intent = new Intent(this, AlarmReceiver.class);
-
-            // we call broadcast using pendingIntent
-            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-
-            time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
-            if (System.currentTimeMillis() > time) {
-                // setting time as AM and PM
-                if (calendar.AM_PM == 0)
-                    time = time + (1000 * 60 * 60 * 12);
-                else
-                    time = time + (1000 * 60 * 60 * 24);
-            }
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 100000, pendingIntent);
-        }
-
-
     }
 }

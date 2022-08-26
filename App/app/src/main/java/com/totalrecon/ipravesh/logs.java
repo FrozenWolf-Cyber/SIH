@@ -22,19 +22,24 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
 import com.totalrecon.ipravesh.data.model.VolleySingleton;
+import com.totalrecon.ipravesh.ui.login.LoginActivity;
 
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class logs extends AppCompatActivity {
-//    PieChart pieChart;
+    //    PieChart pieChart;
     TextView logdetails;
+    PieChart pieChart;
     BottomNavigationView navView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -45,7 +50,7 @@ public class logs extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logd);
         // pie chart
-//        pieChart = findViewById(R.id.piechart);
+        pieChart = findViewById(R.id.piechart);
         logdetails = findViewById(R.id.logdetails2);
         navView = findViewById(R.id.nav_view);
 
@@ -77,8 +82,7 @@ public class logs extends AppCompatActivity {
 
     }
 
-    public void show_log()
-    {
+    public void show_log() {
         String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_log_data";
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
             @Override
@@ -87,9 +91,9 @@ public class logs extends AppCompatActivity {
                 try {
 
                     String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                    json_rec.replaceAll("\\P{Print}","");
+                    json_rec.replaceAll("\\P{Print}", "");
                     String resp = "\"NO\"";
-                    Log.i("DASHBOARD" , json_rec);
+                    Log.i("DASHBOARD", json_rec);
                     Map jsonObject = new Gson().fromJson(json_rec, Map.class);
 
                     try {
@@ -101,29 +105,44 @@ public class logs extends AppCompatActivity {
                         String emp_no = read_data("emp_no");
 
                         // calculate percentage
-                        float present = 0;
+//                        float present = 0;
+////                        String array[] = new String[0];
+//                        List<String> array = new ArrayList<String>();
                         for (int i = 0; i < users.size(); i++) {
+
                             if (("\""+users.get(i)+"\"").equals(emp_no)) {
-                                present += 1;
                                 log_data_detail += "Entry: "+checkin.get(i)+"\nExit: "+checkout.get(i)+"\n\n";
                             }
                             Log.i("RESPONSE", users.get(i));
                         }
 
-                        present = (present / 30) * 100;
+//                        Calendar cal = Calendar.getInstance();
+//                        int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+//                        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+//                        float absentperc = ((days-present) / days) * 100;
+//                        float presentperc = (present / days) * 100;
+//                        Log.i("a",Float.toString(absentperc));
+//
+//                        Log.i("RESPONSE", "percentage : " + present + " %");
+//
+//                        // percentage present in total
 
-                        Log.i("RESPONSE", "percentage : " + present + " %");
-
-                        // percentage present in total
-
-                        logdetails.setText(log_data_detail+"");
+                        logdetails.setText(log_data_detail + "");
                         // set pie chart after percentage calculated
-//                        set_pie_chart(present, 100 - present);
+                        if (log_data_detail.equals("")) {
+                            pieChart.addPieSlice(
+                                    new PieModel(
+                                            "present",
+                                            100,
+                                            Color.parseColor("#808080")));
+                            pieChart.startAnimation();
+                        }
+                        else {
+                            set_pie_chart(100);
+                        }
 
-                    }
-                    catch(Exception e)
-                    {
-                        Log.i("RESPONSE" , e+"");
+                    } catch (Exception e) {
+                        Log.i("RESPONSE", e + "");
                     }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -148,21 +167,15 @@ public class logs extends AppCompatActivity {
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
 
     }
-//    public void set_pie_chart(float percent1 , float percent2)
-//    {
-//        pieChart.addPieSlice(
-//                new PieModel(
-//                        "present",
-//                        percent1,
-//                        Color.parseColor("#28fc03")));
-//        pieChart.addPieSlice(
-//                new PieModel(
-//                        "absent",
-//                        percent2,
-//                        Color.parseColor("#fc2403")));
-//        pieChart.startAnimation();
-//
-//    }
+    public void set_pie_chart(float percent1)
+    {
+        pieChart.addPieSlice(
+                new PieModel(
+                        "present",
+                        percent1,
+                        Color.parseColor("#28fc03")));
+        pieChart.startAnimation();
+    }
     public void check_status_func()
     {
         // do a post request
@@ -179,10 +192,10 @@ public class logs extends AppCompatActivity {
                             json_rec.replaceAll("\\P{Print}", "");
 
                             String cur_status = json_rec;
-                            Log.i("Response" , "cur_status : "+cur_status);
-                            write_data("check_status" , cur_status);
+                            Log.i("Response", "cur_status : " + cur_status);
+                            write_data("check_status", cur_status);
 
-                            if (cur_status.equals("") || cur_status==null) {
+                            if (cur_status.equals("") || cur_status == null) {
                                 Log.i("inside", "inside");
                                 Log.i("After change", read_data("check_status"));
                                 cur_status = read_data("check_status");
@@ -209,7 +222,7 @@ public class logs extends AppCompatActivity {
                 },
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
-                        Log.i("RESPONSE", "error : "+error);
+                        Log.i("RESPONSE", "error : " + error);
                     }
                 }) {
             @Override
@@ -223,15 +236,15 @@ public class logs extends AppCompatActivity {
 
 
     }
-    public String read_data(String filename)
-    {
+
+    public String read_data(String filename) {
         SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         String s1 = sh.getString(filename, "");
         return s1;
     }
-    public void write_data(String filename,String data)
-    {
-        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+
+    public void write_data(String filename, String data) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
         myEdit.putString(filename, data);
         myEdit.commit();
@@ -239,16 +252,39 @@ public class logs extends AppCompatActivity {
 
     public void show_message(String s) {
         // Error due to file writing and other operations
-        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+//                Exit();
+                finishAffinity();
+//                show_message("Logged out successfully!");
+//                Intent i = new Intent(logs.this, LoginActivity.class);
+//                startActivity(i);
+//                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+//    public void Exit() {
+//
+//        logs.this.finish();
+//   Intent a = new Intent(Intent.ACTION_MAIN);
+//   a.addCategory(Intent.CATEGORY_HOME);
+//    a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//    startActivity(a);
+//
+//    }
+//    public void LoggedIn()
+//    {
+//        Intent i = new Intent(logs.this, LoginActivity.class);
+//        startActivity(i);
+//        finish();
+//        //Exit();
+//
+//    }
 }

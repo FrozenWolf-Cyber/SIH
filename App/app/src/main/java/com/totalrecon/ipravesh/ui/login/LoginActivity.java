@@ -628,12 +628,12 @@ public class LoginActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+//                Exit();
+                finishAffinity();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
     public void Message() {
         long time;
         Log.d("switchingon","toggle");
@@ -671,8 +671,5 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
-
-
-
 
 }
