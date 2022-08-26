@@ -28,12 +28,15 @@ import org.eazegraph.lib.models.PieModel;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class logs extends AppCompatActivity {
 //    PieChart pieChart;
     TextView logdetails;
+    PieChart pieChart;
     BottomNavigationView navView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class logs extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logd);
         // pie chart
-//        pieChart = findViewById(R.id.piechart);
+        pieChart = findViewById(R.id.piechart);
         logdetails = findViewById(R.id.logdetails2);
         navView = findViewById(R.id.nav_view);
 
@@ -101,24 +104,40 @@ public class logs extends AppCompatActivity {
                         String emp_no = read_data("emp_no");
 
                         // calculate percentage
-                        float present = 0;
+//                        float present = 0;
+////                        String array[] = new String[0];
+//                        List<String> array = new ArrayList<String>();
                         for (int i = 0; i < users.size(); i++) {
                             if (("\""+users.get(i)+"\"").equals(emp_no)) {
-                                present += 1;
                                 log_data_detail += "Entry: "+checkin.get(i)+"\nExit: "+checkout.get(i)+"\n\n";
                             }
                             Log.i("RESPONSE", users.get(i));
                         }
 
-                        present = (present / 30) * 100;
-
-                        Log.i("RESPONSE", "percentage : " + present + " %");
-
-                        // percentage present in total
+//                        Calendar cal = Calendar.getInstance();
+//                        int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+//                        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+//                        float absentperc = ((days-present) / days) * 100;
+//                        float presentperc = (present / days) * 100;
+//                        Log.i("a",Float.toString(absentperc));
+//
+//                        Log.i("RESPONSE", "percentage : " + present + " %");
+//
+//                        // percentage present in total
 
                         logdetails.setText(log_data_detail+"");
                         // set pie chart after percentage calculated
-//                        set_pie_chart(present, 100 - present);
+                        if (log_data_detail.equals("")) {
+                            pieChart.addPieSlice(
+                                    new PieModel(
+                                            "present",
+                                            100,
+                                            Color.parseColor("#808080")));
+                            pieChart.startAnimation();
+                        }
+                        else {
+                            set_pie_chart(100);
+                        }
 
                     }
                     catch(Exception e)
@@ -148,21 +167,15 @@ public class logs extends AppCompatActivity {
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
 
     }
-//    public void set_pie_chart(float percent1 , float percent2)
-//    {
-//        pieChart.addPieSlice(
-//                new PieModel(
-//                        "present",
-//                        percent1,
-//                        Color.parseColor("#28fc03")));
-//        pieChart.addPieSlice(
-//                new PieModel(
-//                        "absent",
-//                        percent2,
-//                        Color.parseColor("#fc2403")));
-//        pieChart.startAnimation();
-//
-//    }
+    public void set_pie_chart(float percent1)
+    {
+        pieChart.addPieSlice(
+                new PieModel(
+                        "present",
+                        percent1,
+                        Color.parseColor("#28fc03")));
+        pieChart.startAnimation();
+    }
     public void check_status_func()
     {
         // do a post request
