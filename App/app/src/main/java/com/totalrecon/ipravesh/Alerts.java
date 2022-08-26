@@ -3,12 +3,16 @@ package com.totalrecon.ipravesh;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -19,11 +23,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
 import com.totalrecon.ipravesh.data.model.VolleySingleton;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Alerts extends AppCompatActivity {
     BottomNavigationView navView;
+    AlarmManager alarmManager;
+    PendingIntent pendingIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +61,9 @@ public class Alerts extends AppCompatActivity {
                 return true;
             }
         });
-    }public void check_status_func()
-    {
+    }
+
+    public void check_status_func() {
         // do a post request
         String emp_no = read_data("emp_no");
         // get image of the user
@@ -69,10 +78,10 @@ public class Alerts extends AppCompatActivity {
                             json_rec.replaceAll("\\P{Print}", "");
 
                             String cur_status = json_rec;
-                            Log.i("Response" , "cur_status : "+cur_status);
-                            write_data("check_status" , cur_status);
+                            Log.i("Response", "cur_status : " + cur_status);
+                            write_data("check_status", cur_status);
 
-                            if (cur_status.equals("") || cur_status==null) {
+                            if (cur_status.equals("") || cur_status == null) {
                                 Log.i("inside", "inside");
                                 Log.i("After change", read_data("check_status"));
                                 cur_status = read_data("check_status");
@@ -99,7 +108,7 @@ public class Alerts extends AppCompatActivity {
                 },
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
-                        Log.i("RESPONSE", "error : "+error);
+                        Log.i("RESPONSE", "error : " + error);
                     }
                 }) {
             @Override
@@ -113,15 +122,15 @@ public class Alerts extends AppCompatActivity {
 
 
     }
-    public String read_data(String filename)
-    {
+
+    public String read_data(String filename) {
         SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         String s1 = sh.getString(filename, "");
         return s1;
     }
-    public void write_data(String filename,String data)
-    {
-        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+
+    public void write_data(String filename, String data) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
         myEdit.putString(filename, data);
         myEdit.commit();
@@ -130,6 +139,7 @@ public class Alerts extends AppCompatActivity {
     public void show_message(String s) {
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -138,5 +148,38 @@ public class Alerts extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void OnToggleClicked(View view) {
+        long time;
+        if (((ToggleButton) view).isChecked()) {
+            Toast.makeText(Alerts.this, "Notification Time Set", Toast.LENGTH_SHORT).show();
+            Calendar calendar = Calendar.getInstance();
+
+            // calendar is called to get current time in hour and minute
+            calendar.set(Calendar.HOUR_OF_DAY, 14);
+            calendar.set(Calendar.MINUTE, 12);
+            calendar.set(Calendar.SECOND,20);
+
+            // using intent i have class AlarmReceiver class which inherits
+            // BroadcastReceiver
+            Intent intent = new Intent(this, AlarmReceiver.class);
+
+            // we call broadcast using pendingIntent
+            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+            time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
+            if (System.currentTimeMillis() > time) {
+                // setting time as AM and PM
+                if (calendar.AM_PM == 0)
+                    time = time + (1000 * 60 * 60 * 12);
+                else
+                    time = time + (1000 * 60 * 60 * 24);
+            }
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 100000, pendingIntent);
+        }
+
+
     }
 }

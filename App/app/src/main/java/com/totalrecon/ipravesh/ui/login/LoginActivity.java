@@ -6,6 +6,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +27,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.totalrecon.ipravesh.AlarmReceiver;
+import com.totalrecon.ipravesh.Alerts;
 import com.totalrecon.ipravesh.LoadingDialog;
 import com.totalrecon.ipravesh.R;
 import com.totalrecon.ipravesh.check_status;
@@ -36,19 +40,24 @@ import com.google.gson.GsonBuilder;
 import com.totalrecon.ipravesh.register_new_employee_cred;
 import com.totalrecon.ipravesh.threeshot;
 import android.provider.Settings.Secure;
+import android.widget.ToggleButton;
 
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
+
+    AlarmManager alarmManager;
+    PendingIntent pendingIntent;
 
     private Button login_button;
-    private EditText password , username;
+    private EditText password, username;
     private TextView signup_button;
 
 
@@ -87,13 +96,14 @@ public class LoginActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Message();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.existing_user_login_new);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
         login_button = (Button) findViewById(R.id.login);
         signup_button = findViewById(R.id.textView34);
-
 
 
         password = (EditText) findViewById(R.id.password);
@@ -179,12 +189,10 @@ public class LoginActivity extends AppCompatActivity{
                                                         if (json_rec.equals(resp1)) {
                                                             loadingDialog.dismissDialog();
                                                             show_message("Your password is wrong! ");
-                                                        }
-                                                        else if (json_rec.equals(reps2)) {
+                                                        } else if (json_rec.equals(reps2)) {
                                                             loadingDialog.dismissDialog();
                                                             show_message("You have already logged in through a device!");
-                                                        }
-                                                        else {
+                                                        } else {
                                                             loadingDialog.dismissDialog();
                                                             show_message("You have been logged in! ");
 
@@ -343,7 +351,7 @@ public class LoginActivity extends AppCompatActivity{
                                                     params.put("user_name_or_mail_id", user);
                                                     params.put("type_of_login", "username");
                                                     params.put("password", pass);
-                                                    params.put("mobileid",getDeviceId(getApplicationContext()));
+                                                    params.put("mobileid", getDeviceId(getApplicationContext()));
                                                     return params;
 
                                                 }
@@ -591,30 +599,31 @@ public class LoginActivity extends AppCompatActivity{
     }
 
 
-    public void show_message(String s)
-    {
-        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
+    public void show_message(String s) {
+        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
     }
-    public String read_data(String filename)
-    {
+
+    public String read_data(String filename) {
         SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         String s1 = sh.getString(filename, "");
         return s1;
     }
-    public void write_data(String filename,String data)
-    {
-        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+
+    public void write_data(String filename, String data) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
         myEdit.putString(filename, data);
         myEdit.commit();
     }
+
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         Intent a = new Intent(Intent.ACTION_MAIN);
         a.addCategory(Intent.CATEGORY_HOME);
         a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(a);
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -624,4 +633,46 @@ public class LoginActivity extends AppCompatActivity{
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void Message() {
+        long time;
+        Log.d("switchingon","toggle");
+        if (1==1) {
+            Log.d("switchingon1","toggle");
+            //Toast.makeText(LoginActivity.this, "Notification Time Set", Toast.LENGTH_SHORT).show();
+            Calendar calendar = Calendar.getInstance();
+
+            // calendar is called to get current time in hour and minute
+            calendar.set(Calendar.HOUR_OF_DAY, 16);
+            calendar.set(Calendar.MINUTE,23);
+            calendar.set(Calendar.SECOND, 20);
+
+            // using intent i have class AlarmReceiver class which inherits
+            // BroadcastReceiver
+            Intent intent = new Intent(this, AlarmReceiver.class);
+
+            // we call broadcast using pendingIntent
+            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+            time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
+            if (System.currentTimeMillis() > time) {
+                Log.d("switchingon2","toggle");
+                // setting time as AM and PM
+                if (calendar.AM_PM == 0)
+                    time = time + (1000 * 60 * 60 * 12);
+                else
+                    time = time + (1000 * 60 * 60 * 24);
+            }
+            AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 86400000, pendingIntent);
+        }else {
+            alarmManager.cancel(pendingIntent);
+            Toast.makeText(LoginActivity.this, "ALARM OFF", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+
+
 }
