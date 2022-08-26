@@ -434,11 +434,18 @@ public class threeshot extends AppCompatActivity {
                 public void onResponse(NetworkResponse response) {
                     try {
                         String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                        user_embeds.emp_no = json_rec;
                         Log.i("Return from server: ", json_rec);
-                        saveEmbedsToSP(user_embeds);
-                        clearSP();
-                        Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_SHORT).show();
+                        String resp = "\"THIS MOBILE HAS ALREADY BEEN REGISTERED WITH DIFFERENT ACCOUNTs\"";
+                        if (resp.equals(json_rec)) {
+                            show_error("This mobile has already been linked with another account. Contact your administrator for more details.");
+                        }
+                        else {
+                            user_embeds.emp_no = json_rec;
+                            saveEmbedsToSP(user_embeds);
+                            clearSP();
+
+                            Toast.makeText(getApplicationContext(), "Signed up successfully!", Toast.LENGTH_SHORT).show();
+                        }
                         Intent i = new Intent(threeshot.this, LoginActivity.class);
                         startActivity(i);
                         finish();
