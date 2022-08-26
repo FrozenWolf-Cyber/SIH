@@ -120,6 +120,8 @@
         <entry key="..\:/free time/github/SIH-app_dev/tf_lite/app/src/main/res/layout/existing_user.xml" value="0.17552083333333332" />
         <entry key="..\:/free time/github/SIH-app_dev/tf_lite/app/src/main/res/layout/upload_sign_in_activity.xml" value="0.11413043478260869" />
         <entry key="app/src/main/res/layout/activity_camera.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/activity_camerax_capture.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/activity_camerax_threeshot.xml" value="0.2947916666666667" />
         <entry key="app/src/main/res/layout/activity_geo.xml" value="0.2947916666666667" />
         <entry key="app/src/main/res/layout/camera_live.xml" value="0.2947916666666667" />
         <entry key="app/src/main/res/layout/camera_preview.xml" value="0.29375" />

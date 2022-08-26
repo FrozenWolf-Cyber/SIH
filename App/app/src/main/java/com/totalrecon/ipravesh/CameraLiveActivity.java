@@ -167,7 +167,7 @@ public class CameraLiveActivity extends AppCompatActivity {
     boolean developerMode=false;
     boolean start=true,flipX=false;
     Context context=CameraLiveActivity.this;
-    int cam_face=CameraSelector.LENS_FACING_BACK; //Default Back Camera
+    int cam_face=CameraSelector.LENS_FACING_FRONT; //Default Back Camera
 
     CountDownTimer TIMER;
 

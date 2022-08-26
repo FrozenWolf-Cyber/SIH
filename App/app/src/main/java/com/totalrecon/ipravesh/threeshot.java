@@ -23,6 +23,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.*;
 import java.io.*;
 
@@ -123,8 +125,8 @@ public class threeshot extends AppCompatActivity {
                     show_error("error1 "+e);
                     e.printStackTrace();
                 }
-                Intent camera_intent1= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                camera_intent1.putExtra("android.intent.extras.CAMERA_FACING", 1); // Open front camera first
+                Intent camera_intent1= new Intent(getApplicationContext(), camerax_threeshot.class);
+                camera_intent1.putExtra("nth_img", pic_id1); // Open front camera first
                 startActivityForResult(camera_intent1, pic_id1);
             }
         });
@@ -141,8 +143,8 @@ public class threeshot extends AppCompatActivity {
                     show_error("error1 "+e);
                     e.printStackTrace();
                 }
-                Intent camera_intent2= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                camera_intent2.putExtra("android.intent.extras.CAMERA_FACING", 1); // Open front camera first
+                Intent camera_intent2= new Intent(getApplicationContext(), camerax_threeshot.class);
+                camera_intent2.putExtra("nth_img", pic_id2); // Open front camera first
                 startActivityForResult(camera_intent2, pic_id2);
             }
         });
@@ -159,8 +161,8 @@ public class threeshot extends AppCompatActivity {
                     show_error("error1 "+e);
                     e.printStackTrace();
                 }
-                Intent camera_intent3= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                camera_intent3.putExtra("android.intent.extras.CAMERA_FACING", 1); // Open front camera first
+                Intent camera_intent3= new Intent(getApplicationContext(), camerax_threeshot.class);
+                camera_intent3.putExtra("nth_img", pic_id3); // Open front camera first
                 startActivityForResult(camera_intent3, pic_id3);
             }
         });
@@ -203,9 +205,10 @@ public class threeshot extends AppCompatActivity {
         // Match the request 'pic id' with requestCode
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == pic_id1 && resultCode == RESULT_OK) {
-            count_of_times[0] = 0;
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+        if (requestCode == pic_id1) {
+            byte[] byteArray = getIntent().getByteArrayExtra("data");
+            Bitmap photo = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+
 
             my_model.getEmbeddings((photo));
             new Handler().postDelayed(new Runnable() {
