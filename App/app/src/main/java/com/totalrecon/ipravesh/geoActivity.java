@@ -49,6 +49,7 @@ import com.google.android.gms.tasks.Task;
 import com.totalrecon.ipravesh.data.model.VolleyMultipartRequest;
 import com.totalrecon.ipravesh.data.model.VolleySingleton;
 
+import java.io.Console;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -61,8 +62,8 @@ public class geoActivity extends AppCompatActivity {
 
     private LocationRequest locationRequest;
     public double[] coord = new double[2];
-    public String emp_no = read_data("emp_no");
-    public String branch_name = read_data("branch_name");
+    public String emp_no;
+    public String branch_name;
 
     // post request for fetching office address
     public String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_branch_info";
@@ -94,6 +95,8 @@ public class geoActivity extends AppCompatActivity {
 
         getCurrentLocation();
 
+        emp_no = read_data("emp_no");
+        branch_name = read_data("branch_name");
 
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
             @Override
@@ -137,7 +140,7 @@ public class geoActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("emp_no", emp_no);
-                params.put("branch_name", finalBranch_name);
+                params.put("branch_name", branch_name);
                 Log.i("params", "" + params.toString());
                 return params;
             }
@@ -176,7 +179,11 @@ public class geoActivity extends AppCompatActivity {
         if (requestCode == 2) {
             if (resultCode == Activity.RESULT_OK) {
 
+            for (int i=0; i<=100; i++) {
+                Log.i("TRY : ", Integer.toString(i));
                 getCurrentLocation();
+                Log.i("\n","\n");
+            }
             }
         }
     }
@@ -199,7 +206,6 @@ public class geoActivity extends AppCompatActivity {
                             if (locationResult != null && locationResult.getLocations().size() > 0) {
 
                                 int index = locationResult.getLocations().size() - 1;
-
                                 double latitude = locationResult.getLocations().get(index).getLatitude();
                                 double longitude = locationResult.getLocations().get(index).getLongitude();
                                 Log.i("Latitude", "" + Double.toString(latitude));
