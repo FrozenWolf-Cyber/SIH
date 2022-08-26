@@ -67,6 +67,7 @@ import java.util.Map;
 
 
 public class cameraActivity extends AppCompatActivity {
+    private static final int MY_CAMERA_REQUEST_CODE = 1;
 
     // Define the pic id
     private static final int pic_id = 121;
@@ -161,7 +162,7 @@ public class cameraActivity extends AppCompatActivity {
                         locationRequest.setInterval(5000);
                         locationRequest.setFastestInterval(2000);
                         locationRequest.setSmallestDisplacement(10);
-                        getCurrentLocation();
+                        getCurrentLocation(getApplicationContext());
 
                         // verification
 //                    show_alert("Verified!");
@@ -275,11 +276,11 @@ public class cameraActivity extends AppCompatActivity {
 
     }
 
-    public void getCurrentLocation() {
+    public void getCurrentLocation(Context context ) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
                 if (isGPSEnabled()) {
                     LocationServices.getFusedLocationProviderClient(getApplicationContext()).requestLocationUpdates(locationRequest, new LocationCallback() {
@@ -367,7 +368,7 @@ public class cameraActivity extends AppCompatActivity {
         Log.i("RESPONSE", dis + "\n" + latitude + "\n" + longitude);
 
         // dis is in km
-        double zero_error = 30 * (0.001);
+        double zero_error = 30 * (0.1);
         if (dis < 0.1 + zero_error) {
             write_data("latitude" , Double.toString(latitude));
             write_data("longitude" , Double.toString(longitude));
@@ -539,4 +540,16 @@ public class cameraActivity extends AppCompatActivity {
             write_data("check_status", "checkin");
         }
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 }

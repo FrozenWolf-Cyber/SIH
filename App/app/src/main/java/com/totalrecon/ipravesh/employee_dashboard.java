@@ -87,6 +87,8 @@ public class employee_dashboard extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.Add) {
                     check_status_func();
+                    Intent intent = new Intent(employee_dashboard.this, geoActivity.class);
+                    startActivity(intent);
                 }
                 if (item.getItemId() == R.id.Logs) {
                     Intent i = new Intent(employee_dashboard.this, logs.class);

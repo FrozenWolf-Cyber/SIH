@@ -73,8 +73,7 @@ public class geoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo);
@@ -302,11 +301,11 @@ public class geoActivity extends AppCompatActivity {
                         Log.i("RESPONSE", dis + "\n" + latitude + "\n" + longitude);
 
                         // dis is in km
-                        double zero_error = 30 * (0.001);
+                        double zero_error = 30 * (0.1);
                         if (dis < 0.1 + zero_error) {
                             write_data("latitude" , Double.toString(latitude));
                             write_data("longitude" , Double.toString(longitude));
-                                Intent i = new Intent(geoActivity.this, cameraActivity.class);
+                                Intent i = new Intent(geoActivity.this, CameraLiveActivity.class);
                                 startActivity(i);
 
                             // send_log(Double.toString(latitude), Double.toString(longitude));
