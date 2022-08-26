@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +40,8 @@ public class register_new_employee_cred extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_newemployee_cred_new);
 
@@ -201,6 +203,7 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                                 }, new Response.ErrorListener() {
                                                                     @Override
                                                                     public void onErrorResponse(VolleyError error) {
+                                                                        loadingDialog.dismissDialog();
                                                                         error.printStackTrace();
                                                                     }
                                                                 }) {
@@ -213,6 +216,7 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                                 };
                                                                 VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
                                                                 Log.i("ollaala","lalala");
+                                                                loadingDialog.dismissDialog();
 
                                                                 // all details verified successfully
                                                                 Intent i = new Intent(register_new_employee_cred.this, otp_verification.class);
@@ -444,4 +448,23 @@ public class register_new_employee_cred extends AppCompatActivity {
         myEdit.putString(filename, data);
         myEdit.commit();
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Exit();
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    public void Exit(){
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+    }
+
 }

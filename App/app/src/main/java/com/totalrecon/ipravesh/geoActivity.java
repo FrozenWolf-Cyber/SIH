@@ -73,8 +73,8 @@ public class geoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo);
