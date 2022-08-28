@@ -7,8 +7,10 @@ const GenderContainer = document.querySelector('#gender-container');
 male.remove();
 female.remove();
 console.log(emp_no);var emp_data;
+// const fs = require('fs');
 // url = 'http://127.0.0.1:5000/get_info'
 // input data = {'emp_no' : emp_no}
+var emp_data;
 $.ajax('http://sih-smart-attendance.herokuapp.com/get_info', {
         type: 'POST',  
         data:{emp_no:'a'+emp_no+'a'},
@@ -66,22 +68,40 @@ function empProfileRender(data){
         });
     }
 };
-// $.ajax('http://sih-smart-attendance.herokuapp.com/get_img', {
-//         type: 'POST',  
-//         data:{emp_no:'a'+emp_no+'a'},
-//         success: function (data, status, xhr) {
-//              console.log('get_image',data);    
-//              // strip off the data: url prefix to get just the base64-encoded bytes
-//             //  $.ajax('/profile_img',{
-//             //     type:'POST',
-//             //     data,
-//             //     success:function (data,status,xhr){
-//             //         console.log(data);
-//             //     }
-//             //  });
+
+
+$.ajax('http://sih-smart-attendance.herokuapp.com/get_img_website', {
+        type: 'POST',  
+        data:{emp_no:'"'+emp_no+'"'},
+        success: function (data, status, xhr) {
+            const Profile  = document.querySelector('#profile-pic');
+            Profile.remove();
+            const ProfileContainer = document.querySelector('#profile-pic-container');
+            console.log('img api data',data);
+            // const buffer = Buffer.from(base64, "base64");
+            
+            // function hexToBase64(str) {
+            //     return btoa(String.fromCharCode.apply(null, str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ")));
+            // }
+            let profileString = `
+               <img id="profile-img" src="${'data:image/jpeg;base64,'+data}">
+            `;
+
+            // console.log('profile-img tag',profileString);
+            ProfileContainer.innerHTML = profileString + ProfileContainer.innerHTML;
+            ProfileContainer.querySelector('input').value = emp_data.name;
+            // console.log('get_image',data.length);    
+            // strip off the data: url prefix to get just the base64-encoded bytes
+            //  $.ajax('/profile_img',{
+            //     type:'POST',
+            //     data,
+            //     success:function (data,status,xhr){
+            //         console.log(data);
+            //     }
+            //  });
              
-//         }
-// });
+        }
+});
 
 
 

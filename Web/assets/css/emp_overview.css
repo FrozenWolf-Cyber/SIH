@@ -11,12 +11,13 @@
   box-sizing: border-box;
   text-align: left !important;
   padding-left: 12px;
-  color: grey;
+  color: white;
 }
 
 #main main {
   display: flex;
   align-items: center  !important;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   width: 100%;
 }
@@ -25,6 +26,21 @@
   box-shadow: #4d4de8 0px 3px 8px;
   border: 0px solid;
   border-radius: 0.9rem;
-  height: 600px;
-  width: 600px;
+  height: 420px;
+  width: 420px;
+}
+
+#main main #container1 {
+  height: 300px;
+  width: 420px;
+}
+
+#main main #container3 {
+  height: 300px;
+  width: 420px;
+}
+
+#main main #container6 {
+  height: 300px;
+  width: 720px;
 }

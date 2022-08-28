@@ -34,6 +34,9 @@
             padding:1px 3px 1px 3px;
             background-color: grey;
         }
+        label{
+            margin-left:6px;
+        }
         .editable-input{
             pointer-events: inherit; 
         }
@@ -48,6 +51,7 @@
     }
 }
 #calender-container{
+    backdrop-filter: blur(9px);
     height: fit-content;
     width: fit-content;
     display: flex;
@@ -57,65 +61,77 @@
     box-shadow: #4d4de8 0px 3px 8px;
     border-radius: 1rem;
     border:0px solid;
-    nav{
+    #dummy{
+        background-color: white;
+        padding:12px;
+        border:0px solid;
+        border-radius: 0.9rem;
         display: flex;
-        justify-content: space-evenly;
+        flex-direction: column;
         align-items: center;
-        margin-bottom:12px;
-        margin-top: 12px;
-        width:180px;
-        #mmyy{
-            margin-left:6px;
-            margin-right:6px;
+        justify-content: space-evenly;
+        nav{
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            margin-bottom:12px;
+            margin-top: 12px;
+            width:180px;
+            font-weight: 900;
+            #mmyy{
+                margin-left:6px;
+                margin-right:6px;
+            }
+            #right-cal-nav{
+                display: inline-block; 
+                font-size: 1.5rem;
+                color:#4d4de8;       
+            }
+            #left-cal-nav{
+                display: inline-block; 
+                font-size: 1.5rem;       
+                color:#4d4de8;
+            }
         }
-        #right-cal-nav{
-            display: inline-block; 
-            font-size: 1.5rem;
-            color:#4d4de8;       
-        }
-        #left-cal-nav{
-            display: inline-block; 
-            font-size: 1.5rem;       
-            color:#4d4de8;
+        #calender{
+            height:fit-content;
+            width: fit-content;
+            display: grid; 
+            // gap: 0px;
+            column-gap: 1px;
+            row-gap: 1px;
+            grid-template-columns: repeat(7,60px);
+            // margin-left: 12px;
+            .day{
+                height: 24px;
+                width: 45px;
+                border: 0px solid;
+                border-radius: 0.21rem;
+                background-color: #4d4de8;
+                color:white;
+                font-weight: bolder;
+                text-align: center;
+                box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+                text-transform: capitalize;
+            }
+            .dates{
+                height: 45px !important;
+                width: 51px !important;
+                border:0px solid;
+                border-radius: 0.21rem;
+                box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            }
+            .highlight{
+                background-color: lightgrey;
+            }
+            .present{
+                background-color: rgb(110, 236, 110);
+            }
+            .select{
+                border:2px solid #4d4de8;
+                box-sizing: border-box;
+            }
         }
     }
-    #calender{
-        height:fit-content;
-        width: fit-content;
-        display: grid; 
-        // gap: 0px;
-        column-gap: 1px;
-        row-gap: 1px;
-        grid-template-columns: repeat(7,60px);
-        // margin-left: 12px;
-        .day{
-            height: 24px;
-            width: 45px;
-            border: 0px solid;
-            border-radius: 0.21rem;
-            background-color: #4d4de8;
-            color:white;
-            font-weight: bolder;
-            text-align: center;
-            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-            text-transform: capitalize;
-        }
-        .dates{
-            height: 45px !important;
-            width: 51px !important;
-            border:0px solid;
-            border-radius: 0.21rem;
-            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        }
-        .highlight{
-            background-color: lightgrey;
-        }
-        .present{
-            background-color: rgb(110, 236, 110);
-        }
-        .select{
-            border:2px solid #4d4de8;
-            box-sizing: border-box;
-        }
-    }
+    
 }

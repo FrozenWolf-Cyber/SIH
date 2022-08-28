@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "anandavenkatesh-a",
   "license": "ISC",
@@ -15,11 +16,16 @@
     "express": "^4.18.1",
     "express-ejs-layouts": "^2.5.1",
     "highcharts": "^10.2.0",
+    "jimp": "^0.16.1",
     "node-base64-image": "^2.0.4",
     "node-sass-middleware": "^1.0.1",
     "nodejs-base64": "^2.0.0",
-    "nodemon": "^2.0.19",
     "noty": "^3.2.0-beta-deprecated",
+    "string-to-arraybuffer": "^1.0.2",
+    "superagent": "^8.0.0",
     "svg": "^0.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
   }
 }

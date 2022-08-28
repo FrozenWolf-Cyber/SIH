@@ -1,4 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=Aboreto&family=EB+Garamond&display=swap");
+@keyframes fromZero {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes nav {
+  from {
+    transform: translateX(-30px);
+    transform: scale(1);
+  }
+  to {
+    transform: translateX(0px);
+    transform: scale(1);
+  }
+}
+
 body {
   margin: 0;
   width: 100vw;
@@ -15,7 +35,7 @@ body #side-nav {
   border: 0px solid;
   border-radius: 1rem;
   font-size: 1.8rem;
-  height: 100vh;
+  height: 97vh;
   width: 63px;
   display: flex;
   flex-direction: column;
@@ -44,6 +64,10 @@ body #side-nav nav a {
 
 body #side-nav nav a i {
   color: #b7b7b7;
+  animation-name: nav;
+  animation-timing-function: ease-in;
+  animation-duration: 150ms;
+  animation-iteration-count: initial;
 }
 
 body #side-nav nav a i:hover {
@@ -81,4 +105,11 @@ body #side-nav a:hover {
 
 ::placeholder {
   font-family: 'EB Garamond', serif;
+}
+
+body * {
+  animation-name: fromZero;
+  animation-timing-function: ease-in;
+  animation-duration: 150ms;
+  animation-iteration-count: initial;
 }

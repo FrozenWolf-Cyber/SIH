@@ -245,6 +245,9 @@ var month_name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep
              console.log(event.target.getAttribute('data-in').substr(11),event.target.getAttribute('data-out').substr(11));
              this.CheckInElement.value = event.target.getAttribute('data-in').substr(11);
              this.CheckOutElement.value = event.target.getAttribute('data-out').substr(11);
+             this.select_date.classList.remove('select');
+             this.select_date = event.target;
+             event.target.classList.add('select');
           }
           else if(event.target.classList.contains('dates'))
           {

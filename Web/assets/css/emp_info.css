@@ -11,15 +11,16 @@ main #main {
   display: grid;
   gap: 6px;
   grid-template-rows: 1fr 1fr;
-  height: 98%;
-  width: 98%;
+  height: 97%;
+  width: 97%;
   justify-items: center;
   align-items: center;
 }
 
 main #main #profile-container {
-  height: 98%;
-  width: 98%;
+  backdrop-filter: blur(9px);
+  height: 97%;
+  width: 97%;
   border: 0px solid;
   border-radius: 1rem;
   box-shadow: #4d4de8 0px 3px 8px;
@@ -28,17 +29,25 @@ main #main #profile-container {
   align-items: center;
 }
 
+main #main #profile-container #profile-img {
+  display: inline-block;
+  height: 210px;
+  width: 210px;
+  border: 0px solid;
+  border-radius: 50%;
+}
+
 main #main #graph-container {
-  height: 98%;
-  width: 98%;
+  height: 97%;
+  width: 97%;
   border: 0px solid;
   border-radius: 1rem;
   box-shadow: #4d4de8 0px 3px 8px;
 }
 
 main #calender-container {
-  height: 98%;
-  width: 98%;
+  height: 97%;
+  width: 97%;
   border: 0px solid;
   border-radius: 1rem;
   box-shadow: #4d4de8 0px 3px 8px;
@@ -49,6 +58,11 @@ main #calender-container {
 }
 
 main #calender-container form {
+  font-weight: 900;
+  background-color: white;
+  border: 0px solid;
+  border-radius: 0.9rem;
+  padding: 12px;
   font-size: 1.2rem;
   font-family: 'EB Garamond', serif;
   margin-top: 21px;
@@ -68,6 +82,7 @@ main #calender-container form input {
   display: inline-block;
   height: 24px;
   width: 180px;
+  margin-left: 12px;
 }
 
 main #calender-container form .edit {
