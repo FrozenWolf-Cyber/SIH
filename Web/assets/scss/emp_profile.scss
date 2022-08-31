@@ -32,7 +32,9 @@ $containers-color:#ffffff;
                 font-size: 2.1rem;
                 font-family: 'EB Garamond', serif;
                 text-align: center;
+                font-weight: 900;
             }
+            pointer-events: none;
         }
         #other-details{
             width:420px;
@@ -72,4 +74,8 @@ $containers-color:#ffffff;
                 }
             }
         }
-       
+#profile-img{
+    height:120px;
+    width:120px;
+    display: inline-block;
+}     

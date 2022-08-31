@@ -52,6 +52,10 @@ function process_data()
       designation:{
            x:[],
            y:[]
+      },
+      branch:{
+        branches:[],
+        num:[]
       }
    };
    emp_list1.forEach(emp => {
@@ -63,6 +67,16 @@ function process_data()
       {
         data.designation.x.push(emp.designation);
         data.designation.y.push(1);
+      }
+
+      if(data.branch.branches.includes(emp.branch_name))
+      {
+        data.branch.num[data.branch.branches.indexOf(emp.branch_name)]++; 
+      }
+      else
+      {
+        data.branch.branches.push(emp.branch_name);
+        data.branch.num.push(1);
       }
       
       data.emp_num.total += 1;
@@ -76,6 +90,7 @@ function process_data()
 
 function davis(data)
 {
+  console.log('davis called');
   //gender
   Highcharts.chart('container1', {
     chart: {
@@ -120,6 +135,7 @@ function davis(data)
     }]
   });
   
+
   //designation
   let desig_data = [];
   for(let i = 0;i < data.designation.x.length;i++)
@@ -131,6 +147,8 @@ function davis(data)
     desig_data.push(desig);
   }
   console.log(desig_data);
+
+
   Highcharts.chart('container3', {
     chart: {
         type: 'column'
@@ -178,14 +196,78 @@ function davis(data)
         data:desig_data
       }
     ]
-});
+    });
+ 
 
-
-  const adv= document.querySelectorAll('.highcharts-credits');
-  for(i of adv)
+    console.log('davis data',data);  
+  let branchs = [];
+  console.log('data.branch',data.branch);
+  const container6Data = [];
+  for(let i = 0;i < data.branch.branches.length;i++)
   {
-    i.remove();
+    container6Data.push({
+      name:data.branch.branches[i],
+      y:data.branch.num[i]
+    });
   }
+  // console.log(cont6Data',container6Data);
+  Highcharts.chart('container6', {
+    chart: {
+      type: 'bar'
+    },
+    title: {
+      text: 'Branch vs Number of Employees'
+    },
+    xAxis: {
+      categories: data.branch.branches,
+      title: {
+        text: null
+      }
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: 'Branch',
+        align: 'high'
+      },
+      labels: {
+        overflow: 'justify'
+      }
+    },
+    plotOptions: {
+      bar: {
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    legend: {
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'top',
+      x: -40,
+      y: 80,
+      floating: true,
+      borderWidth: 1,
+      backgroundColor:
+        Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+      shadow: true
+    },
+    credits: {
+      enabled: false
+    },
+    series: [{
+      name:'Number of Employee',
+      data:data.branch.num
+    }]
+  });
+
+
+    const adv= document.querySelectorAll('.highcharts-credits');
+    for(i of adv)
+    {
+      i.remove();
+    }
 }
 
 

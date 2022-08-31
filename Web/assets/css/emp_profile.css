@@ -14,6 +14,7 @@
   background-color: #ffffff;
   padding: 12px;
   box-shadow: #4d4de8 0px 3px 8px;
+  pointer-events: none;
 }
 
 #profile-pic-container #profile-pic {
@@ -30,6 +31,7 @@
   font-size: 2.1rem;
   font-family: 'EB Garamond', serif;
   text-align: center;
+  font-weight: 900;
 }
 
 #other-details {
@@ -73,4 +75,10 @@
   background-color: transparent;
   border: none !important;
   font-size: 1rem;
+}
+
+#profile-img {
+  height: 120px;
+  width: 120px;
+  display: inline-block;
 }

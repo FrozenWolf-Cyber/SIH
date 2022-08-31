@@ -36,6 +36,10 @@
   background-color: grey;
 }
 
+#main-container2 form label {
+  margin-left: 6px;
+}
+
 #main-container2 form .editable-input {
   pointer-events: inherit;
 }
@@ -50,6 +54,7 @@
 }
 
 #calender-container {
+  backdrop-filter: blur(9px);
   height: fit-content;
   width: fit-content;
   display: flex;
@@ -60,33 +65,45 @@
   border: 0px solid;
 }
 
-#calender-container nav {
+#calender-container #dummy {
+  background-color: white;
+  padding: 12px;
+  border: 0px solid;
+  border-radius: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+#calender-container #dummy nav {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   margin-bottom: 12px;
   margin-top: 12px;
   width: 180px;
+  font-weight: 900;
 }
 
-#calender-container nav #mmyy {
+#calender-container #dummy nav #mmyy {
   margin-left: 6px;
   margin-right: 6px;
 }
 
-#calender-container nav #right-cal-nav {
+#calender-container #dummy nav #right-cal-nav {
   display: inline-block;
   font-size: 1.5rem;
   color: #4d4de8;
 }
 
-#calender-container nav #left-cal-nav {
+#calender-container #dummy nav #left-cal-nav {
   display: inline-block;
   font-size: 1.5rem;
   color: #4d4de8;
 }
 
-#calender-container #calender {
+#calender-container #dummy #calender {
   height: fit-content;
   width: fit-content;
   display: grid;
@@ -95,7 +112,7 @@
   grid-template-columns: repeat(7, 60px);
 }
 
-#calender-container #calender .day {
+#calender-container #dummy #calender .day {
   height: 24px;
   width: 45px;
   border: 0px solid;
@@ -108,7 +125,7 @@
   text-transform: capitalize;
 }
 
-#calender-container #calender .dates {
+#calender-container #dummy #calender .dates {
   height: 45px !important;
   width: 51px !important;
   border: 0px solid;
@@ -116,15 +133,15 @@
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
-#calender-container #calender .highlight {
+#calender-container #dummy #calender .highlight {
   background-color: lightgrey;
 }
 
-#calender-container #calender .present {
+#calender-container #dummy #calender .present {
   background-color: #6eec6e;
 }
 
-#calender-container #calender .select {
+#calender-container #dummy #calender .select {
   border: 2px solid #4d4de8;
   box-sizing: border-box;
 }

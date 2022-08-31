@@ -5,7 +5,7 @@ const sassMiddleware = require('node-sass-middleware');
 const layout = require('express-ejs-layouts');
 const path = require('path');
 const app = express();
-const port = 9996;
+const port = 5000;
 const bodyParser = require('body-parser');
 //setting up static files view_engine and sass middleaware
 app.use(sassMiddleware({

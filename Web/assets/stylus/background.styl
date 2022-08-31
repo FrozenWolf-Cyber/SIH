@@ -1,0 +1,88 @@
+
+
+body
+  //background #e67e22
+  background #0E6EFF
+  background: -webkit-linear-gradient(48deg, rgb(0, 229, 111), rgb(14, 110, 255));
+
+  height 480px
+  overflow hidden
+
+canvas
+  display block
+  vertical-align bottom
+
+
+#particles-js
+  position absolute
+  width 100%
+  height 480px
+  background-image url("")
+  background-repeat no-repeat
+  background-size cover
+  background-position 50% 50%
+
+
+@-webkit-keyframes rotate {
+  0% { transform: rotate(0deg) translate(-102px) rotate(0deg); }
+  100% { transform: rotate(360deg) translate(-102px) rotate(-360deg); }
+}
+
+@-webkit-keyframes rotate2 {
+  0% { transform: rotate(0deg) translate(102px) rotate(0deg); }
+  100% { transform: rotate(360deg) translate(102px) rotate(-360deg); }
+}
+
+
+@-webkit-keyframes pulse {
+  20% { transform: scale(0.9)}
+  50% { transform: scale(1)}
+  100% { transform: scale(1)}
+}
+
+.container
+  position absolute
+  width 100%
+  height 480px
+  padding-top 50px
+
+.logo
+  width 200px
+  height 200px
+  border-radius 50%
+  //background #46C4D3
+  border 5px solid 5px solid rgba(40, 197, 232, 0.87)
+  box-shadow 0 0 0 5px #fff
+  margin 0 auto
+  position relative
+  text-align center
+  padding-top 25px
+  > .ball
+    display block
+    width 15px
+    height 15px
+    background #fff
+    border-radius 50%
+    position absolute
+    background #fff
+    &:nth-of-type(1)
+      -webkit-animation rotate 3s infinite linear
+      bottom 46%
+      left 46%
+    &:nth-of-type(2)
+      -webkit-animation rotate2 3s infinite linear
+      bottom 46%
+      right 46%
+  >img
+    -webkit-animation pulse 3s infinite
+
+h2
+  font-family 'Raleway', 'Lato', 'Open Sans'
+  font-size 26px
+  font-weight 400
+  text-align center
+  color #f0f0f0
+  > small
+    font-family 'Open Sans'
+    font-size 15px
+    font-weight 300

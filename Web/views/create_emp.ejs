@@ -13,23 +13,27 @@
 
   output response data : employee no. (str) -->
 <link rel="stylesheet" href="/css/create_emp.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css" integrity="sha512-0p3K0H3S6Q4bEWZ/WmC94Tgit2ular2/n0ESdfEX8l172YyQj8re1Wu9s/HT9T/T2osUw5Gx/6pAZNk3UKbESw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <main>
 
     <form action="http://127.0.0.1:5000/admin_signup" method="post">
       <h1>Create Employee</h1>
-       <input type="email" name="mail_id" placeholder="Email">
-       <input type="text" name="name" placeholder="Employee name">
-       <input type="text" name="designation" placeholder="Designation">
+       <input type="email" name="mail_id" placeholder=" Email">
+       <input type="text" name="name" placeholder=" Employee name">
+       <input type="text" name="designation" placeholder=" Designation">
        <div id="gender">
-          <label for="male">Male</label>
-          <input type="radio" id="male" value="M" name="gender">
-          <label for="female">Female</label>
-          <input type="radio" id="female" value="F" name="gender"> 
+        <input type="radio" id="male" value="M" name="gender">
+        <label for="male">Male</label>
+        <input type="radio" id="female" value="F" name="gender"> 
+        <label for="female">Female</label>
        </div>
-       <input type="text" name="branch_name" placeholder="Branch Name">
-       <input type="number" name="contact_no" placeholder="Phone number">
+       <input type="text" name="branch_name" placeholder=" Branch Name">
+       <input type="number" name="contact_no" placeholder=" Phone number">
        <button type="submit">Register</button>
     </form>
 </main>
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js" integrity="sha512-lOrm9FgT1LKOJRUXF3tp6QaMorJftUjowOWiDcG5GFZ/q7ukof19V0HKx/GWzXCdt9zYju3/KhBNdCLzK8b90Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/js/create_emp.js"></script>

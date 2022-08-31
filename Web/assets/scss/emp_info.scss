@@ -153,31 +153,41 @@ main{
         display: grid;
         gap: 6px;
         grid-template-rows: 1fr 1fr;
-        height:98%;
-        width:98%;
+        height:97%;
+        width:97%;
         justify-items: center;
         align-items: center;
         #profile-container{
-            height:98%;
-            width:98%;
+            backdrop-filter: blur(9px);
+            height:97%;
+            width:97%;
             border:0px solid;
             border-radius: 1rem;
             box-shadow: #4d4de8 0px 3px 8px;
             display: flex;
             justify-content: space-evenly;
             align-items: center;
+            // background-color: white;
+            #profile-img{
+                display: inline-block;
+                height:210px;
+                width: 210px;
+                border:0px solid;
+                border-radius: 50%;
+            }
         }
         #graph-container{
-            height:98%;
-            width:98%;
+            height:97%;
+            width:97%;
             border:0px solid;
             border-radius: 1rem;
             box-shadow: #4d4de8 0px 3px 8px;
         }
     }
     #calender-container{
-        height:98%;
-        width:98%;
+        // background-color: white;
+        height:97%;
+        width:97%;
         border:0px solid;
         border-radius: 1rem;
         box-shadow: #4d4de8 0px 3px 8px;
@@ -188,6 +198,11 @@ main{
         // justify-items: center;
         // align-items: center;
         form{
+            font-weight: 900;
+            background-color: white;
+            border:0px solid;
+            border-radius: 0.9rem;
+            padding:12px;
             font-size: 1.2rem;
             font-family: 'EB Garamond', serif ;
             margin-top:21px;
@@ -206,6 +221,7 @@ main{
                 display: inline-block;
                 height:24px;
                 width:180px;
+                margin-left: 12px;
             }
             .edit{
                 font-size: smaller;

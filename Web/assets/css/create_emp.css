@@ -5,6 +5,7 @@ main {
 }
 
 form {
+  background-color: white;
   height: 600px;
   width: 450px;
   box-shadow: #4d4de8 0px 3px 8px;

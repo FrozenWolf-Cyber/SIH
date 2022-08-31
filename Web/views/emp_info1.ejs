@@ -10,9 +10,9 @@
             <div id="profile-container">
                 <div id = 'profile-pic-container'>
                     <div id="profile-pic"
-                        style="background-image: url('https://cdn0.iconfinder.com/data/icons/management-1/100/business-05-512.png');
+                        style="background-image: url('https://cdn3.iconfinder.com/data/icons/avatar-set/512/Avatar11-512.png');
                         background-position: center;
-                        background-size:111%;"
+                        background-size:121%;"
                     ></div>
                       <input type="text" value="Anand" name="name">
                   </div>
@@ -62,37 +62,40 @@
             </div>
         </div>
         <div id="calender-container">
-            <nav>
-                <i id="left-cal-nav" class="fa-solid fa-angle-left"></i>
-                <span id="mmyy">Aug-2022</span>
-                <i id="right-cal-nav" class="fa-solid fa-angle-right"></i>
-            </nav>
-            <!-- <div  class="calender-nav"><img src="/images/left-arrow.png" alt=""></div>
-            <div  class="calender-nav"><img src="/images/left-arrow.png" alt=""></div> -->
-
-            <div id="calender">
-                <div class="day">sun</div>
-                <div class="day">mon</div>
-                <div class="day">tues</div>
-                <div class="day">wed</div>
-                <div class="day">thu</div>
-                <div class="day">fri</div>
-                <div class="day">sat</div>
+            <div id="dummy">
+                <nav>
+                    <i id="left-cal-nav" class="fa-solid fa-angle-left"></i>
+                    <span id="mmyy">Aug-2022</span>
+                    <i id="right-cal-nav" class="fa-solid fa-angle-right"></i>
+                </nav>
+                <!-- <div  class="calender-nav"><img src="/images/left-arrow.png" alt=""></div>
+                <div  class="calender-nav"><img src="/images/left-arrow.png" alt=""></div> -->
     
-                <%for(let i = 1;i <= 37;i++){%>
-                    <div class="dates" id="<%= 'd'+i %>"></div>
-                <%}%>    
+                <div id="calender">
+                    <div class="day">sun</div>
+                    <div class="day">mon</div>
+                    <div class="day">tues</div>
+                    <div class="day">wed</div>
+                    <div class="day">thu</div>
+                    <div class="day">fri</div>
+                    <div class="day">sat</div>
+        
+                    <%for(let i = 1;i <= 37;i++){%>
+                        <div class="dates" id="<%= 'd'+i %>"></div>
+                    <%}%>    
+                </div>
+    
             </div>
-
+            
             <form action="" id="update-log">
                 <div>
-                    <label for="check-in">Check in</label>
+                    <label for="check-in">Entry </label>
                     <input type="text" id="check-in">
                     <button class="edit">edit</button>
                 </div>
                 
                 <div>
-                    <label for="check-out">Check out</label>
+                    <label for="check-out">Exit</label>
                     <input type="text" id="check-out">
                     <button class="edit">edit</button>
                 </div>
@@ -112,5 +115,26 @@
     LineChart.remove();
     document.querySelector('#graph-container').appendChild(LineChart);
 </script>
+<!-- <script>
 
+   let davis_server_data = document.querySelector('#line-chart > div').innerHTML
+   $.ajax('/set_davis', {
+      type: 'POST',
+      data:davis_server_data,  
+      success: function (data, status, xhr) {
+         console.log('set_davis:response',data);
+      }
+   });
+</script> -->
 <!-- <script src="/js/emp_attendance.js"></script> -->
+
+
+<!-- <script>
+    $.ajax('/get_davis',{
+        type:'POST',
+        data:emp_no,
+        success:function (data, status, xhr) {
+         console.log('set_davis:response',data);
+      }
+    });
+</script> -->
