@@ -3,6 +3,25 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_alerts.xml" value="0.14130434782608695" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_camera.xml" value="0.14356884057971014" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_geo.xml" value="0.14356884057971014" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_logd.xml" value="0.12771739130434784" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_login.xml" value="0.1308876811594203" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_register.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_signup_final_upload.xml" value="0.1308876811594203" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_signup_newemployee.xml" value="0.1308876811594203" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_signup_newemployee_cred.xml" value="0.12" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/activity_threeshot.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/check_status_layout.xml" value="0.1" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/dahsboard_home.xml" value="0.12771739130434784" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/dashboard.xml" value="0.18025078369905956" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/existing_user.xml" value="0.14130434782608695" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/existing_user_login.xml" value="0.11503623188405797" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/existing_user_login_new.xml" value="0.13451086956521738" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/otp_verification_signup.xml" value="0.22" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/start_page.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/Admin/Desktop/Hackathons/SIH/App/app/src/main/res/layout/upload_sign_in_activity.xml" value="0.10260416666666666" />
         <entry key="..\:/Users/Gokul adethya/Desktop/SIH/app_dev/Final App - Except post req/app/src/main/res/layout/activity_camera.xml" value="0.20878623188405798" />
         <entry key="..\:/Users/Gokul adethya/Desktop/SIH/app_dev/Final App - Except post req/app/src/main/res/layout/activity_geo.xml" value="0.2033514492753623" />
         <entry key="..\:/Users/Gokul adethya/Desktop/SIH/app_dev/Final App - Except post req/app/src/main/res/layout/activity_login.xml" value="0.21510416666666668" />
@@ -14,11 +33,84 @@
         <entry key="..\:/Users/Gokul adethya/Desktop/SIH/app_dev/Final App - Except post req/app/src/main/res/layout/check_status_layout.xml" value="0.18857142857142858" />
         <entry key="..\:/Users/Gokul adethya/Desktop/SIH/app_dev/Final App - Except post req/app/src/main/res/layout/existing_user.xml" value="0.18857142857142858" />
         <entry key="..\:/Users/Gokul adethya/Desktop/SIH/app_dev/Final App - Except post req/app/src/main/res/layout/upload_sign_in_activity.xml" value="0.2033514492753623" />
+        <entry key="..\:/Users/Kavimalar/Documents/GitHub/SIH/App/app/src/main/res/layout/activity_alerts.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Kavimalar/Documents/GitHub/SIH/App/app/src/main/res/layout/activity_camera.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Kavimalar/Documents/GitHub/SIH/App/app/src/main/res/layout/activity_geo.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Kavimalar/Documents/GitHub/SIH/App/app/src/main/res/layout/activity_logd.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Kavimalar/Documents/GitHub/SIH/App/app/src/main/res/layout/dahsboard_home.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Kavimalar/Documents/GitHub/SIH/App/app/src/main/res/layout/dashboard.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Kavimalar/Documents/GitHub/SIH/App/app/src/main/res/layout/existing_user_login.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Kavimalar/Documents/GitHub/SIH/App/app/src/main/res/layout/existing_user_login_new.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Kavimalar/Documents/GitHub/SIH/App/app/src/main/res/layout/otp_verification_signup.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Kavimalar/Documents/GitHub/SIH/App/app/src/main/res/layout/splash_screen1.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Kavimalar/Documents/GitHub/SIH/App/app/src/main/res/layout/upload_sign_in_activity.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2265" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2265" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/activity_alerts.xml" value="0.25" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/activity_geo.xml" value="0.25" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/activity_logd.xml" value="0.4" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/activity_otp.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/activity_signup_newemployee_cred_new.xml" value="0.4" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/activity_splashscreen.xml" value="0.264" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/activity_threeshot_new.xml" value="0.6" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/dahsboard_home.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/dashboard.xml" value="0.25" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/dashboard_profile.xml" value="0.3857404021937843" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/existing_user_login.xml" value="0.25" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/existing_user_login_new.xml" value="0.72" />
+        <entry key="..\:/Users/aadar/Desktop/SIH/App/app/src/main/res/layout/otp_verification_signup.xml" value="0.4" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2265" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/drawable-v24/round_bg.xml" value="0.2265" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2265" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/drawable/image_border.xml" value="0.2265" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/drawable/progress_bg.xml" value="0.2265" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/drawable/rounded_button.xml" value="0.2265" />
         <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/font/dancingscript.xml" value="0.14010416666666667" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/activity_camera.xml" value="0.25" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/activity_geo.xml" value="0.25" />
         <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/activity_login.xml" value="0.136" />
         <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/activity_register.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/activity_signup_newemployee_cred.xml" value="0.536" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/activity_signup_newemployee_cred_new.xml" value="0.4" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/activity_threeshot.xml" value="0.25" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/activity_threeshot_new.xml" value="0.3917228103946102" />
         <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/check_status_layout.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/customdialogbox.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/dashboard.xml" value="0.25" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/existing_user_login.xml" value="0.264" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/existing_user_login_new.xml" value="0.4" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/layout/upload_sign_in_activity.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/App/app/src/main/res/menu/menu_main.xml" value="0.25" />
         <entry key="..\:/Users/aadar/Desktop/SIH_Proj/SIH/tf_lite/app/src/main/res/xml/network_security_config.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/selva/AndroidStudioProjects/App/app/src/main/res/layout/activity_login.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/selva/AndroidStudioProjects/App/app/src/main/res/layout/activity_register.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/selva/AndroidStudioProjects/App/app/src/main/res/layout/activity_signup_final_upload.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/selva/AndroidStudioProjects/App/app/src/main/res/layout/activity_signup_newemployee_cred.xml" value="0.19067977768277042" />
+        <entry key="..\:/Users/selva/AndroidStudioProjects/App/app/src/main/res/layout/activity_threeshot.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/selva/AndroidStudioProjects/App/app/src/main/res/layout/existing_user_login.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/selva/AndroidStudioProjects/App/app/src/main/res/layout/existing_user_login_new.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/drawable-v24/round_bg.xml" value="0.148" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/drawable/bottom_nav_selector.xml" value="0.225" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/drawable/circular.xml" value="0.2375" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/drawable/image.xml" value="0.1" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/drawable/rounded_button.xml" value="0.148" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/activity_alerts.xml" value="0.21822916666666667" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/activity_logd.xml" value="0.21822916666666667" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/activity_signup_newemployee_cred.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/activity_signup_newemployee_cred_new.xml" value="0.6" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/activity_splashscreen.xml" value="0.264" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/activity_threeshot.xml" value="0.22146739130434784" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/activity_threeshot_new.xml" value="0.22146739130434784" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/camera_live.xml" value="0.22146739130434784" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/check_status_layout.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/dahsboard_new.xml" value="0.264" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/dashboard.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/dashboard_profile.xml" value="0.264" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/existing_user_login_new.xml" value="0.2" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/otp_verification_signup.xml" value="0.2" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/layout/upload_sign_in_activity.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/menu/bottom_nav_menu.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/selva/Downloads/App/app/src/main/res/menu/menu_main.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/selva/OneDrive/Documents/GitHub/SIH/App/app/src/main/res/layout/activity_camera.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/selva/OneDrive/Documents/GitHub/SIH/App/app/src/main/res/layout/activity_geo.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/selva/OneDrive/Documents/GitHub/SIH/App/app/src/main/res/layout/activity_login.xml" value="0.23645833333333333" />
@@ -42,6 +134,7 @@
       </map>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

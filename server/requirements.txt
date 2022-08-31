@@ -1,7 +1,9 @@
-cmake
-face_recognition
-PyDrive
-psycopg2
 fastapi[all]
+asyncpg
 uvicorn
 asgiref
+SQLAlchemy
+databases
+psycopg2
+bcrypt
+pycryptodomex

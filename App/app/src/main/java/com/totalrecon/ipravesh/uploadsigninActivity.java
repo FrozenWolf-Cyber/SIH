@@ -1,12 +1,15 @@
 package com.totalrecon.ipravesh;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,6 +25,11 @@ public class uploadsigninActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.upload_sign_in_activity);
         Bitmap photo = null;
@@ -41,7 +49,7 @@ public class uploadsigninActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                String username = read_data("cur_user_login");
+                String username = read_data("user_name");
                 String gps = read_data("myGps");
                 String cur_state = read_data("check_status");
                 Date currentTime = Calendar.getInstance().getTime();
@@ -117,4 +125,21 @@ public class uploadsigninActivity extends AppCompatActivity {
         myEdit.putString(filename, data);
         myEdit.commit();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+//                Exit();
+                finishAffinity();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+//    public void Exit(){
+//        Intent a = new Intent(Intent.ACTION_MAIN);
+//        a.addCategory(Intent.CATEGORY_HOME);
+//        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(a);
+//    }
 }

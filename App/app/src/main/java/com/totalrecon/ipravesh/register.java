@@ -1,11 +1,13 @@
 package com.totalrecon.ipravesh;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -49,6 +51,10 @@ public class register extends AppCompatActivity implements AdapterView.OnItemSel
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         button=findViewById(R.id.button);
@@ -179,4 +185,22 @@ public class register extends AppCompatActivity implements AdapterView.OnItemSel
         myEdit.putString(filename, data);
         myEdit.commit();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Exit();
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    public void Exit(){
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+    }
+
 }

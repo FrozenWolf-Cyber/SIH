@@ -1,43 +1,84 @@
+import json
 import os
 import shutil
+import base64
+import asyncio
 import uvicorn
-from gdrive_wrapper import gdrive
-from asgiref.sync import sync_to_async
+import logging
+from encryption import encryption_algo
+from messenger import mailman
 from psql_database import Database
 from fastapi import FastAPI, File, UploadFile, Form
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response, JSONResponse
 
+db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
+db_user =  'postgres' #'be6a5ab891fb44'
+db_psswrd = '3112003' #heroku-psswrd
+db_name = 'sih_attendance' #heroku-db
 
-# db_host = 'localhost' #'us-cdbr-iron-east-01.cleardb.net'
-# db_user =  'postgres' #'be6a5ab891fb44'
-# db_psswrd = 'aadarsh2003' #heroku-psswrd
-# db_name = 'sih_attendance' #heroku-db
+# db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
+# db_user =  'sxxkdscneuzrwf'
+# db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
+# db_name = 'd3rhldildqlaje'
 
-db_host = 'ec2-52-207-74-100.compute-1.amazonaws.com' 
-db_user =  'sxxkdscneuzrwf'
-db_psswrd = '0e4072748413d89453bc01d7eb6d8b5d9c128f0c4ce4550defbb3b4d4e203a7f'
-db_name = 'd3rhldildqlaje'
+ADMIN_USERNAME = 'ADMIN'
+ADMIN_PSSWRD = 'ADMIN'
 
-mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name)
-mydrive = gdrive()
+encryptor = encryption_algo('cervh0s3e2hnpaitaeitad0sn', 'eaia0dnesp3thach2tir0esnv')
+messenger = mailman()
+# encryptor = pickle.load(open('encryptor.pkl', 'rb'))
+
+mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name, encryptor=encryptor)
+
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
-def clear_local_data(user_id):
-    for img in os.listdir(f"img_db/{user_id}"):
-        os.remove(f"img_db/{user_id}/{img}")
+async def clear_local_data(emp_no):
+    for img in os.listdir(f"img_db/{emp_no}"):
+        os.remove(f"img_db/{emp_no}/{img}")
 
-    os.rmdir(f"img_db/{user_id}")
+    os.rmdir(f"img_db/{emp_no}")
+
+
+async def write_img_data(emp_no, each_image):
+    img = each_image.filename
+    file_location = f"img_db/{emp_no}/{img}.jpg"
+
+    with open(file_location, "wb+") as buffer:
+        shutil.copyfileobj(each_image.file, buffer)
+
+
+async def exception_handle(msg, func, *args):
+    try:
+        return await func(*args)
+
+    except:
+        logger = logging.getLogger()
+        logging.exception(msg)
+        logger.handlers[0].flush()
+
+        return msg
 
 
 @app.post('/update_log')
-def update_log(
-    user_id : str = Form(...),
+async def update_log(
+    emp_no : str = Form(...),
     check_in: str = Form(...),
-    check_out: str = Form(...)
+    check_out: str = Form(...),
+    latitude: str= Form(...),
+    longitude: str= Form(...)
 ):
-    user_id = user_id[1:-1]
+    emp_no = emp_no[1:-1]
 
-    if not mydb.check_user_id_exist(user_id):
+    if not await mydb.check_emp_no_signed(emp_no):
         return "NOPE"
 
     if check_in == "blah-null":
@@ -46,122 +87,394 @@ def update_log(
     if check_out == "blah-null":
         check_out = None
 
-    mydb.update_log(user_id, check_in, check_out)
+    return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.update_log, emp_no, check_in, check_out, latitude, longitude)
 
-    return "LOG UPDATED"
 
-@app.post('/check_in_out_status')
-def check_in_out_status(
-    user_id : str = Form(...),
+@app.post('/modify_log')
+async def modify_log(
+    emp_no : str = Form(...),
+    old_check_in: str = Form(...),
+    old_check_out: str = Form(...),
+    new_check_in: str = Form(...),
+    new_check_out: str = Form(...)
 ):
-    user_id = user_id[1:-1]
+    emp_no = emp_no[1:-1]
 
-    if not mydb.check_user_id_exist(user_id):
+    if not await mydb.check_emp_no_signed(emp_no):
         return "NOPE"
 
-    return mydb.check_in_out(user_id)
+    return await exception_handle("SERVER ERROR WHILE MODIFYING LOG", mydb.modify_log, emp_no, old_check_in, old_check_out, new_check_in, new_check_out)
+
+
+@app.post('/check_in_out_status')
+async def check_in_out_status(
+    emp_no : str = Form(...),
+):
+    emp_no = emp_no[1:-1]
+
+    if not await mydb.check_emp_no_signed(emp_no):
+        return "NOPE"
+    
+    return await exception_handle("SERVER ERROR WHILE UPDATING LOG", mydb.check_in_out_status, emp_no)
+
+
+@app.post('/admin_signup')
+async def admin_signup(
+    mail_id: str = Form(...),
+    name: str = Form(...),
+    designation: str = Form(...),
+    gender: str = Form(...),
+    branch_name: str = Form(...),
+    contact_no: str = Form(...),
+
+):
+
+    name, designation, gender, branch_name = encryptor.AES_encrypt(name), encryptor.AES_encrypt(designation), encryptor.AES_encrypt(gender), encryptor.AES_encrypt(branch_name)
+    data = [mail_id, name, designation, gender, branch_name, contact_no]
+
+    sucess = False
+    tries = 0
+    while not sucess:
+        try:
+            e = await mydb.admin_signup(data)
+            
+        except:
+            # print("SERVER ERROR WHILE UPDATING ADMIN SIGNUP IN PSQL")
+            await asyncio.sleep(0.2)
+
+        else:
+            sucess = True
+
+        if tries>=50:
+            return "SERVER IS BUSY TRY SOMETIME LATER"
+
+        tries+=1
+
+
+
+
+    if len(e)==2:
+        user_name_availablity, emp_no = e
+
+    else:
+        return e
+
+    if emp_no is None:
+        return "ALREADY IN USE"
+
+    return emp_no
+
+
+@app.post('/send_otp')
+async def send_otp(
+    emp_no: str = Form(...)
+):
+    emp_no = emp_no[1:-1]
+
+    mailid = await mydb.get_mail_id(emp_no)
+    mailid = encryptor.AES_decrypt(mailid)
+
+    try:
+        otp = messenger.send_otp(mailid)
+    except:
+        messenger = mailman()
+        otp = messenger.send_otp(emp_no, mailid)
+
+    otp = encryptor.SHA256_encrypt(otp)
+    await mydb.save_otp(emp_no, otp)
+
+    return "SENT"
+
+
+@app.post('/check_otp')
+async def check_otp(
+    emp_no: str = Form(...),
+    otp: str = Form(...)
+):
+
+    emp_no = emp_no[1:-1]
+    otp = otp[1:-1]
+
+
+    if await mydb.check_otp(emp_no, encryptor.SHA256_encrypt(otp)):
+        return "VERIFIED"
+
+    else:
+        return "NO"
+    
+
 
 @app.post('/signup')
 async def signup(
-    mail_id: str = Form(...),
+
+    mobileid: str = Form(...),
     user_name: str = Form(...),
     password: str = Form(...),
-    name: str = Form(...),
-    designation: str = Form(...),
     emp_no: str = Form(...),
-    gender: str = Form(...),
-    office_address: str = Form(...),
-    contact_no: str = Form(...),
     embed1 : list = Form(...),
     embed2 : list = Form(...),
     embed3 : list = Form(...),
     files: UploadFile = File(...)
 ):
-    data = [mail_id, user_name, password, name, designation, emp_no, gender, office_address, contact_no, embed1, embed2, embed3]
 
-    user_name_availablity, user_id = mydb.sign_up(tuple(data))
-    if user_id is None:
+    emp_no = emp_no[1:-1]
+    
+    password = encryptor.SHA256_encrypt(password)
+    # user_name = encryptor.SHA256_encrypt(user_name)
+
+    mobileid = encryptor.SHA256_encrypt(mobileid)
+    data = [user_name, password, emp_no, mobileid, embed1, embed2, embed3]
+
+    if not await mydb.check_emp_no_exist_master(emp_no):
+        return "EMPLOYEE NUMBER DOESN'T EXIST IN MASTER"
+
+    e = await exception_handle("SERVER ERROR WHILE UPDATING SIGNUP IN PSQL", mydb.signup, tuple(data))
+
+    if len(e)==2:
+        user_name_availablity, emp_no = e
+
+    else:
+        return e
+
+    if emp_no is None:
         return "ALREADY IN USE"
 
-    os.mkdir(f"img_db/{user_id}")
+    os.mkdir(f"img_db/{emp_no}")
     
     each_image = files
-    img = each_image.filename
-    file_location = f"img_db/{user_id}/{img}"
-    with open(file_location, "wb+") as buffer:
-        shutil.copyfileobj(each_image.file, buffer)
 
-    mydrive.upload_img_folder(user_id)
-    clear_local_data(user_id)
+    e = await exception_handle("SERVER ERROR WHILE PROCESSING IMAGE DATA", write_img_data, emp_no, each_image)
 
-    return user_id
+    if e is not None:
+        await clear_local_data(emp_no)
+        return e
+
+    e = await exception_handle("SERVER ERROR WHILE UPLOADING IMAGE DATA TO PSQL", mydb.upload_img, emp_no, base64.b64encode(open(f"img_db/{emp_no}/{each_image.filename}.jpg",'rb').read()))
+
+    if e is not None:
+        return e
+
+    await clear_local_data(emp_no)
+    return emp_no
+
+
+@app.post('/reset_mobileid')
+async def reset_mobileid(
+    emp_no: str = Form(...),
+    mobileid: str = Form(...)
+):
+
+    emp_no = emp_no[1:-1]
+    mobileid = encryptor.SHA256_encrypt(mobileid)
+
+    return await mydb.reset_mobileid(emp_no, mobileid)
+
+
+@app.post('/admin_reset_mobileid')
+async def admin_reset_mobileid(
+    emp_no: str = Form(...),
+):
+
+    emp_no = emp_no[1:-1]
+
+    return await mydb.admin_reset_mobileid(emp_no)
 
 
 @app.post('/login')
 async def login(
     user_name_or_mail_id: str = Form(...),
     type_of_login: str = Form(...),
-    password: str = Form(...)
+    password: str = Form(...),
+    mobileid: str = Form(...)
+    
 ):
-    data = [user_name_or_mail_id, password]
+    mobileid = encryptor.SHA256_encrypt(mobileid)
 
-    unique_id = mydb.user_login_details(data, type_of_login = type_of_login)
-    return str(unique_id)
+    if user_name_or_mail_id == ADMIN_USERNAME and password == ADMIN_PSSWRD:
+        return "ADMIN"
+
+    password = encryptor.SHA256_encrypt(password)
+    # user_name_or_mail_id = encryptor.SHA256_encrypt(user_name_or_mail_id)
+        
+    data = [user_name_or_mail_id, password, mobileid]
+
+    return str(await exception_handle("SERVER ERROR WHILE CHECKING LOGIN DETAILS", mydb.user_login_details, data, type_of_login))
 
 @app.post('/check_username')
 async def check_username(
     username: str = Form(...),
 ):
-    data = [username]
 
-    if mydb.check_username(data):
+    # username = encryptor.SHA256_encrypt(username)
+    if await mydb.check_username(username):
         return "YES"
 
     return "NO"
 
 
+@app.post('/check_emp_no')
+async def check_emp_no(
+    emp_no: str = Form(...),
+):
+
+    result = []
+    emp_no = emp_no[1:-1]
+    if await mydb.check_emp_no_exist_master(emp_no):
+        result.append("YES")
+
+    else:
+        result.append("NO")
+
+    if await mydb.check_emp_no_signed(emp_no):
+            result.append("YES")
+
+    else:
+        result.append("NO")   
+
+    return result
+    
+    
 @app.post('/get_info')
 async def get_info(
-    user_id: str = Form(...)
+    emp_no: str = Form(...)
 ):
-    user_id = user_id[1:-1]
-    if not mydb.check_user_id_exist(user_id):
-        return "NOPE"
+    emp_no = emp_no[1:-1]
+    if not await mydb.check_emp_no_signed(emp_no):
+        return "EMPLOYEE NUMBER DOESN'T EXIST"
 
-    data_args = 'name,designation,emp_no,gender,office_address,contact_no,check_in,check_out'.split(',')
-    data = mydb.get_user_details(user_id)
+    data_args = 'name,mail_id,designation,emp_no,gender,branch_name,contact_no,check_in,check_out,in_latitude,in_longitude,out_latitude,out_longitude'.split(',')
+    decrypt_for = 'name,mail_id,designation,gender,branch_name,contact_no'.split(',')
+    e = await exception_handle("SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL", mydb.get_user_details, emp_no)
+    if e == "SERVER ERROR WHILE RETRIEVING USER INFO FROM PSQL":
+        return e
+    else:
+        data = e
     
     form = {}
     for i, j in zip(data_args, data):
+        if i in decrypt_for:
+            j = encryptor.AES_decrypt(j)
         form[i] = j
         
     return form
 
 @app.post('/get_embed')
 async def get_embed(
-    user_id: str = Form(...)
+    emp_no: str = Form(...)
 ):
-    user_id = user_id[1:-1]
-    if not mydb.check_user_id_exist(user_id):
-        return "NOPE"
+    emp_no = emp_no[1:-1]
+    if not await mydb.check_emp_no_signed(emp_no):
+        return "EMPLOYEE NUMBER DOESN'T EXIST"
 
     data_args = 'embed1,embed2,embed3'.split(',')
-    data = mydb.get_embeds(user_id)
     
+    e = await exception_handle("SERVER ERROR WHILE RETRIEVING EMBEDDINGS FROM PSQL", mydb.get_embeds, emp_no)
+    if e == "SERVER ERROR WHILE RETRIEVING EMBEDDINGS FROM PSQL":
+        return e
+    else:
+        data = e
+
+    # print(len(data), flush=True)
+    # print(len(data), data, data[0], sep="\n\n\n", flush=True)
     form = {}
     for i, j in zip(data_args, data):
-        j = j[0][1:-1].split(', ')
-        j = list(map(float,j))
+        # print ('j', j, j[0])
+        j = eval(','.join(j))
         form[i] = j
         
     return form
 
 
-@app.post('/gdrive_refresh')
-def gdrive_refresh():
-    mydrive.refresh()
-    return "FINISHED REFRESHING"
+@app.post('/get_branch_info')
+async def get_branch_info(
+    emp_no: str = Form(...),
+    branch_name: str = Form(...)
+):
+    emp_no = emp_no[1:-1]
+    if not await mydb.check_emp_no_signed(emp_no):
+        return "EMPLOYEE NUMBER DOESN'T EXIST"
 
+    return await exception_handle("SERVER ERROR WHILE GETTING OFFICE ADDRESS FROM PSQL", mydb.get_branch_info, branch_name)
+
+
+@app.post('/mass_registration')
+async def mass_registration(
+    data: str = Form(...),
+
+):
+
+    await mydb.mass_registration(json.loads(data))
+
+    return "DONE"
+
+
+@app.post('/get_img')
+async def get_img(
+    emp_no: str = Form(...),
+):
+    emp_no = emp_no[1:-1]
+    if not await mydb.check_emp_no_signed(emp_no):
+        return "EMPLOYEE NUMBER DOESN'T EXIST"
+
+    e = await exception_handle("SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER", mydb.get_img, emp_no)
+    if e == "SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER":
+        return e
+
+    decode_img = lambda y: Response(content=base64.b64decode(y), media_type="image/jpg")
+    return decode_img(e)
+
+@app.post('/get_img_website')
+async def get_img_website(
+    emp_no: str = Form(...),
+):
+    emp_no = emp_no[1:-1]
+    if not await mydb.check_emp_no_signed(emp_no):
+        return "EMPLOYEE NUMBER DOESN'T EXIST"
+
+    e = await exception_handle("SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER", mydb.get_img, emp_no)
+    if e == "SERVER ERROR WHILE RETRIEVING IMAGE FROM SERVER":
+        return e
+
+    # Return as b64 for website
+    # decode_img = lambda y: Response(content=base64.b64decode(y), media_type="image/jpg")
+    return e
+
+
+# HANDLING WEBSITE REQUESTS
+@app.post('/get_log_data')
+async def get_log_data(
+    last_n_days: int = Form(...),
+):
+
+    return await exception_handle("SERVER ERROR WHILE RETRIEVING LOG DATA FROM PSQL", mydb.get_log_data, last_n_days)
+
+
+@app.post('/get_user_overview')
+async def get_user_overview():
+
+    data = await exception_handle("SERVER ERROR WHILE RETRIEVING USER OVERVIEW DATA FROM PSQL", mydb.get_user_overview)
+
+    for k in data.keys():
+        if k in ['name', 'designation', 'gender', 'branch_name']:
+            for i in range(len(data[k])):
+                data[k][i] = encryptor.AES_decrypt(data[k][i])
+
+    return data
+
+@app.exception_handler(Exception)
+async def validation_exception_handler(request, err):
+    base_error_message = f"Failed to execute: {request.method}: {request.url}"
+    # Change here to LOGGER
+    return JSONResponse(status_code=400, content={"message": f"{base_error_message}. Detail: {err}"})
+
+@app.on_event("startup")
+async def startup():
+    await mydb.database.connect()
+    await mydb.create()
+
+@app.on_event("shutdown")
+async def shutdown():
+    await mydb.database.disconnect()
 
 if __name__ == '__main__':
     uvicorn.run(app, port=5000)
