@@ -96,8 +96,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Message();
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.existing_user_login_new);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -634,42 +632,42 @@ public class LoginActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    public void Message() {
-        long time;
-        Log.d("switchingon","toggle");
-        if (1==1) {
-            Log.d("switchingon1","toggle");
-            //Toast.makeText(LoginActivity.this, "Notification Time Set", Toast.LENGTH_SHORT).show();
-            Calendar calendar = Calendar.getInstance();
-
-            // calendar is called to get current time in hour and minute
-            calendar.set(Calendar.HOUR_OF_DAY, 16);
-            calendar.set(Calendar.MINUTE,23);
-            calendar.set(Calendar.SECOND, 20);
-
-            // using intent i have class AlarmReceiver class which inherits
-            // BroadcastReceiver
-            Intent intent = new Intent(this, AlarmReceiver.class);
-
-            // we call broadcast using pendingIntent
-            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-
-            time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
-            if (System.currentTimeMillis() > time) {
-                Log.d("switchingon2","toggle");
-                // setting time as AM and PM
-                if (calendar.AM_PM == 0)
-                    time = time + (1000 * 60 * 60 * 12);
-                else
-                    time = time + (1000 * 60 * 60 * 24);
-            }
-            AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 86400000, pendingIntent);
-        }else {
-            alarmManager.cancel(pendingIntent);
-            Toast.makeText(LoginActivity.this, "ALARM OFF", Toast.LENGTH_SHORT).show();
-        }
-
-    }
+//    public void Message() {
+//        long time;
+//        Log.d("switchingon","toggle");
+//        if (1==1) {
+//            Log.d("switchingon1","toggle");
+//            //Toast.makeText(LoginActivity.this, "Notification Time Set", Toast.LENGTH_SHORT).show();
+//            Calendar calendar = Calendar.getInstance();
+//
+//            // calendar is called to get current time in hour and minute
+//            calendar.set(Calendar.HOUR_OF_DAY, 16);
+//            calendar.set(Calendar.MINUTE,23);
+//            calendar.set(Calendar.SECOND, 20);
+//
+//            // using intent i have class AlarmReceiver class which inherits
+//            // BroadcastReceiver
+//            Intent intent = new Intent(this, AlarmReceiver.class);
+//
+//            // we call broadcast using pendingIntent
+//            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+//
+//            time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
+//            if (System.currentTimeMillis() > time) {
+//                Log.d("switchingon2","toggle");
+//                // setting time as AM and PM
+//                if (calendar.AM_PM == 0)
+//                    time = time + (1000 * 60 * 60 * 12);
+//                else
+//                    time = time + (1000 * 60 * 60 * 24);
+//            }
+//            AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+//            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 86400000, pendingIntent);
+//        }else {
+//            alarmManager.cancel(pendingIntent);
+//            Toast.makeText(LoginActivity.this, "ALARM OFF", Toast.LENGTH_SHORT).show();
+//        }
+//
+//    }
 
 }
