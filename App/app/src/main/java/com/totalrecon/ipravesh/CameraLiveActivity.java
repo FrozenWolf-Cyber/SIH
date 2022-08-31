@@ -383,12 +383,6 @@ public class CameraLiveActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(List<Face> faces) {
                                                 float rightEyeOpenProb = -1;
-//                                                if (faces.size()>1){
-//                                                    show_message("MORE THAN ONE FACE IN THE FRAME");
-//                                                    Intent i = new Intent(CameraLiveActivity.this, check_status.class);
-//                                                    startActivity(i);
-//                                                    finish();
-//                                                }
 
                                                 if (start_action) {
                                                     if (timer_activated == false){
@@ -536,7 +530,6 @@ public class CameraLiveActivity extends AppCompatActivity {
                 if (verify.equals("true")) {
                     Log.i("VERFICATION ", "YAAY VERFIED!!");
                     // verification
-//                    show_alert("Verified!");
                     loadingDialog.dismissDialog();
                     locationRequest = LocationRequest.create();
                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -544,8 +537,6 @@ public class CameraLiveActivity extends AppCompatActivity {
                     locationRequest.setFastestInterval(2000);
                     locationRequest.setSmallestDisplacement(10);
                     getCurrentLocation(getApplicationContext());
-//                    Toast.makeText(getApplicationContext(), "VERIFIED !!", Toast.LENGTH_SHORT).show();
-//                    inverse_check_in_out();
                 }
                 if (verify.equals("false")) {
                     loadingDialog.dismissDialog();
