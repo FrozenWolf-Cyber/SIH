@@ -38,3 +38,6 @@ You can set environment varaible in settings in Heroku dashboard like given belo
 <br />You can get the PSQL credential by going to settings in PSQL addon pack in Heroku like given below:<br /><br />
 ![demo2](https://user-images.githubusercontent.com/57902078/188235042-17d4969d-2b78-43f6-a693-8923b5c3d678.jpg)
 
+### Step 3: Launch the app
+
+Either run locally using ```python app.py``` command or run on server using command inside ```Procfile``` in current folder during startup
