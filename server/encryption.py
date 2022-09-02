@@ -7,12 +7,12 @@ from Cryptodome.Random import get_random_bytes
 
 
 class encryption_algo():
-    def __init__(self, AES_key, bcrypt_key):
+    def __init__(self, AES_key, bcrypt_key, salt=b'\xf6}\xaep\x80\xf8\xc0\xfe\xc9r\xe9\xa4\xcc_\x03\xa5'):
         self.AES_key = AES_key
         self.bcrypt_key = bcrypt_key
         self.bcrypt_salt = bcrypt.gensalt()
         # self.salt = get_random_bytes(AES.block_size)
-        self.salt = b'\xf6}\xaep\x80\xf8\xc0\xfe\xc9r\xe9\xa4\xcc_\x03\xa5'
+        self.salt = salt
 
         self.private_key = hashlib.scrypt(self.AES_key.encode(), salt=self.salt, n=2**14, r=8, p=1, dklen=32)
 
