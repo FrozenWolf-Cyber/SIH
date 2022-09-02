@@ -28,7 +28,7 @@ SHA256_KEY = os.environ['SHA256_KEY']
 SALT = os.environ['SALT']
 
 encryptor = encryption_algo(AES_KEY, SHA256_KEY, SALT.encode('utf-8'))
-messenger = mailman(MESSENGER_MAILID, MESSENGER_PSSWRD)
+messenger_ = mailman(MESSENGER_MAILID, MESSENGER_PSSWRD)
 # encryptor = pickle.load(open('encryptor.pkl', 'rb'))
 
 mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name, encryptor=encryptor)
@@ -177,10 +177,10 @@ async def send_otp(
     mailid = encryptor.AES_decrypt(mailid)
 
     try:
-        otp = messenger.send_otp(mailid)
+        otp = messenger_.send_otp(mailid)
     except:
-        messenger = mailman()
-        otp = messenger.send_otp(emp_no, mailid)
+        messenger_ = mailman(MESSENGER_MAILID, MESSENGER_PSSWRD)
+        otp = messenger_.send_otp(emp_no, mailid)
 
     otp = encryptor.SHA256_encrypt(otp)
     await mydb.save_otp(emp_no, otp)
