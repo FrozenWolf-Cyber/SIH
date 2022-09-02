@@ -24,7 +24,7 @@ Set the environment varaibles of the server in which the web app is hosted for t
 ```MESSENGER_MAILID```&nbsp;:&nbsp;&nbsp; Mail id from which you would like to send the OTP.<br />
 ```MESSENGER_PSSWRD```&nbsp;:&nbsp;&nbsp; App password generated for the mail id above.  <br />
 <br />
-Check [this](https://levelup.gitconnected.com/an-alternative-way-to-send-emails-in-python-5630a7efbe84) to generate your password for the mail id used for OTP
+**Check [this](https://levelup.gitconnected.com/an-alternative-way-to-send-emails-in-python-5630a7efbe84) to generate your password for the mail id used for OTP**
 <br /><br />
 ```AES_KEY```&nbsp;:&nbsp;&nbsp; Any string of your choice which will be used as the AES key.<br />
 ```SHA256_KEY```&nbsp;:&nbsp;&nbsp; Any string of your choice which will be used as the SHA256 key.<br />
