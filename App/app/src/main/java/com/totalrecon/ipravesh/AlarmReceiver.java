@@ -9,6 +9,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Vibrator;
 import android.widget.Toast;
+import com.totalrecon.ipravesh.Constant;
 
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
@@ -16,9 +17,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         // we will use vibrator first
         Vibrator vibrator = (Vibrator) context.getSystemService(context.VIBRATOR_SERVICE);
-        vibrator.vibrate(4000);
+        vibrator.vibrate(Constant.vibrate_time);
 
-        Toast.makeText(context, "Take Attendance", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, Constant.attendance_msg, Toast.LENGTH_LONG).show();
 
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         if (alarmUri == null) {

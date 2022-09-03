@@ -110,7 +110,7 @@ public class employee_dashboard extends AppCompatActivity {
         exit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                show_message("Logged out successfully!");
+                show_message(Constant.logout_successful_msg);
                 Intent i = new Intent(employee_dashboard.this, LoginActivity.class);
                 startActivity(i);
                 finish();
@@ -139,7 +139,7 @@ public class employee_dashboard extends AppCompatActivity {
     }
     public void show_log()
     {
-        String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_log_data";
+        String upload_URL = Constant.get_log_data_url;
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
             @Override
             public void onResponse(NetworkResponse response) {
@@ -193,7 +193,7 @@ public class employee_dashboard extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                show_message("Server Error");
+                show_message(Constant.server_error_msg);
                 error.printStackTrace();
             }
         }) {
@@ -201,7 +201,7 @@ public class employee_dashboard extends AppCompatActivity {
             public Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 // calculate attendance perentage for last month (30 days)
-                params.put("last_n_days", "30");
+                params.put("last_n_days", String.valueOf(Constant.last_n_days));
                 return params;
             }
         };
@@ -212,7 +212,7 @@ public class employee_dashboard extends AppCompatActivity {
     {
         String emp_no = read_data("emp_no");
         // get image of the user
-        String url = "https://sih-smart-attendance.herokuapp.com/get_img";
+        String url = Constant.get_img_url;
         VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST , url,
                 new Response.Listener<NetworkResponse>() {
                     @Override
@@ -227,7 +227,7 @@ public class employee_dashboard extends AppCompatActivity {
                             image.setImageBitmap(bitmap);
 
                         } catch (Exception e) {
-                            show_message("Server Error");
+                            show_message(Constant.server_error_msg);
                             Log.i("DASHBOARD" , "ERROR");
                             e.printStackTrace();
                         }
@@ -235,7 +235,7 @@ public class employee_dashboard extends AppCompatActivity {
                 },
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
-                        show_message("Server Error");
+                        show_message(Constant.server_error_msg);
                         Log.i("DASHBOARD","error");
                     }
                 }){
@@ -252,14 +252,14 @@ public class employee_dashboard extends AppCompatActivity {
     {
         pieChart.addPieSlice(
                 new PieModel(
-                        "present",
+                        Constant.present_text,
                         percent1,
-                        Color.parseColor("#28fc03")));
+                        Color.parseColor(Constant.present_color)));
         pieChart.addPieSlice(
                 new PieModel(
-                        "absent",
+                        Constant.absent_text,
                         percent2,
-                        Color.parseColor("#fc2403")));
+                        Color.parseColor(Constant.absent_color)));
         pieChart.startAnimation();
 
     }
@@ -309,7 +309,7 @@ public class employee_dashboard extends AppCompatActivity {
         // do a post request
         String emp_no = read_data("emp_no");
         // get image of the user
-        String url = "https://sih-smart-attendance.herokuapp.com/check_in_out_status";
+        String url = Constant.check_in_out_status_url;
         VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST, url,
                 new Response.Listener<NetworkResponse>() {
                     @Override
@@ -331,13 +331,13 @@ public class employee_dashboard extends AppCompatActivity {
                             if (cur_status.equals("\"CHECKED OUT\"")) {
 
                                 // proceed ...
-                                show_message("Recording your entry attendance now!");
+                                show_message(Constant.entry_attendance_msg);
                                 Intent i = new Intent(employee_dashboard.this, geoActivity.class);
                                 startActivity(i);
 
                             } else {
                                 // proceed ...
-                                show_message("Recording your exit attendance now!");
+                                show_message(Constant.exit_attendance_msg);
                                 Intent i = new Intent(employee_dashboard.this, geoActivity.class);
                                 startActivity(i);
                             }

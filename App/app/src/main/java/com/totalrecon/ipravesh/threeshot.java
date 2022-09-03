@@ -55,7 +55,7 @@ public class threeshot extends AppCompatActivity {
     Button submit_button;
     ImageView back_button;
 
-    private String upload_URL = "https://sih-smart-attendance.herokuapp.com/signup";
+    private String upload_URL = Constant.signup_url;
     Bitmap headshot;
 
     // Class for storing embeds with user_id
@@ -102,7 +102,7 @@ public class threeshot extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit2);
 
-        my_model = new model("mobile_face_net.tflite", threeshot.this);
+        my_model = new model(Constant.model_name, threeshot.this);
         imageView5 = (ImageView)findViewById(R.id.imageView5);
         imageView6 = (ImageView)findViewById(R.id.imageView14);
         imageView7 = (ImageView)findViewById(R.id.imageView16);
@@ -216,11 +216,11 @@ public class threeshot extends AppCompatActivity {
 
                     // Check if no faces detected
                     if(Arrays.toString(user_embeds.embed1).equals("null")) {
-                        show_error("No face detected! Please try again.");
+                        show_error(Constant.face_no_msg_formal);
                         count_of_times[0] -= 1;
                     }
                     else if(user_embeds.embed1.length == 1) {
-                        show_error("Multiple faces detected! Please try again.");
+                        show_error(Constant.face_many_msg_formal);
                     }
 
                     else {
@@ -273,11 +273,11 @@ public class threeshot extends AppCompatActivity {
                     Log.i("EMBEDS", Arrays.toString(user_embeds.embed2));
                     // Check if no faces detected
                     if(Arrays.toString(user_embeds.embed2).equals("null")) {
-                        show_error("No face detected! Please try again.");
+                        show_error(Constant.face_no_msg_formal);
                         count_of_times[1] -= 1;
                     }
                     else if(user_embeds.embed2.length == 1) {
-                        show_error("Multiple faces detected! Please try again.");
+                        show_error(Constant.face_many_msg_formal);
                     }
                     else {
                         try {
@@ -330,11 +330,11 @@ public class threeshot extends AppCompatActivity {
 
                     // Check if no faces detected
                     if(Arrays.toString(user_embeds.embed3).equals("null")) {
-                        show_error("No face detected! Please try again.");
+                        show_error(Constant.face_no_msg_formal);
                         count_of_times[2] -= 1;
                     }
                     else if(user_embeds.embed3.length == 1) {
-                        show_error("Multiple faces detected! Please try again.");
+                        show_error(Constant.face_many_msg_formal);
                     }
                     else {
                         try {
@@ -438,7 +438,7 @@ public class threeshot extends AppCompatActivity {
                         Log.i("Return from server: ", json_rec);
                         saveEmbedsToSP(user_embeds);
                         clearSP();
-                        Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), Constant.signup_successful_msg, Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(threeshot.this, LoginActivity.class);
                         startActivity(i);
                         finish();

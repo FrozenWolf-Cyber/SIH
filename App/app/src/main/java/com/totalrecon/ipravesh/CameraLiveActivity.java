@@ -168,9 +168,9 @@ public class CameraLiveActivity extends AppCompatActivity {
     public boolean half_blink = false;
     public Bitmap main_img = null;
 
-    int turns = 2;
-    int blinks = 3;
-    int ACTION_TIME_ELAPSED = 6000;
+    int turns = Constant.turns_facedetection;
+    int blinks = Constant.blinks_facedetection;
+    int ACTION_TIME_ELAPSED =  Constant.action_time_facedetection;
     int time = ACTION_TIME_ELAPSED;
     String[] turn_actions_possible = {"LEFT", "RIGHT"};
     String chosen_action = null;
@@ -205,11 +205,11 @@ public class CameraLiveActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                timer.setText("try again");
+                timer.setText(Constant.timer_tryagain_msg);
                 time = ACTION_TIME_ELAPSED;
 
 
-                show_alert("Time exceeded!");
+                show_alert(Constant.time_exceeded_msg);
                 Intent j = new Intent(CameraLiveActivity.this, check_status.class);
                 startActivity(j);
                 finish();
@@ -234,7 +234,7 @@ public class CameraLiveActivity extends AppCompatActivity {
 
 
 
-        my_model = new model("mobile_face_net.tflite", CameraLiveActivity.this);
+        my_model = new model(Constant.model_name, CameraLiveActivity.this);
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
         }
@@ -277,7 +277,7 @@ public class CameraLiveActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                timer.setText("try again");
+                timer.setText(Constant.timer_tryagain_msg);
                 time = ACTION_TIME_ELAPSED;
                 start_action = true;
 
@@ -295,9 +295,9 @@ public class CameraLiveActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, Constant.camera_permission_granted_msg, Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, Constant.camera_permission_denied_msg, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -341,7 +341,7 @@ public class CameraLiveActivity extends AppCompatActivity {
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
         ImageAnalysis imageAnalysis =
                 new ImageAnalysis.Builder()
-                        .setTargetResolution(new Size(640, 480))
+                        .setTargetResolution(new Size(Constant.facedetection_img_width, Constant.facedetection_img_height))
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST) //Latest frame is shown
                         .build();
 
@@ -540,20 +540,20 @@ public class CameraLiveActivity extends AppCompatActivity {
                 }
                 if (verify.equals("false")) {
                     loadingDialog.dismissDialog();
-                    show_alert("Face doesn't match!");
+                    show_alert(Constant.face_not_match_msg);
                 }
                 if (verify.equals("many faces")) {
                     loadingDialog.dismissDialog();
-                    show_alert("There are many faces!");
+                    show_alert(Constant.face_many_msg);
                 }
                 if (verify.equals("no face")) {
                     loadingDialog.dismissDialog();
-                    show_alert("There are no faces!");
+                    show_alert(Constant.face_no_msg);
 //                    Toast.makeText(getApplicationContext(), "FACE DOESN'T MATCH", Toast.LENGTH_SHORT).show();
                 }
 
             }
-        }, 2000);
+        }, Constant.delay_time);
 
     }
 
@@ -637,7 +637,7 @@ public class CameraLiveActivity extends AppCompatActivity {
     response:
         attendance recorded message , goto check_status
 */
-        String upload_URL = "https://sih-smart-attendance.herokuapp.com/update_log";
+        String upload_URL = Constant.update_log_url;
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
             @Override
             public void onResponse(NetworkResponse response) {
@@ -645,7 +645,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                     String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
 //                    show_alert("Your attendance has been recorded!");
                     androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(CameraLiveActivity.this);
-                    alertDialogBuilder.setMessage("Your attendance is recorded!")
+                    alertDialogBuilder.setMessage(Constant.attendance_recorded_msg)
                             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Intent i = new Intent(CameraLiveActivity.this, check_status.class);
@@ -775,7 +775,7 @@ public class CameraLiveActivity extends AppCompatActivity {
 
                 try {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
-                    Toast.makeText(getApplicationContext(), "GPS is already turned on", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), Constant.gps_turned_on_msg, Toast.LENGTH_SHORT).show();
                 } catch (ApiException e) {
                     switch (e.getStatusCode()) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
@@ -826,7 +826,7 @@ public class CameraLiveActivity extends AppCompatActivity {
     public void display_distance_error() {
         // person not in campus, automatically exit ....
 
-        show_message("Sorry, you are not in your assigned office!");
+        show_message(Constant.not_in_office_msg);
 
         // go to checkin/checkout page when out of location
 
@@ -1026,7 +1026,7 @@ public class CameraLiveActivity extends AppCompatActivity {
 
 //                                System.out.println(boundingBox);
                                 try {
-                                    Thread.sleep(100);
+                                    Thread.sleep(Constant.thread_sleep_time);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
@@ -1036,7 +1036,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             start=true;
-                            Toast.makeText(context, "Failed to add", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, Constant.failed_toadd_msg, Toast.LENGTH_SHORT).show();
                         }
                     });
 
