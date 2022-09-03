@@ -1,6 +1,10 @@
 # SERVER
 
-To setup the server :
+## Requirements
+* Python == 3.x
+* PostgreSQL
+
+## Deployment
 
 ### Step 1: Go to server folder
 ```shell
