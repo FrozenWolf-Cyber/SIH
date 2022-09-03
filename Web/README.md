@@ -1,27 +1,28 @@
 
 
-## Deployement in AWS
+# Dashboard Deployment (AWS)
 
-### Step1:Create an Instance in AWS
+### Step 1: Setup AWS for deployment
+Create any basic instance in AWS and connect it with the instance using SSH for deployment.
 
-### Step2:Connect with the instance using SSH 
+### Step 2: Setup Node JS
+Move to ```awsDeployee``` folder.
+```shell
+git clone https://github.com/FrozenWolf-Cyber/SIH.git
+cd SIH/Web/awsDeployee/
+```
+Install Node Js using NVM. Use [NVM installation guide](https://github.com/nvm-sh/nvm#installing-and-updating) and [Node Installation guide](https://github.com/nvm-sh/nvm#usage) for your references.
+  
+  _Note: We have tested out our website using Node v8.15.0 and is recommended to replicate our results, install other versions at your own risk_
 
-### Step3:Clone this repo
+Install production manager
+  ```shell
+  npm i
+  npm install pm2 -g
+  ```
 
-### Step4:move to /Web/awsDeployee/ (except this folder all others are not usefull for deployement  you may delete it)
-
-### Step5:Install Node Js using NVM
-  #### [NVM installation guide](https://github.com/nvm-sh/nvm#installing-and-updating)
-  #### [Node Installation guide](https://github.com/nvm-sh/nvm#usage)
-  #### Note:
-  #### Install node version v8.15.0
-
-### Step6:run command 
-   npm i
-
-### Step7:run command 
-   npm install pm2 -g
-
-### Step8:To run the server in production mode run command 
+### Step 3: Deployment
+To deploy website in production mode.
+```shell
    pm2 start index.js
-
+```
