@@ -47,6 +47,7 @@ public class Constant {
     public static final String good_afternoon_msg = "Good afternoon!";
     public static final String good_evening_msg = "Good evening!";
     public static final String logout_successful_msg = "Logged out successfully!";
+    public static final String login_successful_msg = "You have been logged in! ";
     public static final String signup_successful_msg = "Successfully signed up";
     public static final String inside_office_msg = "Great, you are inside your office!";
     public static final String wrong_otp_msg = "Sorry, wrong otp!";
@@ -58,6 +59,10 @@ public class Constant {
     public static final String confirmpass_nomatch_error_msg = "Confirm password does not match with new password!";
     public static final String already_signup_error_msg = "You have already been signed up! Please proceed to login.";
     public static final String invalid_empno_error_msg = "Sorry, the given employee number is invalid!";
+    public static final String username_empty_error_msg = "Please enter a proper username and password !";
+    public static final String username_noexist_msg = "Username does not exist!";
+    public static final String wrong_password_msg = "Your password is wrong!";
+    public static final String already_logged_in_msg = "You have already logged in through a device!";
 
     // other textview and color constants
 
@@ -71,6 +76,7 @@ public class Constant {
 
     // post request: url - string constants
 
+    public static final String login_url = "https://sih-smart-attendance.herokuapp.com/login";
     public static final String check_in_out_status_url = "https://sih-smart-attendance.herokuapp.com/check_in_out_status";
     public static final String update_log_url = "https://sih-smart-attendance.herokuapp.com/update_log";
     public static final String get_log_data_url = "https://sih-smart-attendance.herokuapp.com/get_log_data";
@@ -81,5 +87,6 @@ public class Constant {
     public static final String check_emp_no_url = "https://sih-smart-attendance.herokuapp.com/check_emp_no";
     public static final String check_username_url = "https://sih-smart-attendance.herokuapp.com/check_username";
     public static final String signup_url = "https://sih-smart-attendance.herokuapp.com/signup";
-
+    public static final String get_info_url = "https://sih-smart-attendance.herokuapp.com/get_info";
+    public static final String get_embed_url = "https://sih-smart-attendance.herokuapp.com/get_embed";
 }
