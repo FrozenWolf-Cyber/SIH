@@ -78,9 +78,9 @@ public class geoActivity extends AppCompatActivity {
 
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(2000);
-        locationRequest.setSmallestDisplacement(10);
+        locationRequest.setInterval(Constant.location_setinterval);
+        locationRequest.setFastestInterval(Constant.location_setfastestinterval);
+        locationRequest.setSmallestDisplacement(Constant.location_setsmallestdisplacement);
 
         getCurrentLocation();
 
@@ -175,7 +175,7 @@ public class geoActivity extends AppCompatActivity {
 
                 try {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
-                    Toast.makeText(getApplicationContext(), "GPS is already turned on", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), Constant.gps_turned_on_msg, Toast.LENGTH_SHORT).show();
                 } catch (ApiException e) {
                     switch (e.getStatusCode()) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
@@ -220,7 +220,7 @@ public class geoActivity extends AppCompatActivity {
 
     public void show_coordinates(String s, double a, double b) {
 
-        Toast.makeText(getApplicationContext(), s + "\nGreat, you are inside your office!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), s + "\n"+Constant.inside_office_msg, Toast.LENGTH_SHORT).show();
 
         // write the gps stored for further use ....
         String fileName = "myGps";
@@ -230,7 +230,7 @@ public class geoActivity extends AppCompatActivity {
     public void display_distance_error() {
         // person not in campus, automatically exit ....
 
-        show_message("Sorry, you are not in your assigned office!");
+        show_message(Constant.not_in_office_msg);
 
         // go to checkin/checkout page when out of location
 
@@ -265,7 +265,7 @@ public class geoActivity extends AppCompatActivity {
         String branch_name = read_data("branch_name");
 
         // post request for fetching office address
-        String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_branch_info";
+        String upload_URL = Constant.get_branch_info_url;
         String finalBranch_name = branch_name;
 
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
@@ -299,8 +299,8 @@ public class geoActivity extends AppCompatActivity {
                         Log.i("RESPONSE", dis + "\n" + latitude + "\n" + longitude);
 
                         // dis is in km
-                        double zero_error = 30 * (0.001);
-                        if (dis < 0.1 + zero_error) {
+                        double zero_error = Constant.location_zero_error;
+                        if (dis < Constant.location_radius + zero_error) {
                             write_data("latitude" , Double.toString(latitude));
                             write_data("longitude" , Double.toString(longitude));
                             Intent i = new Intent(geoActivity.this, CameraLiveActivity.class);

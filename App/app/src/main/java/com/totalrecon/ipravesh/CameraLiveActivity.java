@@ -168,9 +168,9 @@ public class CameraLiveActivity extends AppCompatActivity {
     public boolean half_blink = false;
     public Bitmap main_img = null;
 
-    int turns = 2;
-    int blinks = 3;
-    int ACTION_TIME_ELAPSED = 6000;
+    int turns = Constant.turns_facedetection;
+    int blinks = Constant.blinks_facedetection;
+    int ACTION_TIME_ELAPSED =  Constant.action_time_facedetection;
     int time = ACTION_TIME_ELAPSED;
     String[] turn_actions_possible = {"LEFT", "RIGHT"};
     String chosen_action = null;
@@ -205,14 +205,14 @@ public class CameraLiveActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                timer.setText("try again");
+                timer.setText(Constant.timer_tryagain_msg);
                 time = ACTION_TIME_ELAPSED;
 
 
-                show_alert("Time exceeded!");
-                Intent j = new Intent(CameraLiveActivity.this, check_status.class);
-                startActivity(j);
-                finish();
+                show_alert(Constant.time_exceeded_msg);
+//                Intent j = new Intent(CameraLiveActivity.this, check_status.class);
+//                startActivity(j);
+//                finish();
             }
 
         }.start();
@@ -234,7 +234,7 @@ public class CameraLiveActivity extends AppCompatActivity {
 
 
 
-        my_model = new model("mobile_face_net.tflite", CameraLiveActivity.this);
+        my_model = new model(Constant.model_name, CameraLiveActivity.this);
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
         }
@@ -277,7 +277,7 @@ public class CameraLiveActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                timer.setText("try again");
+                timer.setText(Constant.timer_tryagain_msg);
                 time = ACTION_TIME_ELAPSED;
                 start_action = true;
 
@@ -295,9 +295,9 @@ public class CameraLiveActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, Constant.camera_permission_granted_msg, Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, Constant.camera_permission_denied_msg, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -341,7 +341,7 @@ public class CameraLiveActivity extends AppCompatActivity {
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
         ImageAnalysis imageAnalysis =
                 new ImageAnalysis.Builder()
-                        .setTargetResolution(new Size(640, 480))
+                        .setTargetResolution(new Size(Constant.facedetection_img_width, Constant.facedetection_img_height))
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST) //Latest frame is shown
                         .build();
 
@@ -417,7 +417,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                                                         if (chosen_action == "BLINK") {
                                                             if (face.getRightEyeOpenProbability() != null) {
                                                                 rightEyeOpenProb = face.getRightEyeOpenProbability();
-                                                                if (rightEyeOpenProb > 0.7
+                                                                if (rightEyeOpenProb > Constant.right_eye_probability_true
                                                                         && closed == false) {
                                                                     n_opens += 1;
                                                                     if (main_img == null) {
@@ -439,7 +439,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                                                                         timer_activated = false;
                                                                         time = ACTION_TIME_ELAPSED;
                                                                     }
-                                                                } else if (rightEyeOpenProb < 0.1 && closed == true) {
+                                                                } else if (rightEyeOpenProb < Constant.right_eye_probability_false && closed == true) {
                                                                     closed = false;
                                                                     n_closes += 1;
                                                                 }
@@ -448,7 +448,7 @@ public class CameraLiveActivity extends AppCompatActivity {
 
 
                                                         else if (chosen_action == "LEFT") {
-                                                            if (face.getHeadEulerAngleY() >= 30) {
+                                                            if (face.getHeadEulerAngleY() >= Constant.head_angle_y) {
                                                                 Log.i("U HAVE TURNED LEFT", "");
                                                                 TIMER.cancel();
                                                                 time = ACTION_TIME_ELAPSED;
@@ -458,7 +458,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                                                         }
 
                                                         else if (chosen_action == "RIGHT") {
-                                                            if (face.getHeadEulerAngleY() <= -30) {
+                                                            if (face.getHeadEulerAngleY() <= -Constant.head_angle_y) {
                                                                 Log.i("U HAVE TURNED RIGHT", "");
                                                                 TIMER.cancel();
                                                                 time = ACTION_TIME_ELAPSED;
@@ -530,30 +530,29 @@ public class CameraLiveActivity extends AppCompatActivity {
                 if (verify.equals("true")) {
                     Log.i("VERFICATION ", "YAAY VERFIED!!");
                     // verification
-                    loadingDialog.dismissDialog();
                     locationRequest = LocationRequest.create();
                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                    locationRequest.setInterval(5000);
-                    locationRequest.setFastestInterval(2000);
-                    locationRequest.setSmallestDisplacement(10);
+                    locationRequest.setInterval(Constant.location_setinterval);
+                    locationRequest.setFastestInterval(Constant.location_setfastestinterval);
+                    locationRequest.setSmallestDisplacement(Constant.location_setsmallestdisplacement);
                     getCurrentLocation(getApplicationContext());
                 }
                 if (verify.equals("false")) {
                     loadingDialog.dismissDialog();
-                    show_alert("Face doesn't match!");
+                    show_alert(Constant.face_not_match_msg);
                 }
                 if (verify.equals("many faces")) {
                     loadingDialog.dismissDialog();
-                    show_alert("There are many faces!");
+                    show_alert(Constant.face_many_msg);
                 }
                 if (verify.equals("no face")) {
                     loadingDialog.dismissDialog();
-                    show_alert("There are no faces!");
+                    show_alert(Constant.face_no_msg);
 //                    Toast.makeText(getApplicationContext(), "FACE DOESN'T MATCH", Toast.LENGTH_SHORT).show();
                 }
 
             }
-        }, 2000);
+        }, Constant.model_delay_time);
 
     }
 
@@ -637,7 +636,7 @@ public class CameraLiveActivity extends AppCompatActivity {
     response:
         attendance recorded message , goto check_status
 */
-        String upload_URL = "https://sih-smart-attendance.herokuapp.com/update_log";
+        String upload_URL = Constant.update_log_url;
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
             @Override
             public void onResponse(NetworkResponse response) {
@@ -645,7 +644,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                     String json_rec = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
 //                    show_alert("Your attendance has been recorded!");
                     androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(CameraLiveActivity.this);
-                    alertDialogBuilder.setMessage("Your attendance is recorded!")
+                    alertDialogBuilder.setMessage(Constant.attendance_recorded_msg)
                             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Intent i = new Intent(CameraLiveActivity.this, check_status.class);
@@ -775,7 +774,7 @@ public class CameraLiveActivity extends AppCompatActivity {
 
                 try {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
-                    Toast.makeText(getApplicationContext(), "GPS is already turned on", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), Constant.gps_turned_on_msg, Toast.LENGTH_SHORT).show();
                 } catch (ApiException e) {
                     switch (e.getStatusCode()) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
@@ -812,7 +811,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                 + Math.cos(lat1) * Math.cos(lat2)
                 * Math.pow(Math.sin(dlon / 2), 2);
         double c = 2 * Math.asin(Math.sqrt(a));
-        double r = 6371;        // radius of earth
+        double r = Constant.radius_of_earth;        // radius of earth
         return (c * r);          // in km
 
     }
@@ -826,7 +825,7 @@ public class CameraLiveActivity extends AppCompatActivity {
     public void display_distance_error() {
         // person not in campus, automatically exit ....
 
-        show_message("Sorry, you are not in your assigned office!");
+        show_message(Constant.not_in_office_msg);
 
         // go to checkin/checkout page when out of location
 
@@ -837,7 +836,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }
-        }, 2000);
+        }, Constant.delay_time);
 
     }
 
@@ -855,8 +854,8 @@ public class CameraLiveActivity extends AppCompatActivity {
         Log.i("RESPONSE", dis + "\n" + latitude + "\n" + longitude);
 
         // dis is in km
-        double zero_error = 30 * (0.1);
-        if (dis < 0.1 + zero_error) {
+        double zero_error = Constant.location_zero_error;
+        if (dis < Constant.location_radius + zero_error) {
             write_data("latitude" , Double.toString(latitude));
             write_data("longitude" , Double.toString(longitude));
             send_log(Double.toString(latitude), Double.toString(longitude));
@@ -972,7 +971,7 @@ public class CameraLiveActivity extends AppCompatActivity {
         YuvImage yuvImage = new YuvImage(nv21, ImageFormat.NV21, image.getWidth(), image.getHeight(), null);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        yuvImage.compressToJpeg(new Rect(0, 0, yuvImage.getWidth(), yuvImage.getHeight()), 75, out);
+        yuvImage.compressToJpeg(new Rect(0, 0, yuvImage.getWidth(), yuvImage.getHeight()), Constant.compressed_image_quality, out);
 
         byte[] imageBytes = out.toByteArray();
         //System.out.println("bytes"+ Arrays.toString(imageBytes));
@@ -1026,7 +1025,7 @@ public class CameraLiveActivity extends AppCompatActivity {
 
 //                                System.out.println(boundingBox);
                                 try {
-                                    Thread.sleep(100);
+                                    Thread.sleep(Constant.thread_sleep_time);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
@@ -1036,7 +1035,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             start=true;
-                            Toast.makeText(context, "Failed to add", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, Constant.failed_toadd_msg, Toast.LENGTH_SHORT).show();
                         }
                     });
 

@@ -29,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.totalrecon.ipravesh.AlarmReceiver;
 import com.totalrecon.ipravesh.Alerts;
+import com.totalrecon.ipravesh.Constant;
 import com.totalrecon.ipravesh.LoadingDialog;
 import com.totalrecon.ipravesh.R;
 import com.totalrecon.ipravesh.check_status;
@@ -119,10 +120,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String pass = password.getText().toString();
-                String user = username.getText().toString().trim();
+                String user = username.getText().toString();
 
                 if (pass.equals("") || user.equals("")) {
-                    show_message("Please enter a proper username and password !");
+                    show_message(Constant.username_empty_error_msg);
                 } else {
 
 
@@ -157,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                            String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
+                            String upload_URL = Constant.check_username_url;
                             VolleyMultipartRequest multipartRequest1 = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
                                 @Override
                                 public void onResponse(NetworkResponse response) {
@@ -171,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                             // username_exist , do login
                                             // login
-                                            String upload_URL = "https://sih-smart-attendance.herokuapp.com/login";
+                                            String upload_URL = Constant.login_url;
 
                                             VolleyMultipartRequest multipartRequest2 = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
                                                 @Override
@@ -186,13 +187,13 @@ public class LoginActivity extends AppCompatActivity {
                                                         String reps2 = "\"ACCOUNT ALREADY SIGNED IN\"";
                                                         if (json_rec.equals(resp1)) {
                                                             loadingDialog.dismissDialog();
-                                                            show_message("Your password is wrong! ");
+                                                            show_message(Constant.wrong_password_msg);
                                                         } else if (json_rec.equals(reps2)) {
                                                             loadingDialog.dismissDialog();
-                                                            show_message("You have already logged in through a device!");
+                                                            show_message(Constant.already_logged_in_msg);
                                                         } else {
                                                             loadingDialog.dismissDialog();
-                                                            show_message("You have been logged in! ");
+                                                            show_message(Constant.login_successful_msg);
 
                                                             // Get existing user embeds
                                                             SharedPreferences sh = getSharedPreferences("EmbedsSharedPref", MODE_PRIVATE);
@@ -212,7 +213,7 @@ public class LoginActivity extends AppCompatActivity {
                                                             write_data("emp_no", json_rec);
                                                             // get_info
                                                             // get all details from user with emp_no
-                                                            String upload_URL = "https://sih-smart-attendance.herokuapp.com/get_info";
+                                                            String upload_URL = Constant.get_info_url;
                                                             VolleyMultipartRequest multipartRequest3 = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
                                                                 @Override
                                                                 public void onResponse(NetworkResponse response) {
@@ -244,7 +245,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                                                     } catch (UnsupportedEncodingException e) {
                                                                         loadingDialog.dismissDialog();
-                                                                        show_message("Server Error");
+                                                                        show_message(Constant.server_error_msg);
                                                                         e.printStackTrace();
                                                                     }
                                                                 }
@@ -253,7 +254,7 @@ public class LoginActivity extends AppCompatActivity {
                                                                 @Override
                                                                 public void onErrorResponse(VolleyError error) {
                                                                     loadingDialog.dismissDialog();
-                                                                    show_message("Server Error");
+                                                                    show_message(Constant.server_error_msg);
                                                                     error.printStackTrace();
                                                                 }
                                                             }) {
@@ -271,7 +272,7 @@ public class LoginActivity extends AppCompatActivity {
                                                             } else {
                                                                 // get embeddings
                                                                 // get_embed
-                                                                String embeds_URL = "https://sih-smart-attendance.herokuapp.com/get_embed";
+                                                                String embeds_URL = Constant.get_embed_url;
                                                                 VolleyMultipartRequest multipartRequest4 = new VolleyMultipartRequest(Request.Method.POST, embeds_URL, new Response.Listener<NetworkResponse>() {
                                                                     @Override
                                                                     public void onResponse(NetworkResponse response) {
@@ -298,7 +299,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                                                         } catch (UnsupportedEncodingException e) {
                                                                             loadingDialog.dismissDialog();
-                                                                            show_message("server error");
+                                                                            show_message(Constant.server_error_msg);
                                                                             e.printStackTrace();
                                                                         }
 
@@ -307,7 +308,7 @@ public class LoginActivity extends AppCompatActivity {
                                                                     @Override
                                                                     public void onErrorResponse(VolleyError error) {
                                                                         loadingDialog.dismissDialog();
-                                                                        show_message("server error");
+                                                                        show_message(Constant.server_error_msg);
                                                                         error.printStackTrace();
                                                                     }
                                                                 }) {
@@ -339,7 +340,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 public void onErrorResponse(VolleyError error) {
                                                     error.printStackTrace();
                                                     loadingDialog.dismissDialog();
-                                                    show_message("Server Error");
+                                                    show_message(Constant.server_error_msg);
                                                 }
                                             }) {
                                                 @Override
@@ -359,11 +360,11 @@ public class LoginActivity extends AppCompatActivity {
                                         } else {
                                             loadingDialog.dismissDialog();
 //                        Log.i("Hey","I'm inside here");
-                                            Toast.makeText(getApplicationContext(), "Username does not exist!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), Constant.username_noexist_msg, Toast.LENGTH_SHORT).show();
                                         }
                                     } catch (UnsupportedEncodingException e) {
                                         loadingDialog.dismissDialog();
-                                        show_message("server error");
+                                        show_message(Constant.server_error_msg);
                                         e.printStackTrace();
                                     }
                                 }
@@ -372,7 +373,7 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
                                     loadingDialog.dismissDialog();
-                                    show_message("Server Error");
+                                    show_message(Constant.server_error_msg);
                                     error.printStackTrace();
                                 }
                             }) {
@@ -386,7 +387,7 @@ public class LoginActivity extends AppCompatActivity {
                             VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest1);
 
                         }
-                    }, 2000);
+                    }, Constant.delay_time);
                 }
             }
         });

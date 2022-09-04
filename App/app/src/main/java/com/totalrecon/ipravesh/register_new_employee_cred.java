@@ -77,13 +77,13 @@ public class register_new_employee_cred extends AppCompatActivity {
                 // some validation , input should never be empty
                 if (user_name.replace(" ", "").equals("") ||
                         pass_word.replace(" ", "").equals("")) {
-                    show_error("Please enter a non-empty username and password.");
+                    show_error(Constant.nonempty_user_pass_error_msg);
                     flag = 1;
                 } else if (emplno.replace(" ", "").equals("")) {
-                    show_error("Please enter your employee number.");
+                    show_error(Constant.empno_empty_error_msg);
                     flag = 1;
                 } else if (!(pass_word.equals(confirm_password))) {
-                    show_error("Confirm password does not match with new password!");
+                    show_error(Constant.confirmpass_nomatch_error_msg);
                     flag = 1;
                 }
                 // non-empty inputs given for emp_no , username , password
@@ -142,7 +142,7 @@ public class register_new_employee_cred extends AppCompatActivity {
 
                             // check_emp_no
                             // Post request for verification
-                            String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_emp_no";
+                            String upload_URL = Constant.check_emp_no_url;
 
                             VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
                                 @Override
@@ -162,7 +162,7 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                 // emp_no is valid
                                                 // check username , password
 
-                                                String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_username";
+                                                String upload_URL = Constant.check_username_url;
                                                 VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
                                                     @Override
                                                     public void onResponse(NetworkResponse response) {
@@ -178,7 +178,7 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                                 write_data("username", user_name);
                                                                 write_data("password", pass_word);
                                                                 String emplno = read_data("emplno");
-                                                                String upload_URL = "https://sih-smart-attendance.herokuapp.com/send_otp";
+                                                                String upload_URL = Constant.send_otp_url;
                 /*
                     send emp_no to server,
                     server generates otp and sends to the employee's email_id
@@ -223,7 +223,7 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                                 startActivity(i);
                                                             } else {
                                                                 loadingDialog.dismissDialog();
-                                                                show_error("This username is already taken! Please enter another username.");
+                                                                show_error(Constant.username_alreadytaken_error_msg);
                                                             }
 
                                                         } catch (UnsupportedEncodingException e) {
@@ -247,11 +247,11 @@ public class register_new_employee_cred extends AppCompatActivity {
                                                 VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
                                             } else {
                                                 loadingDialog.dismissDialog();
-                                                show_error("You have already been signed up! Please proceed to login.");
+                                                show_error(Constant.already_signup_error_msg);
                                             }
                                         } else {
                                             loadingDialog.dismissDialog();
-                                            show_error("Sorry, the given employee number is invalid!");
+                                            show_error(Constant.invalid_empno_error_msg);
                                         }
                                     } catch (UnsupportedEncodingException | JSONException e) {
                                         e.printStackTrace();

@@ -10,7 +10,7 @@ import android.window.SplashScreen;
 import com.totalrecon.ipravesh.ui.login.LoginActivity;
 
 public class Splashscreen extends AppCompatActivity {
-    private static int SPLASH_TIME = 2000;
+    private static int SPLASH_TIME = Constant.splash_time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

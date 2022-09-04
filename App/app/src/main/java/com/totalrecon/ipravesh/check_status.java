@@ -60,11 +60,11 @@ public class check_status extends AppCompatActivity {
         Calendar c = Calendar.getInstance();
         int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
         if (timeOfDay >= 0 && timeOfDay < 12) {
-            textView.setText("Good morning!");
+            textView.setText(Constant.good_morning_msg);
         } else if (timeOfDay >= 12 && timeOfDay < 16) {
-            textView.setText("Good afternoon!");
+            textView.setText(Constant.good_afternoon_msg);
         } else {
-            textView.setText("Good evening!");
+            textView.setText(Constant.good_evening_msg);
         }
 //        show_message("debugging purpose: cur_status = "+cur_status);
 //        if (cur_status.equals("checkin")) {
@@ -149,7 +149,7 @@ public class check_status extends AppCompatActivity {
         // do a post request
         String emp_no = read_data("emp_no");
         // get image of the user
-        String url = "https://sih-smart-attendance.herokuapp.com/check_in_out_status";
+        String url = Constant.check_in_out_status_url;
         VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST, url,
                 new Response.Listener<NetworkResponse>() {
                     @Override
@@ -172,13 +172,13 @@ public class check_status extends AppCompatActivity {
                             if (cur_status.equals("\"CHECKED OUT\"")) {
 
                                 // proceed ...
-                                show_message("Recording your entry attendance now!");
+                                show_message(Constant.entry_attendance_msg);
                                 Intent i = new Intent(check_status.this, geoActivity.class);
                                 startActivity(i);
 
                             } else {
                                 // proceed ...
-                                show_message("Recording your exit attendance now!");
+                                show_message(Constant.exit_attendance_msg);
                                 Intent i = new Intent(check_status.this, geoActivity.class);
                                 startActivity(i);
                             }

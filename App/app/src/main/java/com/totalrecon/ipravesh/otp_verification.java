@@ -66,7 +66,7 @@ public class otp_verification extends AppCompatActivity {
                 otp = otp_text.getText().toString();
                 String emplno = read_data("emplno");
                 Log.i("debug",emplno);
-                String upload_URL = "https://sih-smart-attendance.herokuapp.com/check_otp";
+                String upload_URL = Constant.check_otp_url;
                 //Log.i("Parameters : ",otp+" , "+emplno);
                 VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_URL, new Response.Listener<NetworkResponse>() {
                     @Override
@@ -83,7 +83,7 @@ public class otp_verification extends AppCompatActivity {
                                 startActivity(i);
                             } else {
                                 // otp does not match
-                                show_error("Sorry, wrong otp!");
+                                show_error(Constant.wrong_otp_msg);
                             }
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
@@ -115,7 +115,7 @@ public class otp_verification extends AppCompatActivity {
                 // only post request to be done .
                 Log.i("response" , "click");
                 String emplno = read_data("emplno");
-                String upload_URL = "https://sih-smart-attendance.herokuapp.com/send_otp";
+                String upload_URL = Constant.send_otp_url;
                 /*
                     send emp_no to server,
                     server generates otp and sends to the employee's email_id
@@ -132,7 +132,7 @@ public class otp_verification extends AppCompatActivity {
                             String resp1 = "YES";
                             String resp2 = "NO";
                             Log.i("RESPONSE", json_rec);
-                            show_toast("OTP has been resend to your email!");
+                            show_toast(Constant.otp_sent_msg);
 
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();

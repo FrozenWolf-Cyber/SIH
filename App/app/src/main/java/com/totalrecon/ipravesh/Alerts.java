@@ -26,6 +26,7 @@ import com.totalrecon.ipravesh.data.model.VolleySingleton;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import com.totalrecon.ipravesh.Constant;
 
 public class Alerts extends AppCompatActivity {
     BottomNavigationView navView;
@@ -69,7 +70,7 @@ public class Alerts extends AppCompatActivity {
         // do a post request
         String emp_no = read_data("emp_no");
         // get image of the user
-        String url = "https://sih-smart-attendance.herokuapp.com/check_in_out_status";
+        String url = Constant.check_in_out_status_url;
         VolleyMultipartRequest request = new VolleyMultipartRequest(Request.Method.POST, url,
                 new Response.Listener<NetworkResponse>() {
                     @Override
@@ -91,13 +92,13 @@ public class Alerts extends AppCompatActivity {
                             if (cur_status.equals("\"CHECKED OUT\"")) {
 
                                 // proceed ...
-                                show_message("Recording your entry attendance now!");
+                                show_message(Constant.entry_attendance_msg);
                                 Intent i = new Intent(Alerts.this, geoActivity.class);
                                 startActivity(i);
 
                             } else {
                                 // proceed ...
-                                show_message("Recording your exit attendance now!");
+                                show_message(Constant.exit_attendance_msg);
                                 Intent i = new Intent(Alerts.this, geoActivity.class);
                                 startActivity(i);
                             }
