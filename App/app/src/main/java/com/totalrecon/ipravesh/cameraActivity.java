@@ -186,7 +186,7 @@ public class cameraActivity extends AppCompatActivity {
                     }
 
                 }
-            }, Constant.delay_time);
+            }, Constant.model_delay_time);
 
 
     }

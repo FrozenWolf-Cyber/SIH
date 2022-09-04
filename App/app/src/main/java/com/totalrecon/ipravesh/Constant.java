@@ -6,6 +6,7 @@ public class Constant {
 
     public static final int vibrate_time = 4000;
     public static final int delay_time = 2000;
+    public static final int model_delay_time = 2000;
     public static final int thread_sleep_time = 100;
     public static final int turns_facedetection = 2;
     public static final int blinks_facedetection = 3;
@@ -20,7 +21,10 @@ public class Constant {
     public static final int facedetection_img_height = 480;
     public static final int last_n_days = 30;
     public static final int splash_time = 2000;
-
+    public static final int head_angle_y = 30;
+    public static final int compressed_image_quality = 75;
+    public static final double right_eye_probability_true = 0.7;
+    public static final double right_eye_probability_false = 0.1;
     // all toast and dialog box messages
 
     public static final String attendance_msg = "Take Attendance";

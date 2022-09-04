@@ -417,7 +417,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                                                         if (chosen_action == "BLINK") {
                                                             if (face.getRightEyeOpenProbability() != null) {
                                                                 rightEyeOpenProb = face.getRightEyeOpenProbability();
-                                                                if (rightEyeOpenProb > 0.7
+                                                                if (rightEyeOpenProb > Constant.right_eye_probability_true
                                                                         && closed == false) {
                                                                     n_opens += 1;
                                                                     if (main_img == null) {
@@ -439,7 +439,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                                                                         timer_activated = false;
                                                                         time = ACTION_TIME_ELAPSED;
                                                                     }
-                                                                } else if (rightEyeOpenProb < 0.1 && closed == true) {
+                                                                } else if (rightEyeOpenProb < Constant.right_eye_probability_false && closed == true) {
                                                                     closed = false;
                                                                     n_closes += 1;
                                                                 }
@@ -448,7 +448,7 @@ public class CameraLiveActivity extends AppCompatActivity {
 
 
                                                         else if (chosen_action == "LEFT") {
-                                                            if (face.getHeadEulerAngleY() >= 30) {
+                                                            if (face.getHeadEulerAngleY() >= Constant.head_angle_y) {
                                                                 Log.i("U HAVE TURNED LEFT", "");
                                                                 TIMER.cancel();
                                                                 time = ACTION_TIME_ELAPSED;
@@ -458,7 +458,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                                                         }
 
                                                         else if (chosen_action == "RIGHT") {
-                                                            if (face.getHeadEulerAngleY() <= -30) {
+                                                            if (face.getHeadEulerAngleY() <= -Constant.head_angle_y) {
                                                                 Log.i("U HAVE TURNED RIGHT", "");
                                                                 TIMER.cancel();
                                                                 time = ACTION_TIME_ELAPSED;
@@ -533,9 +533,9 @@ public class CameraLiveActivity extends AppCompatActivity {
                     loadingDialog.dismissDialog();
                     locationRequest = LocationRequest.create();
                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                    locationRequest.setInterval(5000);
-                    locationRequest.setFastestInterval(2000);
-                    locationRequest.setSmallestDisplacement(10);
+                    locationRequest.setInterval(Constant.location_setinterval);
+                    locationRequest.setFastestInterval(Constant.location_setfastestinterval);
+                    locationRequest.setSmallestDisplacement(Constant.location_setsmallestdisplacement);
                     getCurrentLocation(getApplicationContext());
                 }
                 if (verify.equals("false")) {
@@ -553,7 +553,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                 }
 
             }
-        }, Constant.delay_time);
+        }, Constant.model_delay_time);
 
     }
 
@@ -812,7 +812,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                 + Math.cos(lat1) * Math.cos(lat2)
                 * Math.pow(Math.sin(dlon / 2), 2);
         double c = 2 * Math.asin(Math.sqrt(a));
-        double r = 6371;        // radius of earth
+        double r = Constant.radius_of_earth;        // radius of earth
         return (c * r);          // in km
 
     }
@@ -837,7 +837,7 @@ public class CameraLiveActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }
-        }, 2000);
+        }, Constant.delay_time);
 
     }
 
@@ -855,8 +855,8 @@ public class CameraLiveActivity extends AppCompatActivity {
         Log.i("RESPONSE", dis + "\n" + latitude + "\n" + longitude);
 
         // dis is in km
-        double zero_error = 30 * (0.1);
-        if (dis < 0.1 + zero_error) {
+        double zero_error = Constant.location_zero_error;
+        if (dis < Constant.location_radius + zero_error) {
             write_data("latitude" , Double.toString(latitude));
             write_data("longitude" , Double.toString(longitude));
             send_log(Double.toString(latitude), Double.toString(longitude));
@@ -972,7 +972,7 @@ public class CameraLiveActivity extends AppCompatActivity {
         YuvImage yuvImage = new YuvImage(nv21, ImageFormat.NV21, image.getWidth(), image.getHeight(), null);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        yuvImage.compressToJpeg(new Rect(0, 0, yuvImage.getWidth(), yuvImage.getHeight()), 75, out);
+        yuvImage.compressToJpeg(new Rect(0, 0, yuvImage.getWidth(), yuvImage.getHeight()), Constant.compressed_image_quality, out);
 
         byte[] imageBytes = out.toByteArray();
         //System.out.println("bytes"+ Arrays.toString(imageBytes));
