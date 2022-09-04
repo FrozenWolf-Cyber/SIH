@@ -210,9 +210,9 @@ public class CameraLiveActivity extends AppCompatActivity {
 
 
                 show_alert(Constant.time_exceeded_msg);
-                Intent j = new Intent(CameraLiveActivity.this, check_status.class);
-                startActivity(j);
-                finish();
+//                Intent j = new Intent(CameraLiveActivity.this, check_status.class);
+//                startActivity(j);
+//                finish();
             }
 
         }.start();
@@ -530,7 +530,6 @@ public class CameraLiveActivity extends AppCompatActivity {
                 if (verify.equals("true")) {
                     Log.i("VERFICATION ", "YAAY VERFIED!!");
                     // verification
-                    loadingDialog.dismissDialog();
                     locationRequest = LocationRequest.create();
                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                     locationRequest.setInterval(Constant.location_setinterval);
