@@ -340,7 +340,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 public void onErrorResponse(VolleyError error) {
                                                     error.printStackTrace();
                                                     loadingDialog.dismissDialog();
-                                                    show_message("Server Error");
+                                                    show_message(Constant.server_error_msg);
                                                 }
                                             }) {
                                                 @Override
@@ -387,7 +387,7 @@ public class LoginActivity extends AppCompatActivity {
                             VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest1);
 
                         }
-                    }, 2000);
+                    }, Constant.delay_time);
                 }
             }
         });
