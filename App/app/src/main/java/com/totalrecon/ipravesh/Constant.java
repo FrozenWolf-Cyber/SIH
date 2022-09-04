@@ -75,18 +75,18 @@ public class Constant {
     public static final String model_name = "mobile_face_net.tflite";
 
     // post request: url - string constants
-
-    public static final String login_url = "https://sih-smart-attendance.herokuapp.com/login";
-    public static final String check_in_out_status_url = "https://sih-smart-attendance.herokuapp.com/check_in_out_status";
-    public static final String update_log_url = "https://sih-smart-attendance.herokuapp.com/update_log";
-    public static final String get_log_data_url = "https://sih-smart-attendance.herokuapp.com/get_log_data";
-    public static final String get_img_url = "https://sih-smart-attendance.herokuapp.com/get_img";
-    public static final String check_otp_url = "https://sih-smart-attendance.herokuapp.com/check_otp";
-    public static final String send_otp_url = "https://sih-smart-attendance.herokuapp.com/send_otp";
-    public static final String get_branch_info_url = "https://sih-smart-attendance.herokuapp.com/get_branch_info";
-    public static final String check_emp_no_url = "https://sih-smart-attendance.herokuapp.com/check_emp_no";
-    public static final String check_username_url = "https://sih-smart-attendance.herokuapp.com/check_username";
-    public static final String signup_url = "https://sih-smart-attendance.herokuapp.com/signup";
-    public static final String get_info_url = "https://sih-smart-attendance.herokuapp.com/get_info";
-    public static final String get_embed_url = "https://sih-smart-attendance.herokuapp.com/get_embed";
+    public static final String url = "https://sih-smart-attendance.herokuapp.com";
+    public static final String login_url = url+"/login";
+    public static final String check_in_out_status_url = url+"/check_in_out_status";
+    public static final String update_log_url = url+"/update_log";
+    public static final String get_log_data_url = url+"/get_log_data";
+    public static final String get_img_url = url+"/get_img";
+    public static final String check_otp_url = url+"/check_otp";
+    public static final String send_otp_url = url+"/send_otp";
+    public static final String get_branch_info_url = url+"/get_branch_info";
+    public static final String check_emp_no_url = url+"/check_emp_no";
+    public static final String check_username_url = url+"/check_username";
+    public static final String signup_url = url+"/signup";
+    public static final String get_info_url = url+"/get_info";
+    public static final String get_embed_url = url+"/get_embed";
 }
