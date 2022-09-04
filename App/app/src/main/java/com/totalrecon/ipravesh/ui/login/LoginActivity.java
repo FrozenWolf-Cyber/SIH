@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String pass = password.getText().toString();
-                String user = username.getText().toString().trim();
+                String user = username.getText().toString();
 
                 if (pass.equals("") || user.equals("")) {
                     show_message("Please enter a proper username and password !");
