@@ -11,27 +11,31 @@ from psql_database import Database
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse
+import os
+from dotenv import load_dotenv
 
-db_host = os.environ['DBHOST']
-db_user =  os.environ['DBUSER']
-db_psswrd = os.environ['DBPASS']
-db_name = os.environ['DBNAME']
+load_dotenv()
 
-ADMIN_USERNAME = os.environ['ADMIN_USERNAME']
-ADMIN_PSSWRD = os.environ['ADMIN_PSSWRD']
+db_host = os.getenv('DBHOST')
+db_user =  os.getenv('DBUSER')
+db_psswrd = os.getenv('DBPASS')
+db_name = os.getenv('DBNAME')
 
-MESSENGER_MAILID = os.environ['MESSENGER_MAILID']
-MESSENGER_PSSWRD = os.environ['MESSENGER_PSSWRD']
+ADMIN_USERNAME = os.getenv('ADMIN_USERNAME')
+ADMIN_PSSWRD = os.getenv('ADMIN_PSSWRD')
 
-AES_KEY = os.environ['AES_KEY']
-SHA256_KEY = os.environ['SHA256_KEY']
-SALT = os.environ['SALT']
+MESSENGER_MAILID = os.getenv('MESSENGER_MAILID')
+MESSENGER_PSSWRD = os.getenv('MESSENGER_PSSWRD')
+
+AES_KEY = os.getenv('AES_KEY')
+SHA256_KEY = os.getenv('SHA256_KEY')
+SALT = os.getenv('SALT')
 
 encryptor = encryption_algo(AES_KEY, SHA256_KEY, SALT.encode('utf-8'))
-messenger_ = mailman(MESSENGER_MAILID, MESSENGER_PSSWRD)
 # encryptor = pickle.load(open('encryptor.pkl', 'rb'))
 
 mydb = Database(host = db_host, user = db_user, passwd = db_psswrd, database = db_name, encryptor=encryptor)
+messenger_ = mailman(MESSENGER_MAILID, MESSENGER_PSSWRD)
 
 
 app = FastAPI()

@@ -13,22 +13,5 @@
         android:background="@drawable/ip_logo_splash"
         android:foregroundGravity="center"/>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="64dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="402dp"
-        android:layout_marginBottom="265dp"
-        android:fontFamily="@font/mulishregular"
-        android:gravity="bottom"
-        android:layout_centerHorizontal="true"
-        android:text="Total Recon - NIT Trichy"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
 
 </RelativeLayout>

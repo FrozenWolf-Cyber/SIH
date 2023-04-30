@@ -23,7 +23,7 @@ public class Constant {
     public static final int splash_time = 2000;
     public static final int head_angle_y = 30;
     public static final int compressed_image_quality = 75;
-    public static final double right_eye_probability_true = 0.7;
+    public static final double right_eye_probability_true = 0.5;
     public static final double right_eye_probability_false = 0.1;
     // all toast and dialog box messages
 
@@ -75,7 +75,7 @@ public class Constant {
     public static final String model_name = "mobile_face_net.tflite";
 
     // post request: url - string constants
-    public static final String url = "https://sih-smart-attendance.herokuapp.com";
+    public static final String url = "http://127.0.0.1:5000";
     public static final String login_url = url+"/login";
     public static final String check_in_out_status_url = url+"/check_in_out_status";
     public static final String update_log_url = url+"/update_log";

@@ -141,7 +141,7 @@
         app:layout_constraintHorizontal_bias="0.528"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3"
-        app:srcCompat="@drawable/gaillogo_login" />
+        app:srcCompat="@drawable/nittlogo" />
 
     <TextView
         android:id="@+id/textView18"

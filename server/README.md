@@ -36,6 +36,10 @@ Set the environment varaibles of the server in which the web app is hosted for t
 <br />
 <br />
 
+Note:
+Add a credentials.json file, after registering project in Gmail API (Google Cloud Platform) for sending emails.
+Refer [this link](https://mailtrap.io/blog/python-send-email-gmail/#How-to-send-an-email-with-Python-via-Gmail-SMTP) for steps.
+
 #### Example in Heroku:
 You can set environment varaible in settings in Heroku dashboard like given below:<br /><br />
 ![demo](https://user-images.githubusercontent.com/57902078/188234922-7439b5c4-3ae9-4772-8f8e-d2eaaf12b480.jpeg) <br /><br />

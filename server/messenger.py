@@ -3,10 +3,24 @@ import random
 import smtplib
 from email.message import EmailMessage
 
+import base64
+from email.mime.text import MIMEText
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from requests import HTTPError
+
+SCOPES = [
+        "https://www.googleapis.com/auth/gmail.send"
+    ]
+flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+creds = flow.run_local_server(port=0)
+
 class mailman():
     def __init__(self, mailid = 'ipravesh.sih@gmail.com' , password = "xdkatsbalbwimapl"):
-        self.smtp = smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=None)
-        self.smtp.login(mailid ,password)
+        self.service = build('gmail', 'v1', credentials=creds)
+
+        # self.smtp = smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=None)
+        # self.smtp.login(mailid ,password)
         print("LOGGED IN...", flush=True)
         self.allowed = "0123456789"
         self.mailid = mailid
@@ -19,15 +33,10 @@ class mailman():
         return OTP
 
     def send_otp(self, emp_no, mailid):
-        msg = EmailMessage()
-        msg['Subject'] = "OTP for iPravesh attendance app"
-        msg['From'] = self.mailid
-        # msg['To'] = 'blackyvenky21@gmail.com'
-        msg['To'] = mailid
 
         otp = self.generate_otp()
 
-        msg.set_content(f'''
+        body = f'''
 <!DOCTYPE html>
 <html>
     <body>
@@ -50,8 +59,20 @@ class mailman():
 </div>
     </body>
 </html>
-''', subtype='html')
+'''
+        msg = MIMEText(body, 'html')
+        msg['subject'] = "OTP for iPravesh attendance app"
+        # msg['From'] = self.mailid
+        # msg['To'] = 'blackyvenky21@gmail.com'
+        msg['to'] = mailid
+        create_message = {'raw': base64.urlsafe_b64encode(msg.as_bytes()).decode()}
+        try:
+            message = (self.service.users().messages().send(userId=self.mailid, body=create_message).execute())
+            print(F'sent message to {message} Message Id: {message["id"]}')
+        except HTTPError as error:
+            print(F'An error occurred: {error}')
+            message = None
 
-        self.smtp.send_message(msg)
+        # self.smtp.send_message(msg)
 
         return otp
