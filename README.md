@@ -70,5 +70,8 @@ pm2 start index.js
 
 ### Android App
 
+Use `adb reverse tcp:5000 tcp:5000` to expose localhost to phone.
+Note: While running app, check if all permissions have been granted.
+
 Usage
 =====
